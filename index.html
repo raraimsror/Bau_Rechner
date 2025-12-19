@@ -1,66 +1,75 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <script src="script.js" defer></script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remonta 3D Kalkulators</title>
+    <title>Remont 3D Expert</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header>
+        <div class="logo">RemontExpert</div>
+        <nav><a href="#" class="disabled">Вход / Регистрация</a></nav>
+    </header>
 
     <div class="app-wrapper">
         <aside class="left-panel">
-            <h3>Конфигуратор</h3>
-            <details>
-                <summary>Размеры комнаты (см)</summary>
+            <section class="config-group">
+                <h4>1. Размеры комнаты (см)</h4>
                 <div class="inputs">
-                    <input type="number" id="dimX" value="300" placeholder="Ширина">
-                    <input type="number" id="dimY" value="400" placeholder="Глубина">
-                    <input type="number" id="dimZ" value="250" placeholder="Высота">
+                    <label>X: <input type="number" id="dimX" value="300"></label>
+                    <label>Y: <input type="number" id="dimY" value="400"></label>
+                    <label>Z: <input type="number" id="dimZ" value="250"></label>
                 </div>
-            </details>
+            </section>
 
-            <details>
-                <summary>Проемы (Двери/Окна)</summary>
-                <label><input type="checkbox" id="hasDoor" checked> Дверь (1шт)</label>
-                <label><input type="checkbox" id="hasWindow"> Окно</label>
-            </details>
+            <section class="config-group">
+                <h4>2. Виды работ</h4>
+                <div class="service-list">
+                    <label><input type="checkbox" class="job" data-price="15"> Подготовка стен</label>
+                    <label><input type="checkbox" class="job" data-price="25"> Покраска</label>
+                    <label><input type="checkbox" class="job" data-price="35"> Обои</label>
+                    <label><input type="checkbox" class="job" data-price="50"> Плитка</label>
+                    <label><input type="checkbox" class="job" data-price="20"> Электрика</label>
+                </div>
+            </section>
         </aside>
 
         <main class="viewport">
             <div class="scene">
                 <div class="room" id="room">
-                    <div class="wall wall-front"></div>
-                    <div class="wall wall-back"></div>
-                    <div class="wall wall-left"></div>
-                    <div class="wall wall-right"></div>
-                    <div class="floor"></div>
+                    <div class="wall front"><span>Передняя</span></div>
+                    <div class="wall back"><span>Задняя</span></div>
+                    <div class="wall left"><span>Левая</span></div>
+                    <div class="wall right"><span>Правая</span></div>
+                    <div class="wall floor"><span>Пол</span></div>
                 </div>
             </div>
-            <div class="rotation-hint">Зажми и крути (coming soon) | Вид изнутри</div>
+            <div class="controls-hint">Крутите ползунок X/Y/Z для изменения пропорций</div>
         </main>
 
         <aside class="right-panel">
             <div class="class-selector">
-                <h4>Класс ремонта</h4>
-                <select id="repairClass">
-                    <option value="economy">Эконом (Косметический)</option>
-                    <option value="standard" selected>Стандарт (Капитальный)</option>
-                    <option value="premium">Премиум (Дизайнерский)</option>
+                <h4>Класс материалов</h4>
+                <select id="materialClass">
+                    <option value="1">Эконом (x1.0)</option>
+                    <option value="1.5">Стандарт (x1.5)</option>
+                    <option value="2.5">Премиум (x2.5)</option>
                 </select>
             </div>
 
             <div class="receipt">
-                <h4>Смета</h4>
-                <div id="price-tag">0 €</div>
-                <hr>
-                <h4>План работ:</h4>
-                <ul id="work-plan">
-                    </ul>
+                <h3>Итого: <span id="total-price">0</span> €</h3>
+                <div id="job-summary">Выберите работы слева...</div>
             </div>
         </aside>
     </div>
+
+    <footer>
+        <div class="foot-col"><h4>О нас</h4><p>Профессиональное планирование</p></div>
+        <div class="foot-col"><h4>Партнеры</h4><p>Bauhaus, DEPO</p></div>
+        <div class="foot-col"><h4>Контакты</h4><p>+371 00000000</p></div>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>

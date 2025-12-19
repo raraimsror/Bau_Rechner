@@ -1,39 +1,36 @@
-/* Основные стили */
-body { margin: 0; font-family: 'Arial', sans-serif; background: #1a1a1a; color: white; overflow: hidden; }
-.app-wrapper { display: grid; grid-template-columns: 250px 1fr 300px; height: 100vh; }
+:root { --primary: #3498db; --wall-color: rgba(52, 152, 219, 0.2); }
+body { margin: 0; font-family: sans-serif; background: #fdfdfd; color: #333; }
 
-aside { background: #2c2c2c; padding: 20px; border: 1px solid #444; overflow-y: auto; }
+header { background: #fff; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 2px solid #eee; }
+footer { background: #eee; padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 14px; }
+
+.app-wrapper { display: grid; grid-template-columns: 280px 1fr 300px; height: calc(100vh - 120px); }
+
+aside { padding: 20px; border-right: 1px solid #eee; background: #fff; }
+.right-panel { border-right: none; border-left: 1px solid #eee; }
 
 /* 3D Сцена */
-.viewport { position: relative; perspective: 1200px; display: flex; align-items: center; justify-content: center; }
+.viewport { display: flex; align-items: center; justify-content: center; background: #fff; overflow: hidden; }
+.scene { perspective: 1500px; width: 600px; height: 600px; display: flex; align-items: center; justify-content: center; }
+
 .room { 
-    position: relative; width: 400px; height: 300px; 
-    transform-style: preserve-3d; 
-    transform: rotateX(-10deg) rotateY(20deg); /* Начальный угол обзора */
-    transition: 0.5s;
+    position: relative; transform-style: preserve-3d; 
+    transform: rotateX(-20deg) rotateY(40deg); 
+    transition: 0.3s ease-out;
 }
 
-.wall, .floor { 
-    position: absolute; 
-    background: rgba(255,255,255,0.1); 
-    border: 2px solid #555;
-    box-sizing: border-box;
+.wall { 
+    position: absolute; border: 2px solid #3498db; 
+    background: var(--wall-color); display: flex; align-items: center; justify-content: center;
+    backface-visibility: visible;
 }
 
-/* Расчет позиций через JS переменные */
-.wall-front { transform: translateZ(calc(var(--depth) / -2)); }
-.wall-back  { transform: translateZ(calc(var(--depth) / 2)) rotateY(180deg); }
-.wall-left  { transform: translateX(calc(var(--width) / -2)) rotateY(90deg); }
-.wall-right { transform: translateX(calc(var(--width) / 2)) rotateY(-90deg); }
-.floor      { transform: translateY(calc(var(--height) / 2)) rotateX(90deg); }
+/* Эффект прозрачности для передних стенок */
+.front, .left { opacity: 0.3; border-style: dashed; }
+.back, .right, .floor { opacity: 0.8; }
 
-/* Элементы на стенах */
-.door-viz { width: 60px; height: 180px; background: brown; position: absolute; bottom: 0; left: 20px; }
-.window-viz { width: 100px; height: 100px; background: lightblue; position: absolute; top: 50px; left: 50%; }
+.wall span { font-size: 10px; color: #3498db; }
 
-/* Детали и Смета */
-details { margin-bottom: 15px; background: #3d3d3d; padding: 10px; border-radius: 5px; }
-summary { cursor: pointer; font-weight: bold; }
-.receipt { background: #fff; color: #333; padding: 15px; border-radius: 5px; margin-top: 20px; }
-#price-tag { font-size: 24px; font-weight: bold; color: #27ae60; }
-#work-plan { font-size: 13px; padding-left: 20px; }
+/* Квитанция */
+.receipt { background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-top: 20px; }
+#total-price { color: #27ae60; }
