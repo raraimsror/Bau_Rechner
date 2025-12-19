@@ -1,36 +1,47 @@
-:root { --primary: #3498db; --wall-color: rgba(52, 152, 219, 0.2); }
-body { margin: 0; font-family: sans-serif; background: #fdfdfd; color: #333; }
+/* Основные переменные */
+:root {
+    --primary: #3498db;
+    --accent: #27ae60;
+    --bg: #fdfdfd;
+    --border: #e1e8ed;
+}
 
-header { background: #fff; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 2px solid #eee; }
-footer { background: #eee; padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 14px; }
+body {
+    margin: 0; font-family: 'Arial', sans-serif;
+    background: var(--bg); display: flex; flex-direction: column; height: 100vh;
+}
 
-.app-wrapper { display: grid; grid-template-columns: 280px 1fr 300px; height: calc(100vh - 120px); }
+/* Структура */
+header { background: #fff; padding: 15px 30px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); }
+footer { background: #f1f1f1; padding: 20px; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; font-size: 13px; }
+.app-wrapper { display: grid; grid-template-columns: 280px 1fr 300px; flex: 1; overflow: hidden; }
 
-aside { padding: 20px; border-right: 1px solid #eee; background: #fff; }
-.right-panel { border-right: none; border-left: 1px solid #eee; }
+/* Боковые панели */
+aside { padding: 20px; background: #fff; border-right: 1px solid var(--border); overflow-y: auto; }
+.right-panel { border-right: none; border-left: 1px solid var(--border); }
+
+.input-field { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
+.input-field input { width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
+.full-width { width: 100%; padding: 8px; margin-bottom: 20px; }
 
 /* 3D Сцена */
-.viewport { display: flex; align-items: center; justify-content: center; background: #fff; overflow: hidden; }
-.scene { perspective: 1500px; width: 600px; height: 600px; display: flex; align-items: center; justify-content: center; }
-
-.room { 
-    position: relative; transform-style: preserve-3d; 
-    transform: rotateX(-20deg) rotateY(40deg); 
-    transition: 0.3s ease-out;
-}
+.viewport { display: flex; align-items: center; justify-content: center; perspective: 1500px; background: #fff; }
+.room { position: relative; transform-style: preserve-3d; transform: rotateX(-15deg) rotateY(35deg); transition: 0.4s; }
 
 .wall { 
-    position: absolute; border: 2px solid #3498db; 
-    background: var(--wall-color); display: flex; align-items: center; justify-content: center;
-    backface-visibility: visible;
+    position: absolute; border: 1px solid var(--primary); 
+    background: rgba(52, 152, 219, 0.1); left: 50%; top: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 10px;
 }
 
-/* Эффект прозрачности для передних стенок */
-.front, .left { opacity: 0.3; border-style: dashed; }
-.back, .right, .floor { opacity: 0.8; }
+/* Прозрачность для вида изнутри */
+.front, .left { opacity: 0.25; border-style: dashed; }
+.back, .right, .floor { opacity: 0.85; }
+.floor { background: #f0f0f0; }
 
-.wall span { font-size: 10px; color: #3498db; }
+/* Чек и План */
+.receipt { background: #f8fff9; padding: 15px; border: 1px solid var(--accent); border-radius: 6px; }
+.total-amount { font-size: 26px; font-weight: bold; color: var(--accent); }
+.work-plan ol { padding-left: 20px; font-size: 14px; color: #555; }
 
-/* Квитанция */
-.receipt { background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-top: 20px; }
-#total-price { color: #27ae60; }
+.door-viz { width: 40px; height: 80%; background: #5d4037; position: absolute; bottom: 0; }

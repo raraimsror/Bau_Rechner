@@ -2,35 +2,51 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Remont 3D Expert</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RemontExpert 3D - Планировщик</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <header>
-        <div class="logo">RemontExpert</div>
-        <nav><a href="#" class="disabled">Вход / Регистрация</a></nav>
+        <div class="logo"><strong>RemontExpert</strong> 3D</div>
+        <nav><a href="#" class="login-btn">Вход / Регистрация</a></nav>
     </header>
 
     <div class="app-wrapper">
         <aside class="left-panel">
             <section class="config-group">
-                <h4>1. Размеры комнаты (см)</h4>
-                <div class="inputs">
-                    <label>X: <input type="number" id="dimX" value="300"></label>
-                    <label>Y: <input type="number" id="dimY" value="400"></label>
-                    <label>Z: <input type="number" id="dimZ" value="250"></label>
+                <h4>1. Размеры (см)</h4>
+                <div class="input-field">
+                    <label>Ширина (X)</label>
+                    <input type="number" id="dimX" value="300">
+                </div>
+                <div class="input-field">
+                    <label>Глубина (Y)</label>
+                    <input type="number" id="dimY" value="400">
+                </div>
+                <div class="input-field">
+                    <label>Высота (Z)</label>
+                    <input type="number" id="dimZ" value="250">
                 </div>
             </section>
 
             <section class="config-group">
                 <h4>2. Виды работ</h4>
-                <div class="service-list">
-                    <label><input type="checkbox" class="job" data-price="15"> Подготовка стен</label>
-                    <label><input type="checkbox" class="job" data-price="25"> Покраска</label>
-                    <label><input type="checkbox" class="job" data-price="35"> Обои</label>
-                    <label><input type="checkbox" class="job" data-price="50"> Плитка</label>
-                    <label><input type="checkbox" class="job" data-price="20"> Электрика</label>
-                </div>
+                <details open>
+                    <summary>Стены</summary>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" class="job" data-price="10" data-task="Грунтовка стен"> Подготовка</label>
+                        <label><input type="checkbox" class="job" data-price="15" data-task="Покраска в 2 слоя"> Покраска</label>
+                        <label><input type="checkbox" class="job" data-price="20" data-task="Поклейка обоев"> Обои</label>
+                    </div>
+                </details>
+                <details>
+                    <summary>Элементы</summary>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="hasDoor"> Дверь (1 шт)</label>
+                    </div>
+                </details>
             </section>
         </aside>
 
@@ -44,30 +60,35 @@
                     <div class="wall floor"><span>Пол</span></div>
                 </div>
             </div>
-            <div class="controls-hint">Крутите ползунок X/Y/Z для изменения пропорций</div>
         </main>
 
         <aside class="right-panel">
-            <div class="class-selector">
-                <h4>Класс материалов</h4>
-                <select id="materialClass">
-                    <option value="1">Эконом (x1.0)</option>
-                    <option value="1.5">Стандарт (x1.5)</option>
-                    <option value="2.5">Премиум (x2.5)</option>
-                </select>
-            </div>
+            <h4>Класс материалов</h4>
+            <select id="mClass" class="full-width">
+                <option value="1">Эконом (x1.0)</option>
+                <option value="1.5">Стандарт (x1.5)</option>
+                <option value="2.5">Премиум (x2.5)</option>
+            </select>
 
             <div class="receipt">
-                <h3>Итого: <span id="total-price">0</span> €</h3>
-                <div id="job-summary">Выберите работы слева...</div>
+                <span>Ориентировочная цена:</span>
+                <div class="total-amount"><span id="totalPrice">0</span> €</div>
+            </div>
+
+            <div class="work-plan">
+                <h4>Технологический план:</h4>
+                <ol id="planSteps">
+                    <li>Выберите работы слева</li>
+                </ol>
             </div>
         </aside>
     </div>
 
     <footer>
-        <div class="foot-col"><h4>О нас</h4><p>Профессиональное планирование</p></div>
-        <div class="foot-col"><h4>Партнеры</h4><p>Bauhaus, DEPO</p></div>
-        <div class="foot-col"><h4>Контакты</h4><p>+371 00000000</p></div>
+        <div><strong>О нас</strong><br>Планирование 2025</div>
+        <div><strong>Партнеры</strong><br>DEPO, Bauhaus</div>
+        <div><strong>Миссия</strong><br>Ремонт без хаоса</div>
+        <div><strong>Контакты</strong><br>+371 22 000 000</div>
     </footer>
 
     <script src="script.js"></script>
