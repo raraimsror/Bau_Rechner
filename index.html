@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+<meta charset="utf-8" />
+<title>Vienkāršs 3D kubs — X Y Z</title>
+<style>
+  :root{
+    --scene-w: 600px;
+    --scene-h: 420px;
+  }
+  body{
+    font-family: Inter, Arial, sans-serif;
+    background:#f6f7fb;
+    color:#222;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    padding:28px;
+    height:100vh;
+    box-sizing:border-box;
+  }
+
+  h1{ margin:0; font-size:18px; }
+
+  .controls{
+    display:flex;
+    gap:14px;
+    align-items:end;
+  }
+
+  .ctrl{
+    display:flex;
+    flex-direction:column;
+    font-size:14px;
+  }
+  .ctrl input{
+    width:100px;
+    padding:6px 8px;
+    font-size:14px;
+    box-sizing:border-box;
+  }
+
+  .legend{
+    font-size:13px;
+    margin-top:6px;
+    color:#444;
+  }
+
+  /* SCENE */
+  .scene{
+    width:var(--scene-w);
+    height:var(--scene-h);
+    border-radius:10px;
+    background:linear-gradient(180deg,#fff,#fafbfd);
+    box-shadow:0 6px 18px rgba(20,30,60,0.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    perspective:1000px;
+    padding:18px;
+    box-sizing:border-box;
+  }
+
+  /* cube wrapper centered */
+  .stage{
+    width:1px; height:1px; /* placeholder - faces define sizes */
+    transform-style:preserve-3d;
+    transition:transform 400ms ease;
+  }
+
+  /* common face style */
+  .face{
+    position:absolute;
+    box-sizing:border-box;
+    border:2px solid rgba(0,0,0,0.12);
+    background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(240,240,250,0.9));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    color:#111;
+    backface-visibility:visible;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  }
+
+  /* visible faces styling (front, right, top) */
+  .face.front { background: linear-gradient(180deg,#fff,#f0f6ff); }
+  .face.right { background: linear-gradient(180deg,#fff,#f7fff2); }
+  .face.top   { background: linear-gradient(180deg,#fff,#fff7f2); }
+
+  /* simple caption under scene */
+  .note{
+    font-size:13px;
+    color:#333;
+    text-align:center;
+    max-width:720px;
+  }
+
+  /* responsive */
+  @media (max-width:700px){
+    :root{ --scene-w:320px; --scene-h:260px; }
+    .controls{ flex-direction:column; align-items:center; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Vienkāršs 3D kubs (X, Y, Z)</h1>
+
+<div class="controls">
+  <div class="ctrl">
+    <label>X (platums, cm)</label>
+    <input id="inputX" type="number" min="10" value="200">
+  </div>
+  <div class="ctrl">
+    <label>Y (dziļums, cm)</label>
+    <input id="inputY" type="number" min="10" value="200">
+  </div>
+  <div class="ctrl">
+    <label>Z (augstums, cm)</label>
+    <input id="inputZ" type="number" min="10" value="200">
+  </div>
+</div>
+
+<div class="legend">
+  Paskaidrojums: <strong>X</strong> = platums (pa labi), <strong>Y</strong> = dziļums (iekšā), <strong>Z</strong> = augstums (uz augšu).
+</div>
+
+<div class="scene" id="scene">
+  <!-- stage centrēs kubu un atļaus pagriezt -->
+  <div class="stage" id="stage">
+
+    <!-- priekšpuse (redzama no skatītāja) -->
+    <div class="face front" id="faceFront">Priekšpuse<br><small id="labelFront"></small></div>
+
+    <!-- labā siena (redzama no sāna) -->
+    <div class="face right" id="faceRight">Labā siena<br><small id="labelRight"></small></div>
+
+    <!-- augšpuse (griesti) -->
+    <div class="face top" id="faceTop">Griesti<br><small id="labelTop"></small></div>
+
+  </div>
+</div>
+
+<div class="note">
+  Šī ir vienkārša vizualizācija — redzamas trīs sejas: priekšpuse, labā siena (dziļums) un augšpuse (augstums). Ievadi X, Y, Z vērtības centimetros — kubs mainīsies reāllaikā.
+</div>
+
+<script>
+  // elementi
+  const inpX = document.getElementById('inputX');
+  const inpY = document.getElementById('inputY');
+  const inpZ = document.getElementById('inputZ');
+
+  const stage = document.getElementById('stage');
+  const faceFront = document.getElementById('faceFront');
+  const faceRight = document.getElementById('faceRight');
+  const faceTop = document.getElementById('faceTop');
+
+  const labelFront = document.getElementById('labelFront');
+  const labelRight = document.getElementById('labelRight');
+  const labelTop = document.getElementById('labelTop');
+
+  const scene = document.getElementById('scene');
+
+  // pārvērš cm -> px mērogs (lai kubs neizaug pārāk liels)
+  function cmToPx(cm){
+    // izvēlamies mērogu atkarībā no lieluma, maksimālais skaidri saprātīgs
+    // 1 cm -> scale px. ja cm lieli, mērogs samazinās.
+    const base = 1.2; // pamata mērogs
+    const maxCm = Math.max(Number(inpX.value), Number(inpY.value), Number(inpZ.value));
+    // adaptīvs samazinājums
+    const scale = maxCm > 500 ? base * (500 / maxCm) : base;
+    return Math.round(cm * scale);
+  }
+
+  function updateCube(){
+    const X = Math.max(10, Number(inpX.value));
+    const Y = Math.max(10, Number(inpY.value));
+    const Z = Math.max(10, Number(inpZ.value));
+
+    // izmērīsim face izmērus px
+    const pxX = cmToPx(X);
+    const pxY = cmToPx(Y);
+    const pxZ = cmToPx(Z);
+
+    // PRIEKŠPUSE: platums = X, augstums = Z, atbīdījums pa Z-asi (dziļums) = +Y/2
+    faceFront.style.width = pxX + 'px';
+    faceFront.style.height = pxZ + 'px';
+    // novietojam fronti centrā - translate(-50%,-50%) vēlāk izdarām transform kopā
+    // bet vispirms aprēķinām transform stringu ar translateZ
+    faceFront.style.transform = `translate3d(-50%,-50%, ${pxY/2}px)`;
+
+    // LABĀ SIENA: platums = Y (dziļums), augstums = Z, rotēta pa Y 90deg un pārvietota uz labo X/2
+    faceRight.style.width = pxY + 'px';
+    faceRight.style.height = pxZ + 'px';
+    // lai redzamas malas pareizi — rotateY(90deg) un translateZ(pxX/2)
+    faceRight.style.transform = `translate3d(-50%,-50%, 0px) rotateY(90deg) translateZ(${pxX/2}px)`;
+
+    // AUGŠPUSE (griesti): platums = X, dziļums = Y (bet mēs izstiepjam kā width/height),
+    // augstums nav vizuāls — top face izmēri: width = X, height = Y (tā skata izkārtojums)
+    faceTop.style.width = pxX + 'px';
+    faceTop.style.height = pxY + 'px';
+    // rotateX(-90deg) un pārvietot uz augšu pa Z/2
+    faceTop.style.transform = `translate3d(-50%,-50%, 0px) rotateX(-90deg) translateZ(${pxZ/2}px)`;
+
+    // centrēšana: novietojam stage transformu, lai faces pozīcijas būtu relatīvas centra punktam
+    // stage pārvieto mazliet uz leju, lai diagonālais skats labi izskatītos
+    stage.style.transform = `translate(-50%, -50%) rotateX(22deg) rotateY(-32deg)`;
+
+    // parādīt vērtības uz sejas
+    labelFront.textContent = `${X}cm × ${Z}cm`;
+    labelRight.textContent = `${Y}cm × ${Z}cm`;
+    labelTop.textContent = `${X}cm × ${Y}cm`;
+  }
+
+  // sākotnējā pozicionēšana: katra face centrēta absolūti attiecīgi uz stage
+  // lai centrs darbotos, padarīsim face pozīciju absolute 50%/50% no stage
+  [faceFront, faceRight, faceTop].forEach(f=>{
+    f.style.position = 'absolute';
+    f.style.left = '50%';
+    f.style.top  = '50%';
+    f.style.transformOrigin = 'center center';
+  });
+
+  // event listeneri
+  inpX.addEventListener('input', updateCube);
+  inpY.addEventListener('input', updateCube);
+  inpZ.addEventListener('input', updateCube);
+
+  // inicializēt
+  updateCube();
+
+  // padoms: ja nepieciešams, varam pievienot gludas pārejas:
+  [faceFront, faceRight, faceTop].forEach(f=>{
+    f.style.transition = 'width 300ms ease, height 300ms ease, transform 300ms ease';
+  });
+  stage.style.transition = 'transform 400ms ease';
+</script>
+
+</body>
+</html>
