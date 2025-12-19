@@ -1,59 +1,59 @@
-const inputs = document.querySelectorAll('input');
-const cube = document.getElementById('cube');
-const areaSpan = document.getElementById('area-val');
-const priceSpan = document.getElementById('price-val');
-
-// Cenu konfigurācija (par m2 sienu+grīdas laukumam)
-const priceRates = {
-    economy: 45,
-    standard: 85,
-    premium: 160
+// Константы цен и технологий
+const TECH_PLANS = {
+    economy: ["Очистка стен", "Грунтовка", "Поклейка обоев", "Линолеум"],
+    standard: ["Выравнивание стен", "Электрика", "Грунтовка", "Покраска", "Ламинат", "Плинтуса"],
+    premium: ["Демонтаж", "Перепланировка", "Дизайн-проект", "Теплый пол", "Декоративная штукатурка"]
 };
 
 function update() {
-    // 1. Iegūst vērtības
-    const x = parseFloat(document.getElementById('dimX').value) || 0;
-    const y = parseFloat(document.getElementById('dimY').value) || 0;
-    const z = parseFloat(document.getElementById('dimZ').value) || 0;
-    const level = document.querySelector('input[name="level"]:checked').value;
+    // 1. Считываем размеры
+    const x = parseFloat(document.getElementById('dimX').value);
+    const y = parseFloat(document.getElementById('dimY').value);
+    const z = parseFloat(document.getElementById('dimZ').value);
+    const repairClass = document.getElementById('repairClass').value;
 
-    // 2. Aprēķina mērogu vizualizācijai (100cm = 50px)
-    const scale = 0.5;
-    const sx = x * scale;
-    const sy = y * scale;
-    const sz = z * scale;
+    // 2. Обновляем 3D (передаем значения в CSS)
+    const scale = 0.5; // масштаб для экрана
+    document.documentElement.style.setProperty('--width', `${x * scale}px`);
+    document.documentElement.style.setProperty('--depth', `${y * scale}px`);
+    document.documentElement.style.setProperty('--height', `${z * scale}px`);
 
-    // 3. Atjauno 3D kuba izmērus un pozīcijas caur CSS mainīgajiem
-    document.documentElement.style.setProperty('--tx', `${sx/2}px`);
-    document.documentElement.style.setProperty('--ty', `${sy/2}px`);
-    document.documentElement.style.setProperty('--tz', `${sy/2}px`);
+    // Применяем размеры к элементам
+    document.querySelectorAll('.wall-front, .wall-back').forEach(w => { w.style.width = (x*scale)+'px'; w.style.height = (z*scale)+'px'; });
+    document.querySelectorAll('.wall-left, .wall-right').forEach(w => { w.style.width = (y*scale)+'px'; w.style.height = (z*scale)+'px'; });
+    const fl = document.querySelector('.floor');
+    fl.style.width = (x*scale)+'px'; fl.style.height = (y*scale)+'px';
 
-    const faces = {
-        front: { w: sx, h: sz },
-        right: { w: sy, h: sz },
-        top: { w: sx, h: sy }
-    };
+    // 3. Логика Дверей/Окон (Визуализация)
+    const frontWall = document.querySelector('.wall-front');
+    frontWall.innerHTML = ''; // Чистим перед обновлением
+    if (document.getElementById('hasDoor').checked) {
+        let door = document.createElement('div');
+        door.className = 'door-viz';
+        frontWall.appendChild(door);
+    }
+    if (document.getElementById('hasWindow').checked) {
+        let win = document.createElement('div');
+        win.className = 'window-viz';
+        frontWall.appendChild(win);
+    }
 
-    Object.keys(faces).forEach(f => {
-        const el = document.querySelector(`.${f}`);
-        el.style.width = faces[f].w + 'px';
-        el.style.height = faces[f].h + 'px';
+    // 4. Расчет цены (упрощенно)
+    const area = (2*x*z + 2*y*z + x*y) / 10000; // м2 поверхностей
+    const rates = { economy: 50, standard: 120, premium: 250 };
+    const total = area * rates[repairClass];
+    document.getElementById('price-tag').innerText = Math.round(total) + " €";
+
+    // 5. Формируем план работ
+    const planList = document.getElementById('work-plan');
+    planList.innerHTML = "";
+    TECH_PLANS[repairClass].forEach(step => {
+        let li = document.createElement('li');
+        li.innerText = step;
+        planList.appendChild(li);
     });
-
-    // 4. Aprēķina loģiku (Sienas + Grīda)
-    const floorArea = (x * y) / 10000; // pārvērš m2
-    const wallArea = (2 * x * z + 2 * y * z) / 10000;
-    const totalArea = floorArea + wallArea;
-
-    const totalPrice = totalArea * priceRates[level];
-
-    // 5. Izvadīt datus
-    areaSpan.innerText = totalArea.toFixed(2);
-    priceSpan.innerText = Math.round(totalPrice).toLocaleString();
 }
 
-// Klausās uz visām izmaiņām
-inputs.forEach(input => input.addEventListener('input', update));
-
-// Sākotnējā palaišana
-update();
+// Слушатели событий
+document.querySelectorAll('input, select').forEach(el => el.addEventListener('change', update));
+window.onload = update; // Первый запуск

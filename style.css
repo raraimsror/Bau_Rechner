@@ -1,46 +1,39 @@
-:root {
-    --primary: #2563eb;
-    --bg-light: #f8fafc;
+/* Основные стили */
+body { margin: 0; font-family: 'Arial', sans-serif; background: #1a1a1a; color: white; overflow: hidden; }
+.app-wrapper { display: grid; grid-template-columns: 250px 1fr 300px; height: 100vh; }
+
+aside { background: #2c2c2c; padding: 20px; border: 1px solid #444; overflow-y: auto; }
+
+/* 3D Сцена */
+.viewport { position: relative; perspective: 1200px; display: flex; align-items: center; justify-content: center; }
+.room { 
+    position: relative; width: 400px; height: 300px; 
+    transform-style: preserve-3d; 
+    transform: rotateX(-10deg) rotateY(20deg); /* Начальный угол обзора */
+    transition: 0.5s;
 }
 
-body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-light); }
-
-.app-container { display: flex; height: 100vh; }
-
-/* Sidebar stili */
-.sidebar { 
-    width: 350px; background: white; padding: 25px; 
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 10;
+.wall, .floor { 
+    position: absolute; 
+    background: rgba(255,255,255,0.1); 
+    border: 2px solid #555;
+    box-sizing: border-box;
 }
 
-.input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-.input-grid input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+/* Расчет позиций через JS переменные */
+.wall-front { transform: translateZ(calc(var(--depth) / -2)); }
+.wall-back  { transform: translateZ(calc(var(--depth) / 2)) rotateY(180deg); }
+.wall-left  { transform: translateX(calc(var(--width) / -2)) rotateY(90deg); }
+.wall-right { transform: translateX(calc(var(--width) / 2)) rotateY(-90deg); }
+.floor      { transform: translateY(calc(var(--height) / 2)) rotateX(90deg); }
 
-.budget-selector { display: flex; flex-direction: column; gap: 10px; }
-.radio-card { 
-    padding: 15px; border: 2px solid #eee; border-radius: 8px; 
-    cursor: pointer; transition: 0.3s; 
-}
-.radio-card:has(input:checked) { border-color: var(--primary); background: #eff6ff; }
+/* Элементы на стенах */
+.door-viz { width: 60px; height: 180px; background: brown; position: absolute; bottom: 0; left: 20px; }
+.window-viz { width: 100px; height: 100px; background: lightblue; position: absolute; top: 50px; left: 50%; }
 
-.summary { margin-top: 40px; padding-top: 20px; border-top: 2px solid #eee; }
-.total-price { font-size: 1.5rem; font-weight: bold; color: var(--primary); margin-top: 10px; }
-
-/* 3D Viewer stili */
-.viewer { flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.scene { perspective: 1200px; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-
-.cube { 
-    position: relative; transform-style: preserve-3d; 
-    transform: rotateX(-20deg) rotateY(-35deg); 
-}
-
-.face { 
-    position: absolute; border: 1px solid rgba(255,255,255,0.8);
-    background: rgba(37, 99, 235, 0.4); 
-}
-
-/* Plakņu novietojums tiks iestatīts ar JS */
-.front { transform: translateZ(var(--tz)); }
-.right { transform: rotateY(90deg) translateZ(var(--tx)); }
-.top   { transform: rotateX(90deg) translateZ(var(--ty)); }
+/* Детали и Смета */
+details { margin-bottom: 15px; background: #3d3d3d; padding: 10px; border-radius: 5px; }
+summary { cursor: pointer; font-weight: bold; }
+.receipt { background: #fff; color: #333; padding: 15px; border-radius: 5px; margin-top: 20px; }
+#price-tag { font-size: 24px; font-weight: bold; color: #27ae60; }
+#work-plan { font-size: 13px; padding-left: 20px; }

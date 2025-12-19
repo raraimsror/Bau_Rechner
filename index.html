@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <script src="script.js" defer></script>
     <meta charset="UTF-8">
@@ -9,54 +9,58 @@
 </head>
 <body>
 
-    <div class="app-container">
-        <aside class="sidebar">
-            <h2>Remonta Kvīzs</h2>
-            
-            <section class="step">
-                <h3>1. Telpas izmēri (cm)</h3>
-                <div class="input-grid">
-                    <label>X: <input type="number" id="dimX" value="300"></label>
-                    <label>Y: <input type="number" id="dimY" value="400"></label>
-                    <label>Z: <input type="number" id="dimZ" value="250"></label>
+    <div class="app-wrapper">
+        <aside class="left-panel">
+            <h3>Конфигуратор</h3>
+            <details>
+                <summary>Размеры комнаты (см)</summary>
+                <div class="inputs">
+                    <input type="number" id="dimX" value="300" placeholder="Ширина">
+                    <input type="number" id="dimY" value="400" placeholder="Глубина">
+                    <input type="number" id="dimZ" value="250" placeholder="Высота">
                 </div>
-            </section>
+            </details>
 
-            <section class="step">
-                <h3>2. Remonta līmenis</h3>
-                <div class="budget-selector">
-                    <label class="radio-card">
-                        <input type="radio" name="level" value="economy" checked>
-                        <span>Ekonomisks</span>
-                    </label>
-                    <label class="radio-card">
-                        <input type="radio" name="level" value="standard">
-                        <span>Standarta</span>
-                    </label>
-                    <label class="radio-card">
-                        <input type="radio" name="level" value="premium">
-                        <span>Premium</span>
-                    </label>
-                </div>
-            </section>
-
-            <div class="summary">
-                <p>Platība: <span id="area-val">0</span> m²</p>
-                <div class="total-price">Aptuvenā cena: <span id="price-val">0</span> €</div>
-            </div>
+            <details>
+                <summary>Проемы (Двери/Окна)</summary>
+                <label><input type="checkbox" id="hasDoor" checked> Дверь (1шт)</label>
+                <label><input type="checkbox" id="hasWindow"> Окно</label>
+            </details>
         </aside>
 
-        <main class="viewer">
+        <main class="viewport">
             <div class="scene">
-                <div class="cube" id="cube">
-                    <div class="face front"></div>
-                    <div class="face right"></div>
-                    <div class="face top"></div>
+                <div class="room" id="room">
+                    <div class="wall wall-front"></div>
+                    <div class="wall wall-back"></div>
+                    <div class="wall wall-left"></div>
+                    <div class="wall wall-right"></div>
+                    <div class="floor"></div>
                 </div>
             </div>
+            <div class="rotation-hint">Зажми и крути (coming soon) | Вид изнутри</div>
         </main>
-    </div>
 
+        <aside class="right-panel">
+            <div class="class-selector">
+                <h4>Класс ремонта</h4>
+                <select id="repairClass">
+                    <option value="economy">Эконом (Косметический)</option>
+                    <option value="standard" selected>Стандарт (Капитальный)</option>
+                    <option value="premium">Премиум (Дизайнерский)</option>
+                </select>
+            </div>
+
+            <div class="receipt">
+                <h4>Смета</h4>
+                <div id="price-tag">0 €</div>
+                <hr>
+                <h4>План работ:</h4>
+                <ul id="work-plan">
+                    </ul>
+            </div>
+        </aside>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
