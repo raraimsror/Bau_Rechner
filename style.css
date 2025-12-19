@@ -1,0 +1,46 @@
+:root {
+    --primary: #2563eb;
+    --bg-light: #f8fafc;
+}
+
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-light); }
+
+.app-container { display: flex; height: 100vh; }
+
+/* Sidebar stili */
+.sidebar { 
+    width: 350px; background: white; padding: 25px; 
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 10;
+}
+
+.input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.input-grid input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+
+.budget-selector { display: flex; flex-direction: column; gap: 10px; }
+.radio-card { 
+    padding: 15px; border: 2px solid #eee; border-radius: 8px; 
+    cursor: pointer; transition: 0.3s; 
+}
+.radio-card:has(input:checked) { border-color: var(--primary); background: #eff6ff; }
+
+.summary { margin-top: 40px; padding-top: 20px; border-top: 2px solid #eee; }
+.total-price { font-size: 1.5rem; font-weight: bold; color: var(--primary); margin-top: 10px; }
+
+/* 3D Viewer stili */
+.viewer { flex-grow: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.scene { perspective: 1200px; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+
+.cube { 
+    position: relative; transform-style: preserve-3d; 
+    transform: rotateX(-20deg) rotateY(-35deg); 
+}
+
+.face { 
+    position: absolute; border: 1px solid rgba(255,255,255,0.8);
+    background: rgba(37, 99, 235, 0.4); 
+}
+
+/* Plakņu novietojums tiks iestatīts ar JS */
+.front { transform: translateZ(var(--tz)); }
+.right { transform: rotateY(90deg) translateZ(var(--tx)); }
+.top   { transform: rotateX(90deg) translateZ(var(--ty)); }

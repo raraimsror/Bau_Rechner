@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remonta 3D Kalkulators</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <h2>Remonta Kvīzs</h2>
+            
+            <section class="step">
+                <h3>1. Telpas izmēri (cm)</h3>
+                <div class="input-grid">
+                    <label>X: <input type="number" id="dimX" value="300"></label>
+                    <label>Y: <input type="number" id="dimY" value="400"></label>
+                    <label>Z: <input type="number" id="dimZ" value="250"></label>
+                </div>
+            </section>
+
+            <section class="step">
+                <h3>2. Remonta līmenis</h3>
+                <div class="budget-selector">
+                    <label class="radio-card">
+                        <input type="radio" name="level" value="economy" checked>
+                        <span>Ekonomisks</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="level" value="standard">
+                        <span>Standarta</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="level" value="premium">
+                        <span>Premium</span>
+                    </label>
+                </div>
+            </section>
+
+            <div class="summary">
+                <p>Platība: <span id="area-val">0</span> m²</p>
+                <div class="total-price">Aptuvenā cena: <span id="price-val">0</span> €</div>
+            </div>
+        </aside>
+
+        <main class="viewer">
+            <div class="scene">
+                <div class="cube" id="cube">
+                    <div class="face front"></div>
+                    <div class="face right"></div>
+                    <div class="face top"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
