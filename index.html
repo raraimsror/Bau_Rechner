@@ -1,305 +1,116 @@
 <!DOCTYPE html>
 <html lang="lv">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RemontExpert 3D Pro - AutoScale & RGB</title>
+    <!-- (1.H) Указываем кодировку и мета-настройки для адаптивности -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-:root {
-    --primary: #2c7be5;
-    --accent: #27ae60;
-    --border: #e5e7eb;
-    --bg: #f8fafc;
-}
+    <!-- (2.H) Заголовок страницы -->
+    <title>RemontExpert 3D Pro</title>
 
-* { box-sizing: border-box; }
-
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    user-select: none; /* Aizsardzība pret kopēšanu globāli */
-}
-
-/* HEADER */
-header {
-    padding: 12px 25px;
-    background: #fff;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 20;
-}
-
-/* LAYOUT */
-.app {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 280px 1fr 300px;
-}
-
-aside {
-    background: #fff;
-    padding: 20px;
-    overflow-y: auto;
-    z-index: 10;
-    border-right: 1px solid var(--border);
-}
-aside:last-child { border-right: none; border-left: 1px solid var(--border); }
-
-/* RGB PALETE */
-.color-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-    margin-top: 10px;
-}
-.color-btn {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 4px;
-    border: 1px solid rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-.color-btn:hover { transform: scale(1.1); }
-.color-btn.active { border: 2px solid var(--primary); }
-
-/* VIEWPORT & SCENE */
-.viewport {
-    grid-column: 2;
-    perspective: 2000px;
-    background: #fff;
-    cursor: grab;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.viewport:active { cursor: grabbing; }
-
-.scene {
-    transform-style: preserve-3d;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.room {
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.1s ease-out;
-}
-
-/* WALLS */
-.wall {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform-origin: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 500%;
-    font-weight: bold;
-    border: 1px solid rgba(0,0,0,0.15);
-    background-color: #fff;
-    pointer-events: none; /* Rotāciju uztver viewport */
-}
-
-.floor { background: #d1d5db !important; opacity: 1 !important; }
-
-/* DYNAMIC TEXTURES */
-.texture-wallpaper { background-image: radial-gradient(#00000022 1px, transparent 1px); background-size: 15px 15px; }
-.texture-tile { background-image: linear-gradient(#00000011 1px, transparent 1px), linear-gradient(90deg, #00000011 1px, transparent 1px); background-size: 30px 30px; }
-
-/* UI ELEMENTS */
-.field { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
-input { width: 70px; padding: 4px; border: 1px solid #ccc; border-radius: 4px; }
-.price { margin-top: 20px; padding: 15px; border: 1px solid var(--accent); border-radius: 8px; background: #f8fff9; text-align: center; }
-.price strong { font-size: 24px; color: var(--accent); }
-
-footer { padding: 10px; text-align: center; font-size: 11px; background: #fff; border-top: 1px solid var(--border); }
-</style>
+    <!-- (3.H) Подключение внешнего CSS файла -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <!-- (4.H) Шапка сайта -->
+    <header>
+        <div>RemontExpert <strong>3D</strong></div>
+        <a href="#" class="login-btn">Вход / Регистрация</a>
+    </header>
 
-<header>
-    <div>RemontExpert <strong>3D</strong></div>
-    <div style="font-size: 12px; color: #64748b;">v2.0: AutoScale & WallColor Engine</div>
-</header>
+    <!-- (5.H) Основная структура приложения — три колонки -->
+    <div class="app">
+        <!-- (6.H) Левая панель с параметрами комнаты -->
+        <aside>
+            <h4>Размеры комнаты (см)</h4>
+            <div style="display:flex; gap:5px; margin-bottom:20px;">
+                <input id="xInp" type="number" value="300" style="width:30%;">
+                <input id="yInp" type="number" value="400" style="width:30%;">
+                <input id="zInp" type="number" value="250" style="width:30%;">
+            </div>
 
-<div class="app">
+            <!-- (7.H) Раздел выбора отделочных работ -->
+            <details open>
+                <summary>Стены и отделка</summary>
+                <div class="option-item">
+                    <label>Покраска</label>
+                    <input type="checkbox" class="job-check" data-price="15" checked>
+                </div>
+                <div class="option-item">
+                    <label>Обои</label>
+                    <input type="checkbox" class="job-check" data-price="25">
+                </div>
+                <div class="option-item">
+                    <label>Плитка</label>
+                    <input type="checkbox" class="job-check" data-price="45">
+                </div>
+            </details>
+            
+            <h4>Стеновой материал</h4>
+            <select id="wallTex" style="width:100%; padding:6px; margin-bottom:15px;">
+                <option value="none">Только цвет</option>
+                <option value="texture-wallpaper">Обои</option>
+                <option value="texture-tile">Плитка</option>
+            </select>
 
-<aside>
-    <h4>Izmēri (cm)</h4>
-    <div class="field"><span>Platums X</span><input id="xInp" type="number" value="300"></div>
-    <div class="field"><span>Dziļums Y</span><input id="yInp" type="number" value="400"></div>
-    <div class="field"><span>Augstums Z</span><input id="zInp" type="number" value="250"></div>
+            <h4>Цвет стен</h4>
+            <div class="color-grid" id="colorGrid"></div>
+        </aside>
 
-    <h4>Sienu materiāls</h4>
-    <select id="wallTex" style="width:100%; padding:6px; margin-bottom:15px;">
-        <option value="none">Tīra krāsa</option>
-        <option value="texture-wallpaper">Tapetes</option>
-        <option value="texture-tile">Flīzes</option>
-    </select>
-
-    <h4>Sienu krāsa</h4>
-    <div class="color-grid" id="colorGrid"></div>
-</aside>
-
-<div class="viewport" id="vPort">
-    <div class="scene">
-        <div class="room" id="room">
-            <div class="wall front" data-side="front">front</div>
-            <div class="wall back" data-side="back">back</div>
-            <div class="wall left" data-side="left">left</div>
-            <div class="wall right" data-side="right">right</div>
-            <div class="wall floor" data-side="floor">floor</div>
+        <!-- (8.H) Центральная область с 3D моделью -->
+        <div class="viewport" id="vPort">
+            <div class="scene" id="zoomScene">
+                <div class="room" id="room">
+                    <div class="wall front" data-side="front">front</div>
+                    <div class="wall back" data-side="back">back</div>
+                    <div class="wall left" data-side="left">left</div>
+                    <div class="wall right" data-side="right">right</div>
+                    <div class="wall floor" data-side="floor">floor</div>
+                </div>
+            </div>
         </div>
+
+        <!-- (9.H) Правая панель с расчётом стоимости -->
+        <aside>
+            <h4>Класс материалов</h4>
+            <select id="mClass" style="width:100%; padding:8px; border-radius:5px; margin-bottom:20px;">
+                <option value="1">Эконом (x1.0)</option>
+                <option value="1.8">Стандарт (x1.8)</option>
+                <option value="2.5">Премиум (x2.5)</option>
+            </select>
+
+            <h4>Расчёт</h4>
+            <div style="font-size:13px; color:#666;">
+                Площадь стен: <span id="areaVal">0</span> м²<br>
+            </div>
+
+            <div class="price">
+                Сумма сметы<br>
+                <strong id="priceVal">0 €</strong>
+            </div>
+
+            <h4 style="margin-top:25px;">Этапы работ:</h4>
+            <ul id="steps" style="font-size:13px; padding-left:20px;">
+                <li>Грунтовка стен</li>
+                <li>Подготовка материалов</li>
+                <li>Финишная отделка</li>
+            </ul>
+        </aside>
     </div>
-</div>
 
-<aside>
-    <h4>Aprēķins</h4>
-    <div style="font-size:13px; color:#666;">
-        Sienu platība: <span id="areaVal">0</span> m²<br>
-        Materiāls: <span id="matVal">-</span>
-    </div>
+    <!-- (10.H) Нижний колонтитул -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">О нас</a>
+            <a href="#">Партнеры</a>
+            <a href="#">Миссия</a>
+            <a href="#">Контакты</a>
+        </div>
+        <div style="font-size: 11px; color: #64748b;">Prototype v4.2 · Прокрутка и Zoom исправлены</div>
+    </footer>
 
-    <div class="price">
-        Tāmes summa<br>
-        <strong id="priceVal">0 €</strong>
-    </div>
-
-    <h4 style="margin-top:25px;">Darbu secība:</h4>
-    <ul id="steps" style="font-size:13px; padding-left:20px;">
-        <li>Virsmu gruntēšana</li>
-        <li>Krāsošana/Līmēšana</li>
-        <li>Stūru apstrāde</li>
-    </ul>
-</aside>
-
-</div>
-
-<footer>Prototype v2.0 · Automātiska mērogošana · Dinamiska sienu caurspīdība</footer>
-
-<script>
-/* ===== INIT DATA ===== */
-const room = document.getElementById('room');
-const vPort = document.getElementById('vPort');
-const wallColors = ['#ffffff','#f8f9fa','#e9ecef','#dee2e6','#adb5bd','#6c757d','#ffadad','#ffd6a5','#fdffb6','#caffbf','#9bf6ff','#a0c4ff','#bdb2ff','#ffc6ff','#fffffc','#000000'];
-
-let rx = -15, ry = 35, currentScale = 0.5;
-let selectedColor = '#ffffff';
-
-/* ===== GENERATE COLOR PALETTE ===== */
-const grid = document.getElementById('colorGrid');
-wallColors.forEach(color => {
-    const btn = document.createElement('div');
-    btn.className = 'color-btn';
-    btn.style.backgroundColor = color;
-    btn.onclick = () => {
-        selectedColor = color;
-        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        updateRoom();
-    };
-    grid.appendChild(btn);
-});
-
-/* ===== AUTO-SCALING LOGIC ===== */
-function updateRoom() {
-    const x = +xInp.value || 1;
-    const y = +yInp.value || 1;
-    const z = +zInp.value || 1;
-
-    // Aprēķinām mērogu, lai lielākā mala nepārsniegtu 400px ekrānā
-    const maxDim = Math.max(x, y, z);
-    const scale = 400 / maxDim; 
-    
-    const sx = x * scale, sy = y * scale, sz = z * scale;
-
-    const walls = [
-        { s: '.front', w: sx, h: sz, t: `translate(-50%,-50%) translateZ(${sy/2}px)` },
-        { s: '.back',  w: sx, h: sz, t: `translate(-50%,-50%) translateZ(${-sy/2}px) rotateY(180deg)` },
-        { s: '.left',  w: sy, h: sz, t: `translate(-50%,-50%) translateX(${-sx/2}px) rotateY(-90deg)` },
-        { s: '.right', w: sy, h: sz, t: `translate(-50%,-50%) translateX(${sx/2}px) rotateY(90deg)` },
-        { s: '.floor', w: sx, h: sy, t: `translate(-50%,-50%) translateY(${sz/2}px) rotateX(90deg)` }
-    ];
-
-    walls.forEach(c => {
-        const el = document.querySelector(c.s);
-        el.style.width = c.w + 'px';
-        el.style.height = c.h + 'px';
-        el.style.transform = c.t;
-        
-        // Krāsa tikai sienām
-        if(!c.s.includes('floor')) {
-            el.style.backgroundColor = selectedColor;
-            el.className = 'wall ' + c.s.replace('.','') + ' ' + wallTex.value;
-        }
-    });
-
-    updateOpacity();
-    
-    // Cena
-    const area = (2 * x * z + 2 * y * z) / 10000;
-    document.getElementById('areaVal').innerText = area.toFixed(1);
-    document.getElementById('priceVal').innerText = Math.round(area * 35).toLocaleString() + ' €';
-}
-
-/* ===== DYNAMIC OPACITY (FIXED) ===== */
-function updateOpacity() {
-    const angle = ((ry % 360) + 360) % 360;
-    const walls = document.querySelectorAll('.wall:not(.floor)');
-    
-    walls.forEach(w => {
-        const side = w.dataset.side;
-        let op = 0.9;
-        
-        // Izlabota loģika atkarībā no rotācijas leņķa
-        if (side === 'left' && (angle >= 45 && angle < 135)) op = 0.15; 
-        if (side === 'back'  && (angle >= 135 && angle < 225)) op = 0.15;
-        if (side === 'right' && (angle >= 225 && angle < 315)) op = 0.15;
-        if (side === 'front' && (angle > 315 || angle < 45)) op = 0.15;
-        
-        w.style.opacity = op;
-    });
-}
-
-/* ===== ROTATION ===== */
-let drag = false, px = 0, py = 0;
-function rotate(dx, dy) {
-    ry += dx * 0.4;
-    rx -= dy * 0.4;
-    rx = Math.max(-60, Math.min(60, rx)); // Neļaujam pārgriezties pilnībā
-    room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-    updateOpacity();
-}
-
-vPort.onmousedown = e => { drag = true; px = e.clientX; py = e.clientY; };
-window.onmouseup = () => drag = false;
-window.onmousemove = e => { if(drag) { rotate(e.clientX-px, e.clientY-py); px = e.clientX; py = e.clientY; } };
-
-/* TOUCH */
-vPort.ontouchstart = e => { drag = true; px = e.touches[0].clientX; py = e.touches[0].clientY; };
-window.ontouchmove = e => { if(drag) { rotate(e.touches[0].clientX-px, e.touches[0].clientY-py); px = e.touches[0].clientX; py = e.touches[0].clientY; } };
-window.ontouchend = () => drag = false;
-
-/* LISTENERS */
-[xInp, yInp, zInp, wallTex].forEach(el => el.oninput = updateRoom);
-
-updateRoom();
-</script>
-
+    <!-- (11.H) Подключение JS -->
+    <script src="script.js"></script>
 </body>
 </html>

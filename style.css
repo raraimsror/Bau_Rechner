@@ -1,47 +1,150 @@
-/* Основные переменные */
+/* (1.C) Основные переменные для цветов */
 :root {
-    --primary: #3498db;
+    --primary: #2c7be5;
     --accent: #27ae60;
-    --bg: #fdfdfd;
-    --border: #e1e8ed;
+    --border: #e5e7eb;
+    --bg: #f8fafc;
 }
 
+/* (2.C) Универсальные стили */
+* { box-sizing: border-box; }
+
+/* (3.C) Тело страницы с прокруткой */
 body {
-    margin: 0; font-family: 'Arial', sans-serif;
-    background: var(--bg); display: flex; flex-direction: column; height: 100vh;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-y: auto;
+    user-select: none;
 }
 
-/* Структура */
-header { background: #fff; padding: 15px 30px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); }
-footer { background: #f1f1f1; padding: 20px; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; font-size: 13px; }
-.app-wrapper { display: grid; grid-template-columns: 280px 1fr 300px; flex: 1; overflow: hidden; }
-
-/* Боковые панели */
-aside { padding: 20px; background: #fff; border-right: 1px solid var(--border); overflow-y: auto; }
-.right-panel { border-right: none; border-left: 1px solid var(--border); }
-
-.input-field { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
-.input-field input { width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
-.full-width { width: 100%; padding: 8px; margin-bottom: 20px; }
-
-/* 3D Сцена */
-.viewport { display: flex; align-items: center; justify-content: center; perspective: 1500px; background: #fff; }
-.room { position: relative; transform-style: preserve-3d; transform: rotateX(-15deg) rotateY(35deg); transition: 0.4s; }
-
-.wall { 
-    position: absolute; border: 1px solid var(--primary); 
-    background: rgba(52, 152, 219, 0.1); left: 50%; top: 50%;
-    display: flex; align-items: center; justify-content: center; font-size: 10px;
+/* (4.C) Шапка */
+header {
+    padding: 12px 25px;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* Прозрачность для вида изнутри */
-.front, .left { opacity: 0.25; border-style: dashed; }
-.back, .right, .floor { opacity: 0.85; }
-.floor { background: #f0f0f0; }
+.login-btn {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid var(--primary);
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+}
 
-/* Чек и План */
-.receipt { background: #f8fff9; padding: 15px; border: 1px solid var(--accent); border-radius: 6px; }
-.total-amount { font-size: 26px; font-weight: bold; color: var(--accent); }
-.work-plan ol { padding-left: 20px; font-size: 14px; color: #555; }
+/* (5.C) Основная сетка приложения */
+.app {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 280px 1fr 300px;
+    min-height: 700px;
+}
 
-.door-viz { width: 40px; height: 80%; background: #5d4037; position: absolute; bottom: 0; }
+/* (6.C) Боковые панели */
+aside {
+    background: #fff;
+    padding: 20px;
+    border-right: 1px solid var(--border);
+}
+aside:last-child {
+    border-right: none;
+    border-left: 1px solid var(--border);
+}
+
+/* (7.C) Сетка выбора цвета */
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+.color-btn {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.color-btn:hover { transform: scale(1.1); }
+.color-btn.active { border: 2px solid var(--primary); }
+
+/* (8.C) 3D Область просмотра */
+.viewport {
+    grid-column: 2;
+    perspective: 2000px;
+    background: #fff;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+.viewport:active { cursor: grabbing; }
+
+.scene { transform-style: preserve-3d; transition: transform 0.1s; }
+.room { position: relative; transform-style: preserve-3d; transition: transform 0.1s ease-out; }
+
+/* (9.C) Стили для стен */
+.wall {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform-origin: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+    pointer-events: none;
+    color: rgba(0,0,0,0.2);
+    text-transform: uppercase;
+}
+.floor { background: #d1d5db !important; color: #333; }
+
+/* (10.C) Панель расчёта */
+.option-item { display: flex; justify-content: space-between; margin: 8px 0; font-size: 14px; }
+details { background: #f1f5f9; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+summary { cursor: pointer; font-weight: bold; margin-bottom: 5px; }
+
+.price {
+    margin-top: 20px;
+    padding: 15px;
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    background: #f8fff9;
+    text-align: center;
+}
+.price strong { font-size: 24px; color: var(--accent); }
+
+/* (11.C) Подвал */
+footer {
+    padding: 30px;
+    text-align: center;
+    background: #fff;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+.footer-links a {
+    color: var(--primary);
+    text-decoration: none;
+}

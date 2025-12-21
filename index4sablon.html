@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RemontExpert 3D Pro - Русская версия</title>
+
+    <style>
+        /* 1.C: Глобальные переменные для легкой настройки цветов бренда */
+        :root {
+            --primary: #2c7be5;
+            --accent: #27ae60;
+            --border: #e5e7eb;
+            --bg: #f8fafc;
+        }
+
+        /* 2.C: Базовые настройки страницы для обеспечения прокрутки и предотвращения выделения текста */
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-y: auto;
+            user-select: none;
+        }
+
+        /* 3.C: Оформление шапки приложения */
+        header {
+            padding: 12px 25px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .login-btn { color: var(--primary); text-decoration: none; font-weight: 600; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; font-size: 14px; }
+
+        /* 4.C: Сетка приложения (3 колонки: управление, 3D окно, расчеты) */
+        .app {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            min-height: 700px;
+        }
+
+        /* 5.C: Стили боковых панелей управления */
+        aside {
+            background: #fff;
+            padding: 20px;
+            z-index: 10;
+            border-right: 1px solid var(--border);
+        }
+
+        aside:last-child { border-right: none; border-left: 1px solid var(--border); }
+
+        /* 6.C: Оформление сетки выбора цветов */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .color-btn {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .color-btn:hover { transform: scale(1.1); }
+        .color-btn.active { border: 2px solid var(--primary); }
+
+        /* 7.C: Настройки 3D вьюпорта и перспективы */
+        .viewport {
+            grid-column: 2;
+            perspective: 2000px;
+            background: #fff;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .viewport:active { cursor: grabbing; }
+
+        .scene { transform-style: preserve-3d; transition: transform 0.1s; }
+        .room { position: relative; transform-style: preserve-3d; transition: transform 0.1s ease-out; }
+
+        /* 8.C: Стили для каждой отдельной стены комнаты */
+        .wall {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform-origin: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            background-color: #fff;
+            pointer-events: none;
+            color: rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
+
+        /* 9.C: Стили для пола и текстур */
+        .floor { background: #d1d5db !important; opacity: 1 !important; color: #333; }
+        .texture-wallpaper { background-image: radial-gradient(#00000022 1px, transparent 1px); background-size: 15px 15px; }
+        .texture-tile { background-image: linear-gradient(#00000011 1px, transparent 1px), linear-gradient(90deg, #00000011 1px, transparent 1px); background-size: 30px 30px; }
+
+        /* 10.C: Стилизация элементов интерфейса и итоговой цены */
+        .option-item { display: flex; justify-content: space-between; margin: 8px 0; font-size: 14px; }
+        details { background: #f1f5f9; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+        summary { cursor: pointer; font-weight: bold; margin-bottom: 5px; }
+
+        .price {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            background: #f8fff9;
+            text-align: center;
+        }
+        .price strong { font-size: 24px; color: var(--accent); }
+
+        footer {
+            padding: 30px;
+            text-align: center;
+            background: #fff;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
+        .footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 10px; font-weight: 600; }
+        .footer-links a { color: var(--primary); text-decoration: none; }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>RemontExpert <strong>3D</strong></div>
+        <a href="#" class="login-btn">Вход / Регистрация</a>
+    </header>
+
+    <div class="app">
+        <aside>
+            <h4>Размеры комнаты (см)</h4>
+            <div style="display:flex; gap:5px; margin-bottom:20px;">
+                <input id="xInp" type="number" value="300" style="width:30%;">
+                <input id="yInp" type="number" value="400" style="width:30%;">
+                <input id="zInp" type="number" value="250" style="width:30%;">
+            </div>
+
+            <details open>
+                <summary>Стены и отделка</summary>
+                <div class="option-item">
+                    <label>Покраска</label>
+                    <input type="checkbox" class="job-check" data-price="15" checked>
+                </div>
+                <div class="option-item">
+                    <label>Обои</label>
+                    <input type="checkbox" class="job-check" data-price="25">
+                </div>
+                <div class="option-item">
+                    <label>Плитка</label>
+                    <input type="checkbox" class="job-check" data-price="45">
+                </div>
+            </details>
+            
+            <h4>Материал стен</h4>
+            <select id="wallTex" style="width:100%; padding:6px; margin-bottom:15px;">
+                <option value="none">Чистая краска</option>
+                <option value="texture-wallpaper">Обои</option>
+                <option value="texture-tile">Плитка</option>
+            </select>
+
+            <h4>Цвет стен</h4>
+            <div class="color-grid" id="colorGrid"></div>
+        </aside>
+
+        <div class="viewport" id="vPort">
+            <div class="scene" id="zoomScene">
+                <div class="room" id="room">
+                    <div class="wall front" data-side="front">front</div>
+                    <div class="wall back" data-side="back">back</div>
+                    <div class="wall left" data-side="left">left</div>
+                    <div class="wall right" data-side="right">right</div>
+                    <div class="wall floor" data-side="floor">floor</div>
+                </div>
+            </div>
+        </div>
+
+        <aside>
+            <h4>Класс материалов</h4>
+            <select id="mClass" style="width:100%; padding:8px; border-radius:5px; margin-bottom:20px;">
+                <option value="1">Эконом (x1.0)</option>
+                <option value="1.8">Стандарт (x1.8)</option>
+                <option value="2.5">Премиум (x2.5)</option>
+            </select>
+
+            <h4>Расчет</h4>
+            <div style="font-size:13px; color:#666;">
+                Площадь стен: <span id="areaVal">0</span> м²<br>
+            </div>
+
+            <div class="price">
+                Итоговая смета<br>
+                <strong id="priceVal">0 €</strong>
+            </div>
+
+            <h4 style="margin-top:25px;">Порядок работ:</h4>
+            <ul id="steps" style="font-size:13px; padding-left:20px;">
+                <li>Грунтовка поверхностей</li>
+                <li>Подготовка материалов</li>
+                <li>Финишная отделка</li>
+            </ul>
+        </aside>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">О нас</a>
+            <a href="#">Партнеры</a>
+            <a href="#">Миссия</a>
+            <a href="#">Контакты</a>
+        </div>
+        <div style="font-size: 11px; color: #64748b;">Prototype v4.2 · Расчет и Визуализация</div>
+    </footer>
+
+    <script>
+        // 1.J: Объявление глобальных переменных (поворот, зум, активный цвет)
+        let rx = -15, ry = 35, zoomLevel = 1;
+        let selectedColor = '#ffffff';
+
+        // 2.J: Инициализация ссылок на основные элементы интерфейса
+        const room = document.getElementById('room');
+        const vPort = document.getElementById('vPort');
+        const zoomScene = document.getElementById('zoomScene');
+        const wallColors = ['#ffffff', '#f8f9fa', '#e9ecef', '#dee2e6', '#adb5bd', '#6c757d', '#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff', '#fffffc', '#000000'];
+
+        // 3.J: Функция генерации палитры цветов в левой панели
+        function createColorPalette() {
+            const grid = document.getElementById('colorGrid');
+            wallColors.forEach(color => {
+                const btn = document.createElement('div');
+                btn.className = 'color-btn';
+                btn.style.backgroundColor = color;
+                btn.onclick = () => {
+                    selectedColor = color;
+                    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateRoom(); // Обновление комнаты после смены цвета
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        // 4.J: Основная функция отрисовки 3D комнаты и расчета стоимости
+        function updateRoom() {
+            const x = +xInp.value || 1;
+            const y = +yInp.value || 1;
+            const z = +zInp.value || 1;
+            const multiplier = +mClass.value;
+
+            // Расчет автоматического масштаба, чтобы комната влезла в экран
+            const maxDim = Math.max(x, y, z);
+            const scale = 400 / maxDim;
+            const sx = x * scale, sy = y * scale, sz = z * scale;
+
+            // Конфигурация трансформаций для каждой из 5 сторон
+            const walls = [
+                { s: '.front', w: sx, h: sz, t: `translate(-50%,-50%) translateZ(${sy / 2}px)` },
+                { s: '.back', w: sx, h: sz, t: `translate(-50%,-50%) translateZ(${-sy / 2}px) rotateY(180deg)` },
+                { s: '.left', w: sy, h: sz, t: `translate(-50%,-50%) translateX(${-sx / 2}px) rotateY(-90deg)` },
+                { s: '.right', w: sy, h: sz, t: `translate(-50%,-50%) translateX(${sx / 2}px) rotateY(90deg)` },
+                { s: '.floor', w: sx, h: sy, t: `translate(-50%,-50%) translateY(${sz / 2}px) rotateX(90deg)` }
+            ];
+
+            walls.forEach(c => {
+                const el = document.querySelector(c.s);
+                el.style.width = c.w + 'px';
+                el.style.height = c.h + 'px';
+                el.style.transform = c.t;
+
+                // Применяем цвет и текстуру только к стенам (не к полу)
+                if (!c.s.includes('floor')) {
+                    el.style.backgroundColor = selectedColor;
+                    el.className = 'wall ' + c.s.replace('.', '') + ' ' + wallTex.value;
+                }
+            });
+
+            updateOpacity(); // Обновление прозрачности стен
+            calculateFinance(x, y, z, multiplier); // Расчет сметы
+        }
+
+        // 5.J: Функция расчета площади и итоговой стоимости
+        function calculateFinance(x, y, z, multiplier) {
+            const area = (2 * x * z + 2 * y * z) / 10000;
+            let jobRate = 0;
+            document.querySelectorAll('.job-check:checked').forEach(cb => jobRate += +cb.dataset.price);
+            
+            document.getElementById('areaVal').innerText = area.toFixed(1);
+            document.getElementById('priceVal').innerText = Math.round(area * jobRate * multiplier).toLocaleString() + ' €';
+        }
+
+        // 6.J: Логика прозрачности (скрывает стены, которые находятся между камерой и центром)
+        function updateOpacity() {
+            const angle = ((ry % 360) + 360) % 360;
+            document.querySelectorAll('.wall:not(.floor)').forEach(w => {
+                const side = w.dataset.side;
+                let op = 0.9;
+                if (side === 'front' && (angle > 315 || angle < 45)) op = 0.15;
+                if (side === 'right' && (angle >= 225 && angle < 315)) op = 0.15;
+                if (side === 'back' && (angle >= 135 && angle < 225)) op = 0.15;
+                if (side === 'left' && (angle >= 45 && angle < 135)) op = 0.15;
+                w.style.opacity = op;
+            });
+        }
+
+        // 7.J: Обработка вращения комнаты с помощью мыши
+        let drag = false, px, py;
+        vPort.onmousedown = e => { drag = true; px = e.clientX; py = e.clientY; };
+        window.onmouseup = () => drag = false;
+        window.onmousemove = e => {
+            if (drag) {
+                ry += (e.clientX - px) * 0.4;
+                rx -= (e.clientY - py) * 0.4;
+                rx = Math.max(-60, Math.min(60, rx));
+                room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+                px = e.clientX; py = e.clientY;
+                updateOpacity();
+            }
+        };
+
+        // 8.J: Масштабирование (Zoom) с помощью колесика мыши во вьюпорте
+        vPort.onwheel = e => {
+            e.preventDefault();
+            zoomLevel += e.deltaY * -0.001;
+            zoomLevel = Math.max(0.5, Math.min(2, zoomLevel));
+            zoomScene.style.transform = `scale(${zoomLevel})`;
+        };
+
+        // 9.J: Настройка слушателей изменений для всех полей ввода
+        function setupEventListeners() {
+            [xInp, yInp, zInp, wallTex, mClass].forEach(el => el.oninput = updateRoom);
+            document.querySelectorAll('.job-check').forEach(el => el.onchange = updateRoom);
+        }
+
+        // 10.J: Запуск приложения
+        createColorPalette();
+        setupEventListeners();
+        updateRoom();
+    </script>
+</body>
+</html>
