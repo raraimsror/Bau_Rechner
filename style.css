@@ -1,9 +1,9 @@
 /* (1.C) Основные переменные для цветов */
 :root {
-    --primary: #2c7be5;
+    --primary: #000000;
     --accent: #27ae60;
-    --border: #e5e7eb;
-    --bg: #f8fafc;
+    --border: #828792;
+    --bg: #83a5c8;
 }
 
 /* (2.C) Универсальные стили */
@@ -43,10 +43,11 @@ header {
 
 /* (5.C) Основная сетка приложения */
 .app {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 280px 1fr 300px;
+    display: flex;
+    flex-wrap: wrap; /* Позволяет адаптироваться на маленьких экранах */
+    gap: 0;
     min-height: 700px;
+    width: 100%;
 }
 
 /* (6.C) Боковые панели */
@@ -84,11 +85,12 @@ aside:last-child {
     perspective: 2000px;
     background: #fff;
     cursor: grab;
-    display: flex;
+   display: inline-flex; /* ✅ nomainām flex uz inline-flex */
     align-items: center;
     justify-content: center;
     overflow: hidden;
     position: relative;
+    margin-bottom: 20px; /* небольшое пространство снизу */
 }
 .viewport:active { cursor: grabbing; }
 
@@ -133,7 +135,7 @@ summary { cursor: pointer; font-weight: bold; margin-bottom: 5px; }
 footer {
     padding: 30px;
     text-align: center;
-    background: #fff;
+    background: #aeaeae;
     border-top: 1px solid var(--border);
     margin-top: auto;
 }
@@ -148,3 +150,34 @@ footer {
     color: var(--primary);
     text-decoration: none;
 }
+
+
+
+/* (6.C) Parametru paneļi (sānu malas) */
+aside {
+    flex: 1 1 280px; /* Aug, saraujas, bet bāzes izmērs ir 280px */
+    background: #fff;
+    padding: 20px;
+    border: 1px solid var(--border);
+    min-width: 250px; /* Neļauj kļūt pārāk šauram */
+}
+
+/* (7.C) 3D Logs (Centrs) */
+.viewport {
+    flex: 3 1 400px; /* Centrs aizņem 3x vairāk vietas nekā sāni */
+    min-height: 400px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* (11.C) Neliels "triks" mobilajai versijai */
+@media (max-width: 768px) {
+    .viewport {
+        order: -1; /* Pārvieto 3D logu uz pašu augšu mobilajos */
+        flex: 1 1 100%; /* Aizņem pilnu platumu */
+    }
+    aside {
+        flex: 1 1 100%;
+    }
+} 

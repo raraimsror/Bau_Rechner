@@ -44,14 +44,14 @@ function updateRoom() {
     ];
 
     // (6.J) Применяем размеры и цвета к стенам
-    walls.forEach(c => {
-        const el = document.querySelector(c.s);
-        el.style.width = c.w + 'px';
-        el.style.height = c.h + 'px';
-        el.style.transform = c.t;
-        if (!c.s.includes('floor')) {
-            el.style.backgroundColor = selectedColor;
-            el.className = 'wall ' + c.s.replace('.', '') + ' ' + wallTex.value;
+    walls.forEach(color => {
+        const elemet = document.querySelector(color.s);
+        elemet.style.width = color.w + 'px';
+        elemet.style.height = color.h + 'px';
+        elemet.style.transform = color.t;
+        if (!color.s.includes('floor')) {
+            elemet.style.backgroundColor = selectedColor;
+            elemet.className = 'wall ' + color.s.replace('.', '') + ' ' + wallTex.value;
         }
     });
 
@@ -71,7 +71,7 @@ function updateOpacity() {
     const angle = ((ry % 360) + 360) % 360;
     document.querySelectorAll('.wall:not(.floor)').forEach(w => {
         const side = w.dataset.side;
-        let op = 0.9;
+        let op = 0.95;
         if (side === 'front' && (angle > 315 || angle < 45)) op = 0.15;
         if (side === 'right' && (angle >= 225 && angle < 315)) op = 0.15;
         if (side === 'back' && (angle >= 135 && angle < 225)) op = 0.15;
@@ -104,8 +104,13 @@ vPort.onwheel = e => {
 };
 
 // (11.J) Слушатели событий
-[xInp, yInp, zInp, wallTex, mClass].forEach(el => el.oninput = updateRoom);
-document.querySelectorAll('.job-check').forEach(el => el.onchange = updateRoom);
+[xInp, yInp, zInp, wallTex, mClass].forEach(elemet => elemet.oninput = updateRoom);
+document.querySelectorAll('.job-check').forEach(elemet => elemet.onchange = updateRoom);
 
 // (12.J) Первоначальная отрисовка сцены
 updateRoom();
+
+// (13.J) Обновление сцены при изменении размера окна
+window.onresize = () => {
+    updateRoom(); 
+};
