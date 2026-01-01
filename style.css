@@ -49,12 +49,14 @@ header {
     border-radius: 8px;
 }
 
-/* Правая колонка — отдельная граница */
+/* Правая колонка */
 .right-panel {
     border-left: 1px solid #ccc;
 }
 
-/* ======= Блок выбора класса ремонта ======= */
+/* =========================================================
+   Блок выбора класса ремонта
+   ========================================================= */
 .repair-class-block {
     background: #fff;
     border: 1px solid #ccc;
@@ -84,9 +86,38 @@ header {
     cursor: pointer;
 }
 
+/* =========================================================
+   Блоки ввода (размеры комнаты, чекбоксы)
+   ========================================================= */
+.input-block {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
 
+.input-block input {
+    width: 60px;
+    padding: 6px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    text-align: center;
+}
 
-/* Центральная колонка */
+.xyz_img {
+    width: 35px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+/* =========================================================
+   Центральная колонка
+   ========================================================= */
 .center-panel {
     flex: 1;
     padding: 15px;
@@ -116,10 +147,9 @@ header {
     border: 1px solid #ccc;
     border-radius: 8px;
     overflow: hidden;
-    touch-action: none; /* важно для мобильных устройств */
+    touch-action: none;
 }
 
-/* Сцена и комната — 3D контейнеры */
 .three-d {
     position: relative;
     transform-style: preserve-3d;
@@ -164,32 +194,52 @@ header {
 }
 
 /* =========================================================
-   Блоки ввода (размеры комнаты, чекбоксы)
+   ЧЕК (РЕЗУЛЬТАТЫ)
    ========================================================= */
-.input-block {
+.receipt {
+    font-family: monospace;
+    font-size: 13px;
     background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 1px dashed #ccc;
     padding: 10px;
-    margin-bottom: 15px;
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
+    border-radius: 6px;
 }
 
-.input-block input {
-    width: 60px;
-    padding: 6px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
+.receipt__title {
     text-align: center;
+    font-weight: 700;
+    margin-bottom: 4px;
 }
 
-.xyz_img {
-    width: 35px;
-    height: 30px;
-    margin-right: 10px;
+.receipt__subtitle {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.receipt__group-title {
+    margin-top: 8px;
+    margin-bottom: 4px;
+    font-weight: 600;
+    border-top: 1px dashed #ccc;
+    padding-top: 4px;
+}
+
+.receipt__line {
+    display: flex;
+    justify-content: space-between;
+    margin: 1px 0;
+}
+
+.receipt__total {
+    border-top: 1px solid #000;
+    margin-top: 8px;
+    padding-top: 4px;
+    font-weight: 700;
+}
+
+.receipt__muted {
+    color: #777;
+    font-size: 12px;
 }
 
 /* =========================================================
