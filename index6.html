@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RemontExpert 3D Pro - Русская версия</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <header>
+        <div>RemontExpert 3D</div>
+        <a href="#" class="login-btn">Вход / Регистрация</a>
+    </header>
+
+    <div class="layout">
+
+        <div class="panel left-panel">
+            <h3>Фильтры</h3>
+
+            <div id="jobList"></div>
+
+            <div class="input-block room_option_inputs">
+                <label><input type="checkbox" id="selectAll"> Выбрать всё</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="front"> Передняя стена</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="back"> Задняя стена</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="left"> Левая стена</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="right"> Правая стена</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="floor"> Пол</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="ceiling"> Потолок</label>
+            </div>
+
+            <select id="surfaceSelect" class="full-width-select">
+                <option value="none">Выберите поверхность...</option>
+                <option value="walls">Стены</option>
+                <option value="floor">Пол</option>
+                <option value="ceiling">Потолок</option>
+            </select>
+        </div>
+
+        <div class="center-panel">
+
+            <div class="input-block xyz_value_inputs">
+                <img class="xyz_img" src="../../pics/Bildschirmfoto_27-12-2025_185527_static.vecteezy.com.jpeg" alt="">
+                <h4>Размеры комнаты (см)</h4>
+                <div>
+                    <input id="xInp" type="number" value="400" placeholder="X (см)">
+                    <input id="yInp" type="number" value="300" placeholder="Y (см)">
+                    <input id="zInp" type="number" value="250" placeholder="Z (см)">
+                </div>
+            </div>
+
+            <div class="viewport" id="vPort">
+                <div class="scene three-d" id="zoomScene">
+                    <div class="room three-d" id="room">
+                        <div class="wall front" data-side="front"></div>
+                        <div class="wall back" data-side="back"></div>
+                        <div class="wall left" data-side="left"></div>
+                        <div class="wall right" data-side="right"></div>
+                        <div class="wall floor" data-side="floor"></div>
+                        <div class="wall ceiling" data-side="ceiling">
+                            <div class="lamp"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel right-panel">
+            <div class="repair-class-block">
+                <h4>Класс ремонта</h4>
+
+                <label class="radio-option">
+                    <input type="radio" name="repairClass" value="econom">
+                    Эконом
+                </label>
+
+                <label class="radio-option">
+                    <input type="radio" name="repairClass" value="standard">
+                    Стандарт
+                </label>
+
+                <label class="radio-option">
+                    <input type="radio" name="repairClass" value="premium">
+                    Премиум
+                </label>
+            </div>
+
+            <h3>Результаты</h3>
+            <div id="resultsBox"></div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">О нас</a>
+                <a href="#">Партнеры</a>
+                <a href="#">Миссия</a>
+                <a href="#">Контакты</a>
+            </div>
+            © 2025 RemontExpert — Все права защищены
+        </div>
+    </div>
+
+</body>
+
+</html>
