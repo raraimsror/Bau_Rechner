@@ -1,0 +1,68 @@
+{
+  "paint": {
+    "coverage_m2_per_liter": 8,
+    "price_per_liter": 12
+  },
+
+  "ecoMaterials": {
+    "brushes": 3.5,
+    "rollers": 4.0,
+    "tape": 2.5,
+    "covers": 6.0
+  },
+
+  "workRatePerM2": {
+    "painting": {
+      "econom": 6,
+      "standard": 12,
+      "premium": 20
+    },
+    "wallpaper": {
+      "econom": 8,
+      "standard": 14,
+      "premium": 22
+    },
+    "flooring": {
+      "econom": 10,
+      "standard": 18,
+      "premium": 28
+    }
+  },
+
+  "materialRatePerM2": {
+    "painting": {
+      "econom": 4,
+      "standard": 6,
+      "premium": 8
+    },
+    "wallpaper": {
+      "econom": 5,
+      "standard": 7,
+      "premium": 9
+    },
+    "flooring": {
+      "econom": 6,
+      "standard": 8,
+      "premium": 10
+    }
+  },
+
+  "equipmentTotal": {
+    "painting": {
+      "econom": 0,
+      "standard": 20,
+      "premium": 40
+    },
+    "wallpaper": {
+      "econom": 0,
+      "standard": 10,
+      "premium": 25
+    },
+    "flooring": {
+      "econom": 0,
+      "standard": 30,
+      "premium": 60
+    }
+  }
+}
+

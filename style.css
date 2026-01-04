@@ -29,6 +29,13 @@ header {
     border-bottom: 1px solid #ccc;
 }
 
+.login-btn {
+    font-weight: 400;
+    font-size: 14px;
+    text-decoration: none;
+    color: #007bff;
+}
+
 /* =========================================================
    Основной макет (3 колонки)
    ========================================================= */
@@ -49,9 +56,9 @@ header {
     border-radius: 8px;
 }
 
-/* Правая колонка */
-.right-panel {
-    border-left: 1px solid #ccc;
+.left-panel h3,
+.right-panel h3 {
+    margin-bottom: 10px;
 }
 
 /* =========================================================
@@ -74,7 +81,7 @@ header {
 .radio-option {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
     padding: 8px 0;
     cursor: pointer;
     font-size: 15px;
@@ -94,15 +101,19 @@ header {
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     display: flex;
-    gap: 15px;
-    justify-content: center;
+    gap: 8px;
+    align-items: center;
     flex-wrap: wrap;
 }
 
-.input-block input {
-    width: 60px;
+.input-block h4 {
+    margin-bottom: 4px;
+}
+
+.input-block input[type="number"] {
+    width: 70px;
     padding: 6px;
     border: 1px solid #aaa;
     border-radius: 4px;
@@ -112,7 +123,6 @@ header {
 .xyz_img {
     width: 35px;
     height: 30px;
-    margin-right: 10px;
 }
 
 /* =========================================================
@@ -124,6 +134,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
 /* =========================================================
@@ -209,11 +220,6 @@ header {
     text-align: center;
     font-weight: 700;
     margin-bottom: 4px;
-}
-
-.receipt__subtitle {
-    text-align: center;
-    margin-bottom: 8px;
 }
 
 .receipt__group-title {
@@ -310,3 +316,4 @@ header {
         width: 100%;
     }
 }
+
