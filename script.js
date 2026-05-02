@@ -427,11 +427,6 @@ function renderReceipt(model) {
     const box = document.getElementById("resultsBox");
     if (!box) return;
 
-    // Убираем предупреждение при перерисовке (если b1 снова выбран)
-    if (selectedWorkBlocks.includes("b1") || currentClass !== "standard") {
-        hideInspectionWarning();
-    }
-
     // Фильтруем блоки по классу ремонта
     const filtered = filterBlocksForClass(model);
 
@@ -534,8 +529,44 @@ function renderReceipt(model) {
         </div>
     `;
 
+    // Показываем предупреждение, если b1 не выбран в NORM классе
+    if (currentClass === "standard" && !selectedWorkBlocks.includes("b1")) {
+        const warning = document.createElement("div");
+        warning.id = "inspectionWarning";
+        warning.style.cssText = `
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 10px 0;
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.4;
+        `;
+        warning.innerHTML = `
+            <strong>⚠️ Внимание!</strong><br>
+            Без осмотра мастер не сможет подтвердить выполнимость выбранного плана работ.
+            <a href="#" onclick="returnInspectionBlock(); return false;" style="color: #856404; text-decoration: underline; margin-left: 8px; cursor: pointer;">вернуть</a>
+        `;
+        box.insertBefore(warning, box.firstChild);
+    }
+
     // Привязываем обработчики к новым checkbox
     attachWorkBlockCheckboxListeners();
+}
+
+/* =========================================================
+   ФУНКЦИЯ ДЛЯ ВОЗВРАТА БЛОКА b1 (ОСМОТР)
+   ========================================================= */
+
+function returnInspectionBlock() {
+    // Добавляем b1 обратно в выбранные блоки
+    if (!selectedWorkBlocks.includes("b1")) {
+        selectedWorkBlocks.push("b1");
+    }
+
+    // Перерисовываем чек
+    loadReceipt(currentJob);
 }
 
 /* =========================================================
@@ -557,54 +588,12 @@ function attachWorkBlockCheckboxListeners() {
             } else {
                 // Убираем блок из выбранных
                 selectedWorkBlocks = selectedWorkBlocks.filter(id => id !== blockId);
-
-                // Предупреждение, если убрали b1 (осмотр)
-                if (blockId === "b1") {
-                    showInspectionWarning();
-                }
             }
 
             // Перерисовываем чек с новыми выбранными блоками
             loadReceipt(currentJob);
         });
     });
-}
-
-/* =========================================================
-   ПРЕДУПРЕЖДЕНИЕ ПРИ ОТКЛЮЧЕНИИ ОСМОТРА (b1)
-   ========================================================= */
-
-function showInspectionWarning() {
-    const resultsBox = document.getElementById("resultsBox");
-
-    // Создаем предупреждение, если его еще нет
-    let warning = document.getElementById("inspectionWarning");
-    if (!warning) {
-        warning = document.createElement("div");
-        warning.id = "inspectionWarning";
-        warning.style.cssText = `
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: 4px;
-            padding: 12px;
-            margin: 10px 0;
-            color: #856404;
-            font-size: 14px;
-            line-height: 1.4;
-        `;
-        warning.innerHTML = `
-            <strong>⚠️ Внимание!</strong><br>
-            Без осмотра мастер не сможет подтвердить выполнимость выбранного плана работ.
-        `;
-        resultsBox.insertBefore(warning, resultsBox.firstChild);
-    }
-}
-
-function hideInspectionWarning() {
-    const warning = document.getElementById("inspectionWarning");
-    if (warning) {
-        warning.remove();
-    }
 }
 
 /* =========================================================
@@ -662,9 +651,6 @@ function initResetWorkBlocksButton() {
     resetBtn.addEventListener("click", () => {
         // Сброс выбранных блоков для NORM на все блоки
         selectedWorkBlocks = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"];
-
-        // Убираем предупреждение, если оно было
-        hideInspectionWarning();
 
         // Перерисовываем чек
         loadReceipt(currentJob);
