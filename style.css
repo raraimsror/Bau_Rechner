@@ -15,6 +15,10 @@ body {
     flex-direction: column;
 }
 
+header {
+    flex-shrink: 0;
+}
+
 /* =========================================================
    Шапка сайта
    ========================================================= */
@@ -103,13 +107,20 @@ header {
     padding: 10px;
     margin-bottom: 10px;
     display: flex;
+    flex-direction: column;
     gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
 }
 
 .input-block h4 {
     margin-bottom: 4px;
+}
+
+.input-block label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    cursor: pointer;
 }
 
 .input-block input[type="number"] {
@@ -259,6 +270,8 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 .footer-content {

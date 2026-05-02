@@ -18,6 +18,10 @@ window.addEventListener("load", () => {
     // Привязка радиокнопок
     initJobTypeRadios();
     initRepairClassRadios();
+
+    // Привязка кнопок сброса
+    initResetWorkBlocksButton();
+    initResetFiltersButton();
 });
 
 /* =========================================================
@@ -47,6 +51,36 @@ let currentClass = "econom";
 let pricing = null;
 
 /* =========================================================
+   ВАЛИДАЦИЯ ВХОДНЫХ ДАННЫХ
+   ========================================================= */
+
+function validateInput(inputElement) {
+    const value = parseFloat(inputElement.value);
+
+    // Проверка на пустое значение, ноль, отрицательные числа
+    if (!inputElement.value || isNaN(value) || value <= 0) {
+        inputElement.style.borderColor = "#ff4444";
+        return null;
+    }
+
+    // Проверка максимального значения
+    if (value > 10000) {
+        inputElement.style.borderColor = "#ff4444";
+        showError("Максимальное значение: 10000 см");
+        return null;
+    }
+
+    // Валидация прошла успешно
+    inputElement.style.borderColor = "";
+    return value;
+}
+
+function showError(message) {
+    const resultsBox = document.getElementById("resultsBox");
+    resultsBox.innerHTML = `<div style="color: #ff4444; padding: 10px; background: #fff3f3; border-radius: 4px; margin: 10px 0;">${message}</div>`;
+}
+
+/* =========================================================
    ЗАГРУЗКА ЦЕН (pricing.json)
    ========================================================= */
 
@@ -66,9 +100,12 @@ async function loadPricing() {
    ========================================================= */
 
 function updateRoom() {
-    const x = +xInp.value || 1;
-    const y = +yInp.value || 1;
-    const z = +zInp.value || 1;
+    // Валидация входных данных
+    const x = validateInput(xInp);
+    const y = validateInput(yInp);
+    const z = validateInput(zInp);
+
+    if (!x || !y || !z) return; // Если валидация не прошла, не обновляем
 
     const maxDim = Math.max(x, y, z);
     const scale = 400 / maxDim;
@@ -352,10 +389,13 @@ function calculateTotals(model) {
    ========================================================= */
 
 const visibilityRules = {
-    econom: ["b11"],                 // Эконом: только материалы TOOM
-    standard: ["b4", "b5", "b6", "b7", "b11"], // Стандарт: подготовка + покраска + материалы TOOM
-    premium: "ALL"                   // Премиум: все блоки
+    econom: ["b11", "equip", "extra"],     // Эконом: материалы + оборудование (клиент работает сам)
+    standard: ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10", "b11"], // Стандарт: все работы + материалы
+    premium: "ALL"                          // Премиум: все блоки
 };
+
+// Хранилище выбранных блоков для NORM класса
+let selectedWorkBlocks = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"]; // По умолчанию все выбраны
 
 function filterBlocksForClass(model) {
     const rules = visibilityRules[currentClass];
@@ -363,7 +403,19 @@ function filterBlocksForClass(model) {
     if (rules === "ALL") return model;
 
     const clone = JSON.parse(JSON.stringify(model));
-    clone.blocks = clone.blocks.filter(block => rules.includes(block.id));
+
+    // Для NORM класса фильтруем по выбранным checkbox
+    if (currentClass === "standard") {
+        clone.blocks = clone.blocks.filter(block => {
+            // Материалы (b11) всегда показываем
+            if (block.id === "b11") return true;
+            // Остальные блоки - только если выбраны
+            return selectedWorkBlocks.includes(block.id);
+        });
+    } else {
+        clone.blocks = clone.blocks.filter(block => rules.includes(block.id));
+    }
+
     return clone;
 }
 
@@ -374,6 +426,11 @@ function filterBlocksForClass(model) {
 function renderReceipt(model) {
     const box = document.getElementById("resultsBox");
     if (!box) return;
+
+    // Убираем предупреждение при перерисовке (если b1 снова выбран)
+    if (selectedWorkBlocks.includes("b1") || currentClass !== "standard") {
+        hideInspectionWarning();
+    }
 
     // Фильтруем блоки по классу ремонта
     const filtered = filterBlocksForClass(model);
@@ -388,7 +445,22 @@ function renderReceipt(model) {
     let htmlBlocks = "";
 
     filtered.blocks.forEach(block => {
-        htmlBlocks += `<div class="receipt__group-title">${block.title}</div>`;
+        // Для NORM класса добавляем checkbox перед заголовком блока (кроме b11 - материалы)
+        let blockTitle = block.title;
+        if (currentClass === "standard" && block.id !== "b11" && block.id.startsWith("b")) {
+            const isChecked = selectedWorkBlocks.includes(block.id) ? "checked" : "";
+            blockTitle = `
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" class="work-block-toggle" data-block-id="${block.id}" ${isChecked}
+                           style="margin-right: 8px; cursor: pointer;">
+                    <span>${block.title}</span>
+                </label>
+            `;
+        } else {
+            blockTitle = block.title;
+        }
+
+        htmlBlocks += `<div class="receipt__group-title">${blockTitle}</div>`;
 
         block.items.forEach(item => {
             let lineTotal = 0;
@@ -461,6 +533,78 @@ function renderReceipt(model) {
             </div>
         </div>
     `;
+
+    // Привязываем обработчики к новым checkbox
+    attachWorkBlockCheckboxListeners();
+}
+
+/* =========================================================
+   ОБРАБОТЧИКИ CHECKBOX ДЛЯ ВЫБОРА РАБОТ (NORM КЛАСС)
+   ========================================================= */
+
+function attachWorkBlockCheckboxListeners() {
+    const checkboxes = document.querySelectorAll(".work-block-toggle");
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", (e) => {
+            const blockId = e.target.dataset.blockId;
+
+            if (e.target.checked) {
+                // Добавляем блок в выбранные
+                if (!selectedWorkBlocks.includes(blockId)) {
+                    selectedWorkBlocks.push(blockId);
+                }
+            } else {
+                // Убираем блок из выбранных
+                selectedWorkBlocks = selectedWorkBlocks.filter(id => id !== blockId);
+
+                // Предупреждение, если убрали b1 (осмотр)
+                if (blockId === "b1") {
+                    showInspectionWarning();
+                }
+            }
+
+            // Перерисовываем чек с новыми выбранными блоками
+            loadReceipt(currentJob);
+        });
+    });
+}
+
+/* =========================================================
+   ПРЕДУПРЕЖДЕНИЕ ПРИ ОТКЛЮЧЕНИИ ОСМОТРА (b1)
+   ========================================================= */
+
+function showInspectionWarning() {
+    const resultsBox = document.getElementById("resultsBox");
+
+    // Создаем предупреждение, если его еще нет
+    let warning = document.getElementById("inspectionWarning");
+    if (!warning) {
+        warning = document.createElement("div");
+        warning.id = "inspectionWarning";
+        warning.style.cssText = `
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 10px 0;
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.4;
+        `;
+        warning.innerHTML = `
+            <strong>⚠️ Внимание!</strong><br>
+            Без осмотра мастер не сможет подтвердить выполнимость выбранного плана работ.
+        `;
+        resultsBox.insertBefore(warning, resultsBox.firstChild);
+    }
+}
+
+function hideInspectionWarning() {
+    const warning = document.getElementById("inspectionWarning");
+    if (warning) {
+        warning.remove();
+    }
 }
 
 /* =========================================================
@@ -493,6 +637,12 @@ function initRepairClassRadios() {
     radios.forEach(radio => {
         radio.addEventListener("change", () => {
             currentClass = radio.value; // econom | standard | premium
+
+            // При переключении на NORM - сбрасываем выбор на все блоки
+            if (currentClass === "standard") {
+                selectedWorkBlocks = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"];
+            }
+
             loadReceipt(currentJob);
         });
     });
@@ -501,4 +651,52 @@ function initRepairClassRadios() {
     if (first && !first.checked) first.checked = true;
 }
 
+/* =========================================================
+   КНОПКА СБРОСА ВЫБОРА РАБОТ (NORM/PRO)
+   ========================================================= */
+
+function initResetWorkBlocksButton() {
+    const resetBtn = document.getElementById("resetWorkBlocksBtn");
+    if (!resetBtn) return;
+
+    resetBtn.addEventListener("click", () => {
+        // Сброс выбранных блоков для NORM на все блоки
+        selectedWorkBlocks = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"];
+
+        // Убираем предупреждение, если оно было
+        hideInspectionWarning();
+
+        // Перерисовываем чек
+        loadReceipt(currentJob);
+    });
+}
+
+/* =========================================================
+   КНОПКА СБРОСА ФИЛЬТРОВ (ТИП РАБОТ + СТЕНЫ)
+   ========================================================= */
+
+function initResetFiltersButton() {
+    const resetBtn = document.getElementById("resetFiltersBtn");
+    if (!resetBtn) return;
+
+    resetBtn.addEventListener("click", () => {
+        // Сброс типа работ на painting
+        currentJob = "painting";
+        document.querySelector("input[name='jobType'][value='painting']").checked = true;
+
+        // Сброс всех checkbox стен
+        document.querySelectorAll(".plane-toggle").forEach(box => {
+            box.checked = false;
+            const side = box.dataset.side;
+            const wall = document.querySelector(`.wall.${side}`);
+            if (wall) wall.classList.remove("selected");
+        });
+
+        // Сброс "Выбрать всё"
+        document.getElementById("selectAll").checked = false;
+
+        // Перерисовываем чек с новым типом работ
+        loadReceipt(currentJob);
+    });
+}
 

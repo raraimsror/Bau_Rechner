@@ -18,24 +18,19 @@
     <div class="layout">
 
         <div class="panel left-panel">
-            <h3>Фильтры</h3>
+            <h3>Фильтры <button id="resetFiltersBtn" title="Сбросить фильтры" style="background: none; border: none; cursor: pointer; font-size: 18px; margin-left: 8px;">🔃</button></h3>
 
             <div class="input-block">
                 <h4>Тип работ</h4>
 
                 <label class="radio-option">
-                    <input type="radio" name="jobType" value="painting">
+                    <input type="radio" name="jobType" value="painting" checked>
                     Покраска
                 </label>
 
                 <label class="radio-option">
                     <input type="radio" name="jobType" value="wallpaper">
                     Поклейка обоев
-                </label>
-
-                <label class="radio-option">
-                    <input type="radio" name="jobType" value="flooring">
-                    Напольное покрытие
                 </label>
             </div>
 
@@ -58,9 +53,9 @@
                 <div>
                     <h4>Размеры комнаты (см)</h4>
                     <div>
-                        <input id="xInp" type="number" value="400" placeholder="X (см)">
-                        <input id="yInp" type="number" value="300" placeholder="Y (см)">
-                        <input id="zInp" type="number" value="250" placeholder="Z (см)">
+                        <input id="xInp" type="number" value="400" placeholder="X (см)" min="1" max="10000">
+                        <input id="yInp" type="number" value="300" placeholder="Y (см)" min="1" max="10000">
+                        <input id="zInp" type="number" value="250" placeholder="Z (см)" min="1" max="10000">
                     </div>
                 </div>
             </div>
@@ -87,23 +82,23 @@
             <div class="repair-class-block">
                 <h4>Класс ремонта</h4>
 
-                <label class="radio-option">
-                    <input type="radio" name="repairClass" value="econom">
-                    Эконом
+                <label class="radio-option" title="Эконом - только материалы, клиент работает сам">
+                    <input type="radio" name="repairClass" value="econom" checked>
+                    ECO
                 </label>
 
-                <label class="radio-option">
+                <label class="radio-option" title="Стандарт - выбор работ + связь с мастерами">
                     <input type="radio" name="repairClass" value="standard">
-                    Стандарт
+                    NORM
                 </label>
 
-                <label class="radio-option">
+                <label class="radio-option" title="Премиум - полный сервис под ключ">
                     <input type="radio" name="repairClass" value="premium">
-                    Премиум
+                    PRO
                 </label>
             </div>
 
-            <h3>Результаты</h3>
+            <h3>Результаты <button id="resetWorkBlocksBtn" title="Сбросить выбор работ" style="background: none; border: none; cursor: pointer; font-size: 18px; margin-left: 8px;">🔃</button></h3>
             <div id="resultsBox"></div>
         </div>
 
