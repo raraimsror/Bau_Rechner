@@ -456,3 +456,30 @@
 ❯ pievienoju mapee 2 bildes  analizej. viena ir siis mapes projekta vizualizacija, otra- meginajums atkartot to cita servisa.
   es velos projektu palaist pasaulee jau ar demo versiju kas spetu aprekinat tami par krasosanu un tapetesanu, jo jau ir pirmie interesenti par sada veida pakalpojumu.
   vajag planu. pa punktiem un apakspunktiem, plus seciba..
+  
+  darbu izvele standarta klasee, ka vinus dabut atpakal?
+  kapec biznesa logikas faila raksti angliski?
+  КНОПКА СБРОСА К НАЧАЛЬНЫМ ЗНАЧЕНИЯМ - tu mazliet parcenties, pilnigam restartam te nevajadzeja but. seit vajag tikai NORM un PRO tadu pogu kas atkal no sakuma rada visus darba punktus. vinam nevajag maini... re man ko vajag:
+       606 +/* =========================================================                                                                                     
+      607 +   КНОПКА СБРОСА К НАЧАЛЬНЫМ ЗНАЧЕНИЯМ                                                                                                    
+      608 +   ========================================================= */                                                                                  
+      609                                                                                                                                                 
+      610 +function initResetButton() {                                                                                                              
+      611 +    const resetBtn = document.getElementById("resetBtn");                                                                                 
+      612 +    if (!resetBtn) return;                                                                                                                
+      613 +                                                                                                                                                                                                         
+      628 +        // Сброс выбранных блоков для NORM                                                                                                
+      629 +        selectedWorkBlocks = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"];                                               
+      630 +                                                                                                      
+      640 +        // Обновление комнаты и чека                                                                                                      
+      641 +        updateRoom();                                                                                                                     
+      642 +        loadReceipt(currentJob);                                                                                                          
+      643 +    });                                                                                                                                   
+      644 +}                                                                                                                          
+      640 +        // Обновление комнаты и чека                                                                                                      
+                                                                                                                   
+      642 +        loadReceipt(currentJob);                                                                                                          
+      643 +    });                                                                                                                                   
+      644 +}                                                                                                                                         
+      645 +             
+parak atri pazud bridinajums isledzot norm klasee pirmo darbu par parbaudi

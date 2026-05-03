@@ -1,4 +1,15 @@
 {
+  "alpina": {
+    "name": "Alpina Wandfarbe Raum-Weiß matt",
+    "size": 10,
+    "price": 26.99,
+    "coverage": 5.5,
+    "coats": 2,
+    "store": "OBI",
+    "url": "https://www.obi.de/",
+    "lastUpdated": "2026-05-03"
+  },
+
   "paint": {
     "coverage_m2_per_liter": 8,
     "price_per_liter": 12

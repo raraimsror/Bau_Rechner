@@ -10,6 +10,13 @@ window.addEventListener("load", () => {
     currentJob = "painting";   // тип работы
     currentClass = "econom";   // класс ремонта
 
+    // Инициализируем подсветку выбранных стен по умолчанию
+    document.querySelectorAll('.plane-toggle:checked').forEach(box => {
+        const side = box.dataset.side;
+        const wall = document.querySelector(`.wall.${side}`);
+        if (wall) wall.classList.add("selected");
+    });
+
     // Загружаем цены, затем чек
     loadPricing().then(() => {
         loadReceipt(currentJob);
@@ -211,6 +218,9 @@ document.querySelectorAll(".plane-toggle").forEach(box => {
         const side = box.dataset.side;
         const wall = document.querySelector(`.wall.${side}`);
         wall.classList.toggle("selected", box.checked);
+
+        // Пересчитываем результаты при изменении выбора
+        loadReceipt(currentJob);
     });
 });
 
@@ -276,17 +286,42 @@ vPort.addEventListener("touchend", () => {
 updateRoom();
 
 /* =========================================================
-   ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ: ПЛОЩАДЬ СТЕН (м²)
+   ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ: ПЛОЩАДЬ ВЫБРАННЫХ ПЛОСКОСТЕЙ (м²)
    ========================================================= */
-// x, y, z в см
-// Стены: 2*(x + y)*z, делим на 10 000 чтобы получить м²
 
 function getWallsAreaM2() {
     const x = +xInp.value || 0;
     const y = +yInp.value || 0;
     const z = +zInp.value || 0;
-    const areaCm2 = 2 * (x + y) * z;
-    return areaCm2 / 10000;
+
+    // Конвертируем см в м
+    const xM = x / 100;
+    const yM = y / 100;
+    const zM = z / 100;
+
+    let totalArea = 0;
+
+    // Проверяем какие плоскости отмечены и суммируем их площадь
+    document.querySelectorAll('.plane-toggle:checked').forEach(box => {
+        const side = box.dataset.side;
+
+        switch(side) {
+            case 'front':
+            case 'back':
+                totalArea += xM * zM;
+                break;
+            case 'left':
+            case 'right':
+                totalArea += yM * zM;
+                break;
+            case 'ceiling':
+            case 'floor':
+                totalArea += xM * yM;
+                break;
+        }
+    });
+
+    return totalArea;
 }
 
 /* =========================================================
@@ -332,6 +367,55 @@ function calculateTotals(model) {
 
     const area = getWallsAreaM2();
 
+    // Для крашения используем Alpina
+    if (currentJob === "painting" && pricing.alpina) {
+        const alpina = pricing.alpina;
+
+        // Формула: (площадь / покрытие) * слои * (1 + резерв)
+        const litersNeeded = (area / alpina.coverage) * alpina.coats * 1.1;
+
+        // Округляем вверх до полных 10L ведер
+        const bucketsNeeded = Math.ceil(litersNeeded / alpina.size);
+        const totalLiters = bucketsNeeded * alpina.size;
+
+        // Рассчитываем стоимость
+        const paintCost = bucketsNeeded * alpina.price;
+
+        // Для ECO класса: только материалы (краска)
+        if (currentClass === "econom") {
+            return {
+                area,
+                workTotal: 0,
+                materialTotal: paintCost,
+                equipmentTotal: 0,
+                grandTotal: paintCost,
+                paintCost,
+                litersNeeded: Math.round(litersNeeded * 10) / 10,
+                bucketsNeeded,
+                totalLiters,
+                alpina
+            };
+        }
+
+        // Для NORM и PRO: добавляем работу
+        const workRate = pricing.workRatePerM2?.[currentJob]?.[currentClass] || 0;
+        const workTotal = area * workRate;
+
+        return {
+            area,
+            workTotal,
+            materialTotal: paintCost,
+            equipmentTotal: 0,
+            grandTotal: workTotal + paintCost,
+            paintCost,
+            litersNeeded: Math.round(litersNeeded * 10) / 10,
+            bucketsNeeded,
+            totalLiters,
+            alpina
+        };
+    }
+
+    // Старая логика для обоев и других
     // Эконом: считаем только материалы (краска по м² + фиксированные материалы)
     if (currentClass === "econom") {
         const coverage = pricing.paint.coverage_m2_per_liter;
@@ -488,6 +572,27 @@ function renderReceipt(model) {
         });
     });
 
+    // Добавляем детали краски для крашения с Alpina
+    let paintDetailsHtml = "";
+    if (currentJob === "painting" && totals.alpina && totals.bucketsNeeded) {
+        const coverage = totals.totalLiters * totals.alpina.coverage / totals.alpina.coats;
+        paintDetailsHtml = `
+            <div class="receipt__group-title">Детали краски</div>
+            <div class="receipt__line">
+                <span>${totals.alpina.name}</span>
+                <span>${totals.bucketsNeeded} × ${totals.alpina.size}L</span>
+            </div>
+            <div class="receipt__line receipt__muted">
+                <span>Необходимо</span>
+                <span>${totals.litersNeeded}L</span>
+            </div>
+            <div class="receipt__line receipt__muted">
+                <span>Покрытие</span>
+                <span>${Math.round(coverage)}m²</span>
+            </div>
+        `;
+    }
+
     box.innerHTML = `
         <div class="receipt">
             <div class="receipt__title">${model.title}</div>
@@ -503,6 +608,8 @@ function renderReceipt(model) {
             </div>
 
             ${htmlBlocks}
+
+            ${paintDetailsHtml}
 
             <div class="receipt__total">
                 <div class="receipt__line">
@@ -670,12 +777,19 @@ function initResetFiltersButton() {
         currentJob = "painting";
         document.querySelector("input[name='jobType'][value='painting']").checked = true;
 
-        // Сброс всех checkbox стен
+        // Сброс checkbox на значения по умолчанию (4 стены + потолок, БЕЗ пола)
         document.querySelectorAll(".plane-toggle").forEach(box => {
-            box.checked = false;
             const side = box.dataset.side;
             const wall = document.querySelector(`.wall.${side}`);
-            if (wall) wall.classList.remove("selected");
+
+            // Отмечаем все кроме пола
+            if (side === "floor") {
+                box.checked = false;
+                if (wall) wall.classList.remove("selected");
+            } else {
+                box.checked = true;
+                if (wall) wall.classList.add("selected");
+            }
         });
 
         // Сброс "Выбрать всё"
