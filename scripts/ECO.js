@@ -48,16 +48,17 @@ function calculateEcoPainting(area, pricing) {
             equipmentTotal: 0,
             extrasTotal: 0,
             grandTotal: 0,
-            paintData: null
+            paintData: null,
+            primerData: null
         };
     }
 
-    // Используем paint.js для оптимизации вёдер
-    const paintData = window.calculatePaintQuantity
-        ? window.calculatePaintQuantity(area, pricing.alpina)
+    // Используем технологическую карту (грунтовка + краска)
+    const techCard = window.calculatePaintingTechCard
+        ? window.calculatePaintingTechCard(area, pricing)
         : null;
 
-    if (!paintData) {
+    if (!techCard || !techCard.paint) {
         return {
             area,
             items: [],
@@ -67,7 +68,8 @@ function calculateEcoPainting(area, pricing) {
             equipmentTotal: 0,
             extrasTotal: 0,
             grandTotal: 0,
-            paintData: null
+            paintData: null,
+            primerData: null
         };
     }
 
@@ -121,7 +123,8 @@ function calculateEcoPainting(area, pricing) {
         }
     ];
 
-    const materialTotal = paintData.totalCost;
+    // Материалы = грунтовка + краска
+    const materialTotal = techCard.totalCost;
     const grandTotal = materialTotal + toolsTotal + equipmentTotal + extrasTotal;
 
     return {
@@ -133,7 +136,8 @@ function calculateEcoPainting(area, pricing) {
         equipmentTotal,
         extrasTotal,
         grandTotal,
-        paintData
+        paintData: techCard.paint,
+        primerData: techCard.primer
     };
 }
 

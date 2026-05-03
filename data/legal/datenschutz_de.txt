@@ -1,0 +1,34 @@
+DATENSCHUTZERKLÄRUNG
+
+Datenschutz
+Die Nutzung dieser Berechnungssoftware erfolgt ohne Erhebung personenbezogener Daten. Es werden keine Nutzerdaten gespeichert, übertragen oder an Dritte weitergegeben.
+
+1. DATENERFASSUNG
+Bei der Nutzung dieser Anwendung werden folgende Daten NICHT erfasst:
+- Keine personenbezogenen Daten
+- Keine IP-Adressen
+- Keine Cookies
+- Keine Tracking-Mechanismen
+
+2. LOKALE BERECHNUNG
+Alle Berechnungen erfolgen lokal im Browser des Nutzers. Es findet keine Datenübertragung an externe Server statt.
+
+3. PDF-EXPORT
+Der PDF-Export wird lokal im Browser des Nutzers erstellt. Die PDF-Datei wird ausschließlich auf dem Gerät des Nutzers gespeichert und nicht an den Anbieter übermittelt.
+
+4. EXTERNE LINKS
+Diese Anwendung kann Links zu externen Websites enthalten (z.B. zu Baumärkten). Für die Datenschutzpraktiken dieser externen Websites ist der jeweilige Betreiber verantwortlich.
+
+5. IHRE RECHTE
+Da keine personenbezogenen Daten erhoben werden, entfallen die üblichen Auskunfts-, Berichtigungs- und Löschungsrechte gemäß DSGVO.
+
+6. ÄNDERUNGEN
+Diese Datenschutzerklärung kann jederzeit angepasst werden, um rechtlichen Anforderungen zu entsprechen.
+
+7. KONTAKT
+Bei Fragen zum Datenschutz wenden Sie sich bitte an:
+[IHRE E-MAIL]
+
+Stand: Mai 2026
+
+Rechtsgrundlage: DSGVO (Datenschutz-Grundverordnung) der Europäischen Union

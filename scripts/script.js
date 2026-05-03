@@ -285,7 +285,63 @@ function renderReceipt(model) {
     if (currentJob === "painting" && totals.paintData) {
         const pd = totals.paintData;
 
-        // Группируем вёдра по размеру для красивого отображения
+        paintDetailsHtml = `<div class="receipt__group-title">Детали материалов</div>`;
+
+        // Грунтовка (если есть)
+        if (totals.primerData) {
+            const primer = totals.primerData;
+
+            paintDetailsHtml += `<div style="margin-bottom: 10px;">`;
+            paintDetailsHtml += `<div class="receipt__line" style="font-weight: 600;">
+                <span>Грунтовка (обязательно)</span>
+                <span></span>
+            </div>`;
+
+            // Группируем канистры грунтовки
+            const primerGroups = {};
+            primer.cans.forEach(can => {
+                const key = `${can.name}_${can.size}L`;
+                if (!primerGroups[key]) {
+                    primerGroups[key] = {
+                        name: can.name,
+                        size: can.size,
+                        price: can.price,
+                        count: 0
+                    };
+                }
+                primerGroups[key].count++;
+            });
+
+            Object.values(primerGroups).forEach(group => {
+                paintDetailsHtml += `
+                    <div class="receipt__line">
+                        <span>${group.name} ${group.size}L</span>
+                        <span>${group.count} × ${group.price.toFixed(2)}€</span>
+                    </div>
+                `;
+            });
+
+            paintDetailsHtml += `
+                <div class="receipt__line receipt__muted">
+                    <span>Необходимо</span>
+                    <span>${primer.litersNeeded}L</span>
+                </div>
+                <div class="receipt__line receipt__muted">
+                    <span>Всего грунтовки</span>
+                    <span>${primer.totalLiters}L</span>
+                </div>
+            `;
+            paintDetailsHtml += `</div>`;
+        }
+
+        // Краска
+        paintDetailsHtml += `<div style="margin-bottom: 10px;">`;
+        paintDetailsHtml += `<div class="receipt__line" style="font-weight: 600;">
+            <span>Краска (2 слоя)</span>
+            <span></span>
+        </div>`;
+
+        // Группируем вёдра краски
         const bucketGroups = {};
         pd.buckets.forEach(bucket => {
             const key = `${bucket.name}_${bucket.size}L`;
@@ -300,9 +356,8 @@ function renderReceipt(model) {
             bucketGroups[key].count++;
         });
 
-        let bucketsHtml = "";
         Object.values(bucketGroups).forEach(group => {
-            bucketsHtml += `
+            paintDetailsHtml += `
                 <div class="receipt__line">
                     <span>${group.name} ${group.size}L</span>
                     <span>${group.count} × ${group.price.toFixed(2)}€</span>
@@ -310,9 +365,7 @@ function renderReceipt(model) {
             `;
         });
 
-        paintDetailsHtml = `
-            <div class="receipt__group-title">Детали краски</div>
-            ${bucketsHtml}
+        paintDetailsHtml += `
             <div class="receipt__line receipt__muted">
                 <span>Необходимо</span>
                 <span>${pd.litersNeeded}L</span>
@@ -322,6 +375,7 @@ function renderReceipt(model) {
                 <span>${pd.totalLiters}L</span>
             </div>
         `;
+        paintDetailsHtml += `</div>`;
     }
 
     // Добавляем детали обоев для поклейки обоев
@@ -425,6 +479,24 @@ function renderReceipt(model) {
                 ${totalSummaryHtml}
             </div>
 
+            ${currentClass === "econom" ? `
+                <button id="downloadPdfBtn" style="
+                    width: 100%;
+                    padding: 12px;
+                    margin-top: 15px;
+                    background: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background 0.3s;
+                ">
+                    📄 Скачать PDF
+                </button>
+            ` : ''}
+
             <div class="receipt__muted" style="margin-top:6px;">
                 * Эконом: только материалы + инструменты. Стандарт/Премиум: работа + материалы + оборудование.
             </div>
@@ -433,6 +505,28 @@ function renderReceipt(model) {
 
     // Привязываем обработчики к checkbox
     attachCheckboxListeners();
+
+    // Привязываем обработчик к кнопке PDF (только для ECO)
+    if (currentClass === "econom") {
+        const pdfBtn = document.getElementById("downloadPdfBtn");
+        if (pdfBtn) {
+            pdfBtn.addEventListener("click", () => {
+                if (typeof window.generateEcoPDF === 'function') {
+                    window.generateEcoPDF(totals, currentJob);
+                } else {
+                    alert('Ошибка: функция генерации PDF не загружена');
+                }
+            });
+
+            // Hover эффект
+            pdfBtn.addEventListener("mouseenter", () => {
+                pdfBtn.style.background = "#45a049";
+            });
+            pdfBtn.addEventListener("mouseleave", () => {
+                pdfBtn.style.background = "#4CAF50";
+            });
+        }
+    }
 }
 
 /* =========================================================
