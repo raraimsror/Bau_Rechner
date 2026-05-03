@@ -29,7 +29,7 @@ window.addEventListener("load", () => {
     initRepairClassRadios();
 
     // Привязка кнопок сброса
-    initResetWorkBlocksButton();
+    initResetResultsButton();
     initResetFiltersButton();
 
     // Привязка checkbox событий для пересчета
@@ -170,163 +170,49 @@ function calculateTotals(model) {
     if (!pricing) {
         return {
             area: 0,
+            items: [],
             workTotal: 0,
             materialTotal: 0,
             equipmentTotal: 0,
-            grandTotal: 0,
-            paintCost: 0,
-            litersNeeded: 0
+            grandTotal: 0
         };
     }
 
     const area = getWallsAreaM2();
 
-    // Для крашения используем Alpina с оптимизацией вёдер
-    if (currentJob === "painting" && pricing.alpina && typeof window.calculatePaintQuantity === 'function') {
-        const paintData = window.calculatePaintQuantity(area, pricing.alpina);
+    // Используем модули расчёта по классам ремонта
+    switch(currentClass) {
+        case "econom":
+            // ECO.js - только материалы + инструменты (checkbox)
+            if (typeof window.calculateEco === 'function') {
+                return window.calculateEco(currentJob, area, pricing);
+            }
+            break;
 
-        // Для ECO класса: только материалы (краска)
-        if (currentClass === "econom") {
-            return {
-                area,
-                workTotal: 0,
-                materialTotal: paintData.totalCost,
-                equipmentTotal: 0,
-                grandTotal: paintData.totalCost,
-                paintData
-            };
-        }
+        case "standard":
+            // NORM.js - материалы + работы (выбранные блоки)
+            if (typeof window.calculateNorm === 'function') {
+                return window.calculateNorm(currentJob, area, pricing);
+            }
+            break;
 
-        // Для NORM и PRO: добавляем работу
-        const workRate = pricing.workRatePerM2?.[currentJob]?.[currentClass] || 0;
-        const workTotal = area * workRate;
-
-        return {
-            area,
-            workTotal,
-            materialTotal: paintData.totalCost,
-            equipmentTotal: 0,
-            grandTotal: workTotal + paintData.totalCost,
-            paintData
-        };
+        case "premium":
+            // PRO.js - материалы + работы + оборудование (всё включено)
+            if (typeof window.calculatePro === 'function') {
+                return window.calculatePro(currentJob, area, pricing);
+            }
+            break;
     }
 
-    // Для обоев используем wallpaper.js
-    if (currentJob === "wallpaper" && pricing.wallpaper && typeof window.calculateWallpaperCost === 'function') {
-        const wpData = window.calculateWallpaperCost(area, pricing);
-
-        // Для ECO класса: только материалы (обои + клей)
-        if (currentClass === "econom") {
-            return {
-                area,
-                workTotal: 0,
-                materialTotal: wpData.totalCost,
-                equipmentTotal: 0,
-                grandTotal: wpData.totalCost,
-                wallpaperData: wpData
-            };
-        }
-
-        // Для NORM и PRO: добавляем работу
-        const workRate = pricing.workRatePerM2?.[currentJob]?.[currentClass] || 0;
-        const workTotal = area * workRate;
-
-        return {
-            area,
-            workTotal,
-            materialTotal: wpData.totalCost,
-            equipmentTotal: 0,
-            grandTotal: workTotal + wpData.totalCost,
-            wallpaperData: wpData
-        };
-    }
-
-    // Старая логика для других типов работ
-    // Эконом: считаем только материалы (краска по м² + фиксированные материалы)
-    if (currentClass === "econom") {
-        const coverage = pricing.paint.coverage_m2_per_liter;
-        const pricePerLiter = pricing.paint.price_per_liter;
-
-        const litersNeeded = coverage > 0 ? area / coverage : 0;
-        const paintCost = litersNeeded * pricePerLiter;
-
-        const mat = pricing.ecoMaterials || {};
-        const materialTotal =
-            paintCost +
-            (mat.brushes || 0) +
-            (mat.rollers || 0) +
-            (mat.tape || 0) +
-            (mat.covers || 0);
-
-        return {
-            area,
-            workTotal: 0,
-            materialTotal,
-            equipmentTotal: 0,
-            grandTotal: materialTotal,
-            paintCost,
-            litersNeeded
-        };
-    }
-
-    // Стандарт и Премиум: работа + материалы + оборудование
-    const workRate =
-        pricing.workRatePerM2?.[currentJob]?.[currentClass] || 0;
-
-    const materialRate =
-        pricing.materialRatePerM2?.[currentJob]?.[currentClass] || 0;
-
-    const equipmentTotal =
-        pricing.equipmentTotal?.[currentJob]?.[currentClass] || 0;
-
-    const workTotal = area * workRate;
-    const materialTotal = area * materialRate;
-    const grandTotal = workTotal + materialTotal + equipmentTotal;
-
+    // Fallback если модули не загружены
     return {
         area,
-        workTotal,
-        materialTotal,
-        equipmentTotal,
-        grandTotal,
-        paintCost: 0,
-        litersNeeded: 0
+        items: [],
+        workTotal: 0,
+        materialTotal: 0,
+        equipmentTotal: 0,
+        grandTotal: 0
     };
-}
-
-/* =========================================================
-   ЛОГИКА ВИДИМОСТИ БЛОКОВ ПО КЛАССУ РЕМОНТА
-   ========================================================= */
-
-const visibilityRules = {
-    econom: ["b11", "equip", "extra"],     // Эконом: материалы + оборудование (клиент работает сам)
-    standard: ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10", "b11"], // Стандарт: все работы + материалы
-    premium: "ALL"                          // Премиум: все блоки
-};
-
-// Хранилище выбранных блоков для NORM класса
-let selectedWorkBlocks = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"]; // По умолчанию все выбраны
-
-function filterBlocksForClass(model) {
-    const rules = visibilityRules[currentClass];
-
-    if (rules === "ALL") return model;
-
-    const clone = JSON.parse(JSON.stringify(model));
-
-    // Для NORM класса фильтруем по выбранным checkbox
-    if (currentClass === "standard") {
-        clone.blocks = clone.blocks.filter(block => {
-            // Материалы (b11) всегда показываем
-            if (block.id === "b11") return true;
-            // Остальные блоки - только если выбраны
-            return selectedWorkBlocks.includes(block.id);
-        });
-    } else {
-        clone.blocks = clone.blocks.filter(block => rules.includes(block.id));
-    }
-
-    return clone;
 }
 
 /* =========================================================
@@ -337,66 +223,62 @@ function renderReceipt(model) {
     const box = document.getElementById("resultsBox");
     if (!box) return;
 
-    // Фильтруем блоки по классу ремонта
-    const filtered = filterBlocksForClass(model);
-
     const totals = calculateTotals(model);
-
-    const allItems =
-        filtered.blocks.reduce((sum, block) => sum + block.items.length, 0) || 1;
-    const workPerItem = totals.workTotal / allItems;
-    const matPerItem = totals.materialTotal / allItems;
 
     let htmlBlocks = "";
 
-    filtered.blocks.forEach(block => {
-        // Для NORM класса добавляем checkbox перед заголовком блока (кроме b11 - материалы)
-        let blockTitle = block.title;
-        if (currentClass === "standard" && block.id !== "b11" && block.id.startsWith("b")) {
-            const isChecked = selectedWorkBlocks.includes(block.id) ? "checked" : "";
-            blockTitle = `
-                <label style="display: flex; align-items: center; cursor: pointer;">
-                    <input type="checkbox" class="work-block-toggle" data-block-id="${block.id}" ${isChecked}
-                           style="margin-right: 8px; cursor: pointer;">
-                    <span>${block.title}</span>
-                </label>
-            `;
-        } else {
-            blockTitle = block.title;
-        }
+    // Рендерим блоки из новой структуры (items из ECO/NORM/PRO модулей)
+    if (totals.items && totals.items.length > 0) {
+        totals.items.forEach(itemGroup => {
+            // Заголовок категории
+            htmlBlocks += `<div class="receipt__group-title">${itemGroup.category}</div>`;
 
-        htmlBlocks += `<div class="receipt__group-title">${blockTitle}</div>`;
+            // Pozīcijas ar checkbox (ECO un NORM klases)
+            if (itemGroup.lines && itemGroup.lines.length > 0) {
+                itemGroup.lines.forEach(line => {
+                    // Ja ir 'checked' lauks, tad checkbox pozīcija
+                    if (line.hasOwnProperty('checked')) {
+                        const isChecked = line.checked ? 'checked' : '';
+                        const cost = line.checked ? line.price : 0;
 
-        block.items.forEach(item => {
-            let lineTotal = 0;
+                        // Noteikt checkbox klasi (ECO vai NORM)
+                        const checkboxClass = currentClass === "econom" ? "eco-tool-toggle" : "norm-work-toggle";
+                        const dataAttr = currentClass === "econom" ? "data-tool-id" : "data-work-id";
 
-            // Эконом: только материалы, с индивидуальными ценами
-            if (currentClass === "econom") {
-                const mat = pricing.ecoMaterials || {};
+                        htmlBlocks += `
+                            <div class="receipt__line">
+                                <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                    <input type="checkbox" class="${checkboxClass}" ${dataAttr}="${line.id}" ${isChecked}
+                                           style="margin-right: 8px; cursor: pointer;">
+                                    <span style="flex: 1;">${line.name}</span>
+                                </label>
+                                <span>${cost.toFixed(2)} €</span>
+                            </div>
+                        `;
+                    }
+                    // Parastā pozīcija bez checkbox
+                    else {
+                        htmlBlocks += `
+                            <div class="receipt__line">
+                                <span>${line.name}</span>
+                                <span>${line.cost.toFixed(2)} €</span>
+                            </div>
+                        `;
+                    }
+                });
 
-                const ecoPrices = {
-                    "Краска интерьерная (TOOM)": totals.paintCost,
-                    "Кисти малярные (TOOM)": mat.brushes || 0,
-                    "Валики малярные (TOOM)": mat.rollers || 0,
-                    "Малярная лента (TOOM)": mat.tape || 0,
-                    "Защитная плёнка (TOOM)": mat.covers || 0
-                };
-
-                lineTotal = ecoPrices[item] || 0;
+                // Pievienojam starpsummu ja ir
+                if (itemGroup.hasOwnProperty('subtotal')) {
+                    htmlBlocks += `
+                        <div class="receipt__line" style="border-top: 1px solid #ddd; margin-top: 4px; padding-top: 4px; font-weight: 600;">
+                            <span>Итого ${itemGroup.category.toLowerCase()}</span>
+                            <span>${itemGroup.subtotal.toFixed(2)} €</span>
+                        </div>
+                    `;
+                }
             }
-            // Стандарт + Премиум: равномерно распределяем работу и материалы
-            else {
-                lineTotal = workPerItem + matPerItem;
-            }
-
-            htmlBlocks += `
-                <div class="receipt__line">
-                    <span>${item}</span>
-                    <span>${lineTotal.toFixed(2)} €</span>
-                </div>
-            `;
         });
-    });
+    }
 
     // Добавляем детали краски для крашения с Alpina
     let paintDetailsHtml = "";
@@ -472,6 +354,54 @@ function renderReceipt(model) {
         `;
     }
 
+    // Формируем итоговые суммы в зависимости от класса
+    let totalSummaryHtml = "";
+    if (currentClass === "econom") {
+        // Для ECO: Материалы + Инструменты + Оборудование + Дополнительно
+        totalSummaryHtml = `
+            <div class="receipt__line">
+                <span>Материалы всего</span>
+                <span>${totals.materialTotal.toFixed(2)} €</span>
+            </div>
+            <div class="receipt__line">
+                <span>Инструменты</span>
+                <span>${(totals.toolsTotal || 0).toFixed(2)} €</span>
+            </div>
+            <div class="receipt__line">
+                <span>Оборудование</span>
+                <span>${(totals.equipmentTotal || 0).toFixed(2)} €</span>
+            </div>
+            <div class="receipt__line">
+                <span>Дополнительно</span>
+                <span>${(totals.extrasTotal || 0).toFixed(2)} €</span>
+            </div>
+            <div class="receipt__line">
+                <span>ИТОГО</span>
+                <span>${totals.grandTotal.toFixed(2)} €</span>
+            </div>
+        `;
+    } else {
+        // Для NORM и PRO: Работы + Материалы + Оборудование
+        totalSummaryHtml = `
+            <div class="receipt__line">
+                <span>Работы всего</span>
+                <span>${(totals.workTotal || 0).toFixed(2)} €</span>
+            </div>
+            <div class="receipt__line">
+                <span>Материалы всего</span>
+                <span>${totals.materialTotal.toFixed(2)} €</span>
+            </div>
+            <div class="receipt__line">
+                <span>Оборудование</span>
+                <span>${(totals.equipmentTotal || 0).toFixed(2)} €</span>
+            </div>
+            <div class="receipt__line">
+                <span>ИТОГО</span>
+                <span>${totals.grandTotal.toFixed(2)} €</span>
+            </div>
+        `;
+    }
+
     box.innerHTML = `
         <div class="receipt">
             <div class="receipt__title">${model.title}</div>
@@ -492,92 +422,54 @@ function renderReceipt(model) {
             ${wallpaperDetailsHtml}
 
             <div class="receipt__total">
-                <div class="receipt__line">
-                    <span>Работы всего</span>
-                    <span>${totals.workTotal.toFixed(2)} €</span>
-                </div>
-                <div class="receipt__line">
-                    <span>Материалы всего</span>
-                    <span>${totals.materialTotal.toFixed(2)} €</span>
-                </div>
-                <div class="receipt__line">
-                    <span>Оборудование</span>
-                    <span>${totals.equipmentTotal.toFixed(2)} €</span>
-                </div>
-                <div class="receipt__line">
-                    <span>ИТОГО</span>
-                    <span>${totals.grandTotal.toFixed(2)} €</span>
-                </div>
+                ${totalSummaryHtml}
             </div>
 
             <div class="receipt__muted" style="margin-top:6px;">
-                * Эконом: только материалы. Стандарт/Премиум: работа + материалы + оборудование.
+                * Эконом: только материалы + инструменты. Стандарт/Премиум: работа + материалы + оборудование.
             </div>
         </div>
     `;
 
-    // Показываем предупреждение, если b1 не выбран в NORM классе
-    if (currentClass === "standard" && !selectedWorkBlocks.includes("b1")) {
-        const warning = document.createElement("div");
-        warning.id = "inspectionWarning";
-        warning.style.cssText = `
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: 4px;
-            padding: 12px;
-            margin: 10px 0;
-            color: #856404;
-            font-size: 14px;
-            line-height: 1.4;
-        `;
-        warning.innerHTML = `
-            <strong>⚠️ Внимание!</strong><br>
-            Без осмотра мастер не сможет подтвердить выполнимость выбранного плана работ.
-            <a href="#" onclick="returnInspectionBlock(); return false;" style="color: #856404; text-decoration: underline; margin-left: 8px; cursor: pointer;">вернуть</a>
-        `;
-        box.insertBefore(warning, box.firstChild);
-    }
-
-    // Привязываем обработчики к новым checkbox
-    attachWorkBlockCheckboxListeners();
+    // Привязываем обработчики к checkbox
+    attachCheckboxListeners();
 }
 
 /* =========================================================
-   ФУНКЦИЯ ДЛЯ ВОЗВРАТА БЛОКА b1 (ОСМОТР)
+   ОБРАБОТЧИКИ CHECKBOX
    ========================================================= */
 
-function returnInspectionBlock() {
-    // Добавляем b1 обратно в выбранные блоки
-    if (!selectedWorkBlocks.includes("b1")) {
-        selectedWorkBlocks.push("b1");
-    }
-
-    // Перерисовываем чек
-    loadReceipt(currentJob);
-}
-
-/* =========================================================
-   ОБРАБОТЧИКИ CHECKBOX ДЛЯ ВЫБОРА РАБОТ (NORM КЛАСС)
-   ========================================================= */
-
-function attachWorkBlockCheckboxListeners() {
-    const checkboxes = document.querySelectorAll(".work-block-toggle");
-
-    checkboxes.forEach(checkbox => {
+function attachCheckboxListeners() {
+    // ECO класс: checkbox для инструментов
+    const ecoCheckboxes = document.querySelectorAll(".eco-tool-toggle");
+    ecoCheckboxes.forEach(checkbox => {
         checkbox.addEventListener("change", (e) => {
-            const blockId = e.target.dataset.blockId;
+            const toolId = e.target.dataset.toolId;
+            const checked = e.target.checked;
 
-            if (e.target.checked) {
-                // Добавляем блок в выбранные
-                if (!selectedWorkBlocks.includes(blockId)) {
-                    selectedWorkBlocks.push(blockId);
-                }
-            } else {
-                // Убираем блок из выбранных
-                selectedWorkBlocks = selectedWorkBlocks.filter(id => id !== blockId);
+            // Обновляем состояние в ECO.js
+            if (typeof window.updateEcoToolSelection === 'function') {
+                window.updateEcoToolSelection(toolId, checked);
             }
 
-            // Перерисовываем чек с новыми выбранными блоками
+            // Перерисовываем чек
+            loadReceipt(currentJob);
+        });
+    });
+
+    // NORM класс: checkbox для работ
+    const normCheckboxes = document.querySelectorAll(".norm-work-toggle");
+    normCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", (e) => {
+            const workId = e.target.dataset.workId;
+            const checked = e.target.checked;
+
+            // Обновляем состояние в NORM.js
+            if (typeof window.updateNormWorkSelection === 'function') {
+                window.updateNormWorkSelection(workId, checked);
+            }
+
+            // Перерисовываем чек
             loadReceipt(currentJob);
         });
     });
@@ -613,12 +505,6 @@ function initRepairClassRadios() {
     radios.forEach(radio => {
         radio.addEventListener("change", () => {
             currentClass = radio.value; // econom | standard | premium
-
-            // При переключении на NORM - сбрасываем выбор на все блоки
-            if (currentClass === "standard") {
-                selectedWorkBlocks = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"];
-            }
-
             loadReceipt(currentJob);
         });
     });
@@ -628,16 +514,55 @@ function initRepairClassRadios() {
 }
 
 /* =========================================================
-   КНОПКА СБРОСА ВЫБОРА РАБОТ (NORM/PRO)
+   КНОПКА СБРОСА РЕЗУЛЬТАТОВ (ECO/NORM/PRO)
    ========================================================= */
 
-function initResetWorkBlocksButton() {
+function initResetResultsButton() {
     const resetBtn = document.getElementById("resetWorkBlocksBtn");
     if (!resetBtn) return;
 
     resetBtn.addEventListener("click", () => {
-        // Сброс выбранных блоков для NORM на все блоки
-        selectedWorkBlocks = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10"];
+        // Сброс для ECO класса - все инструменты выбраны, оборудование/дополнительно - нет
+        if (typeof window.selectedEcoTools !== 'undefined') {
+            window.selectedEcoTools.brushes = true;
+            window.selectedEcoTools.rollers = true;
+            window.selectedEcoTools.tape = true;
+            window.selectedEcoTools.covers = true;
+            window.selectedEcoTools.sprayGun = false;
+            window.selectedEcoTools.ledLights = false;
+            window.selectedEcoTools.sander = false;
+            window.selectedEcoTools.laser = false;
+            window.selectedEcoTools.extraTape = false;
+            window.selectedEcoTools.extraTools = false;
+            window.selectedEcoTools.safety = false;
+        }
+
+        // Сброс для NORM класса - все работы выбраны
+        if (typeof window.selectedNormWorks !== 'undefined') {
+            // Покраска
+            window.selectedNormWorks.paintInspection = true;
+            window.selectedNormWorks.paintPrep = true;
+            window.selectedNormWorks.paintPrimer = true;
+            window.selectedNormWorks.paintProtection = true;
+            window.selectedNormWorks.paintCoat1 = true;
+            window.selectedNormWorks.paintCoat2 = true;
+            window.selectedNormWorks.paintHardSpots = true;
+            window.selectedNormWorks.paintQuality = true;
+            window.selectedNormWorks.paintCleanup = true;
+            window.selectedNormWorks.paintTrash = true;
+
+            // Обои
+            window.selectedNormWorks.wpInspection = true;
+            window.selectedNormWorks.wpPrep = true;
+            window.selectedNormWorks.wpPrimer = true;
+            window.selectedNormWorks.wpProtection = true;
+            window.selectedNormWorks.wpCutting = true;
+            window.selectedNormWorks.wpHanging = true;
+            window.selectedNormWorks.wpTrimming = true;
+            window.selectedNormWorks.wpQuality = true;
+            window.selectedNormWorks.wpCleanup = true;
+            window.selectedNormWorks.wpTrash = true;
+        }
 
         // Перерисовываем чек
         loadReceipt(currentJob);
