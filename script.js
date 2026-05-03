@@ -3,8 +3,10 @@
    ========================================================= */
 
 window.addEventListener("load", () => {
-    // Небольшая пауза, чтобы DOM успел отрисоваться
-    setTimeout(updateRoom, 50);
+    // Инициализируем 3D визуализацию (из room3d.js)
+    if (typeof init3D === 'function') {
+        init3D();
+    }
 
     // Значения по умолчанию:
     currentJob = "painting";   // тип работы
@@ -29,24 +31,32 @@ window.addEventListener("load", () => {
     // Привязка кнопок сброса
     initResetWorkBlocksButton();
     initResetFiltersButton();
+
+    // Привязка checkbox событий для пересчета
+    document.querySelectorAll(".plane-toggle").forEach(box => {
+        box.addEventListener("change", () => {
+            const side = box.dataset.side;
+            const wall = document.querySelector(`.wall.${side}`);
+            wall.classList.toggle("selected", box.checked);
+            loadReceipt(currentJob);
+        });
+    });
+
+    // Привязка "Выбрать всё"
+    document.getElementById("selectAll").addEventListener("change", function () {
+        const isChecked = this.checked;
+        document.querySelectorAll(".plane-toggle").forEach(box => {
+            if (box.checked !== isChecked) {
+                box.checked = isChecked;
+                box.dispatchEvent(new Event("change"));
+            }
+        });
+    });
 });
 
 /* =========================================================
    ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
    ========================================================= */
-
-// Повороты камеры и зум
-let rx = -15, ry = 35, zoomLevel = 1;
-
-// Основные элементы 3D-сцены
-const vPort = document.getElementById("vPort");
-const room = document.getElementById("room");
-const zoomScene = document.getElementById("zoomScene");
-
-// Поля ввода размеров комнаты
-const xInp = document.getElementById("xInp");
-const yInp = document.getElementById("yInp");
-const zInp = document.getElementById("zInp");
 
 // Текущий тип работы и класс ремонта
 // job: painting | wallpaper | flooring
@@ -56,36 +66,6 @@ let currentClass = "econom";
 
 // Объект с ценами из pricing.json
 let pricing = null;
-
-/* =========================================================
-   ВАЛИДАЦИЯ ВХОДНЫХ ДАННЫХ
-   ========================================================= */
-
-function validateInput(inputElement) {
-    const value = parseFloat(inputElement.value);
-
-    // Проверка на пустое значение, ноль, отрицательные числа
-    if (!inputElement.value || isNaN(value) || value <= 0) {
-        inputElement.style.borderColor = "#ff4444";
-        return null;
-    }
-
-    // Проверка максимального значения
-    if (value > 10000) {
-        inputElement.style.borderColor = "#ff4444";
-        showError("Максимальное значение: 10000 см");
-        return null;
-    }
-
-    // Валидация прошла успешно
-    inputElement.style.borderColor = "";
-    return value;
-}
-
-function showError(message) {
-    const resultsBox = document.getElementById("resultsBox");
-    resultsBox.innerHTML = `<div style="color: #ff4444; padding: 10px; background: #fff3f3; border-radius: 4px; margin: 10px 0;">${message}</div>`;
-}
 
 /* =========================================================
    ЗАГРУЗКА ЦЕН (pricing.json)
@@ -103,193 +83,16 @@ async function loadPricing() {
 }
 
 /* =========================================================
-   ОБНОВЛЕНИЕ ГЕОМЕТРИИ КОМНАТЫ
-   ========================================================= */
-
-function updateRoom() {
-    // Валидация входных данных
-    const x = validateInput(xInp);
-    const y = validateInput(yInp);
-    const z = validateInput(zInp);
-
-    if (!x || !y || !z) return; // Если валидация не прошла, не обновляем
-
-    const maxDim = Math.max(x, y, z);
-    const scale = 400 / maxDim;
-
-    const sx = x * scale;
-    const sy = y * scale;
-    const sz = z * scale;
-
-    const walls = [
-        { s: ".front",   w: sx, h: sz, t: `translate(-50%,-50%) translateZ(${sy / 2}px)` },
-        { s: ".back",    w: sx, h: sz, t: `translate(-50%,-50%) translateZ(${-sy / 2}px) rotateY(180deg)` },
-        { s: ".left",    w: sy, h: sz, t: `translate(-50%,-50%) translateX(${-sx / 2}px) rotateY(-90deg)` },
-        { s: ".right",   w: sy, h: sz, t: `translate(-50%,-50%) translateX(${sx / 2}px) rotateY(90deg)` },
-        { s: ".floor",   w: sx, h: sy, t: `translate(-50%,-50%) translateY(${sz / 2}px) rotateX(90deg)` },
-        { s: ".ceiling", w: sx, h: sy, t: `translate(-50%,-50%) translateY(${-sz / 2}px) rotateX(-90deg)` }
-    ];
-
-    walls.forEach(cfg => {
-        const el = document.querySelector(cfg.s);
-        el.style.width = cfg.w + "px";
-        el.style.height = cfg.h + "px";
-        el.style.transform = cfg.t;
-    });
-
-    updateOpacity();
-}
-
-/* =========================================================
-   ПРОЗРАЧНОСТЬ СТЕН В ЗАВИСИМОСТИ ОТ УГЛА КАМЕРЫ
-   ========================================================= */
-
-function updateOpacity() {
-    const angle = ((ry % 360) + 360) % 360;
-
-    document.querySelectorAll(".wall").forEach(w => {
-        const side = w.dataset.side;
-        let op = 0.95;
-
-        if (side === "front"  && (angle > 315 || angle < 45))  op = 0.05;
-        if (side === "right"  && angle >= 225 && angle < 315)  op = 0.05;
-        if (side === "back"   && angle >= 135 && angle < 225)  op = 0.05;
-        if (side === "left"   && angle >= 45  && angle < 135)  op = 0.05;
-        if (side === "ceiling" && rx < 0)                      op = 0.2;
-
-        w.style.opacity = op;
-    });
-}
-
-/* =========================================================
-   ВРАЩЕНИЕ МЫШЬЮ + ЗАЩИТА ОТ ВЫДЕЛЕНИЯ
-   ========================================================= */
-
-let drag = false, px, py;
-
-vPort.onmousedown = e => {
-    drag = true;
-    document.body.classList.add("noselect");
-    px = e.clientX;
-    py = e.clientY;
-};
-
-window.onmouseup = () => {
-    drag = false;
-    document.body.classList.remove("noselect");
-};
-
-window.onmousemove = e => {
-    if (!drag) return;
-
-    ry += (e.clientX - px) * 0.4;
-    rx -= (e.clientY - py) * 0.4;
-    rx = Math.max(-60, Math.min(60, rx));
-
-    room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-
-    px = e.clientX;
-    py = e.clientY;
-
-    updateOpacity();
-};
-
-/* =========================================================
-   ВЫБОР ВСЕХ ПОВЕРХНОСТЕЙ (ЧЕКБОКСЫ)
-   ========================================================= */
-
-document.getElementById("selectAll").addEventListener("change", function () {
-    const isChecked = this.checked;
-
-    document.querySelectorAll(".plane-toggle").forEach(box => {
-        if (box.checked !== isChecked) {
-            box.checked = isChecked;
-            box.dispatchEvent(new Event("change"));
-        }
-    });
-});
-
-/* =========================================================
-   ПОДСВЕТКА ВЫБРАННЫХ СТЕН
-   ========================================================= */
-
-document.querySelectorAll(".plane-toggle").forEach(box => {
-    box.addEventListener("change", () => {
-        const side = box.dataset.side;
-        const wall = document.querySelector(`.wall.${side}`);
-        wall.classList.toggle("selected", box.checked);
-
-        // Пересчитываем результаты при изменении выбора
-        loadReceipt(currentJob);
-    });
-});
-
-/* =========================================================
-   ЗУМ КОЛЕСОМ МЫШИ
-   ========================================================= */
-
-vPort.onwheel = e => {
-    e.preventDefault();
-    zoomLevel += e.deltaY * -0.001;
-    zoomLevel = Math.max(0.5, Math.min(2, zoomLevel));
-    zoomScene.style.transform = `scale(${zoomLevel})`;
-};
-
-/* =========================================================
-   ОБНОВЛЕНИЕ КОМНАТЫ ПРИ ИЗМЕНЕНИИ РАЗМЕРОВ
-   ========================================================= */
-
-[xInp, yInp, zInp].forEach(el => el.oninput = () => {
-    updateRoom();
-    // При изменении размеров сразу пересчитываем чек
-    loadReceipt(currentJob);
-});
-
-/* =========================================================
-   TOUCH-ВРАЩЕНИЕ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
-   ========================================================= */
-
-vPort.addEventListener("touchstart", (e) => {
-    const t = e.touches[0];
-    drag = true;
-    px = t.clientX;
-    py = t.clientY;
-    document.body.classList.add("noselect");
-});
-
-vPort.addEventListener("touchmove", (e) => {
-    if (!drag) return;
-
-    const t = e.touches[0];
-
-    ry += (t.clientX - px) * 0.4;
-    rx -= (t.clientY - py) * 0.4;
-    rx = Math.max(-60, Math.min(60, rx));
-
-    room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-
-    px = t.clientX;
-    py = t.clientY;
-
-    updateOpacity();
-});
-
-vPort.addEventListener("touchend", () => {
-    drag = false;
-    document.body.classList.remove("noselect");
-});
-
-/* =========================================================
-   НАЧАЛЬНАЯ ИНИЦИАЛИЗАЦИЯ КОМНАТЫ
-   ========================================================= */
-
-updateRoom();
-
-/* =========================================================
    ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ: ПЛОЩАДЬ ВЫБРАННЫХ ПЛОСКОСТЕЙ (м²)
    ========================================================= */
 
 function getWallsAreaM2() {
+    // Получаем input элементы из room3d.js
+    const inputs = window.getInputElements ? window.getInputElements() : {};
+    const xInp = inputs.xInp || document.getElementById("xInp");
+    const yInp = inputs.yInp || document.getElementById("yInp");
+    const zInp = inputs.zInp || document.getElementById("zInp");
+
     const x = +xInp.value || 0;
     const y = +yInp.value || 0;
     const z = +zInp.value || 0;
