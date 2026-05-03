@@ -179,10 +179,26 @@ function setupTouchControls() {
    INPUT LISTENERS
    ========================================================= */
 
+// Debounce таймер для пересчёта
+let recalculateTimer = null;
+
 function setupInputListeners() {
     [xInp, yInp, zInp].forEach(el => {
         el.oninput = () => {
+            // Обновляем 3D сразу
             updateRoom();
+
+            // Пересчитываем чек с задержкой 1.5 секунды
+            if (recalculateTimer) {
+                clearTimeout(recalculateTimer);
+            }
+
+            recalculateTimer = setTimeout(() => {
+                // Вызываем функцию пересчёта из script.js
+                if (typeof window.recalculateReceipt === 'function') {
+                    window.recalculateReceipt();
+                }
+            }, 1500);
         };
     });
 }
