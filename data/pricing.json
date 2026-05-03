@@ -11,11 +11,15 @@
   },
 
   "wallpaper": {
+    "name": "Erfurt Rauhfaser-Tapete Classico",
     "rollWidth": 0.53,
-    "rollLength": 10,
-    "rollPrice": 15.99,
-    "gluePerRoll": 0.2,
-    "gluePrice": 8.50,
+    "rollLength": 20,
+    "rollArea": 10.6,
+    "rollPrice": 8.79,
+    "glueName": "Tapetenkleister Spezial",
+    "glueWeight": 0.2,
+    "glueCoverage": 22.5,
+    "gluePrice": 4.99,
     "store": "TOOM",
     "url": "https://toom.lv/",
     "lastUpdated": "2026-05-03"

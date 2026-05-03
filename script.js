@@ -430,15 +430,20 @@ function renderReceipt(model) {
     let wallpaperDetailsHtml = "";
     if (currentJob === "wallpaper" && totals.wallpaperData) {
         const wp = totals.wallpaperData;
+        const wpInfo = pricing.wallpaper;
         wallpaperDetailsHtml = `
             <div class="receipt__group-title">Детали обоев</div>
             <div class="receipt__line">
-                <span>Обои (0.53×10м)</span>
+                <span>${wpInfo.name}</span>
                 <span>${wp.rolls} рулонов</span>
             </div>
+            <div class="receipt__line receipt__muted">
+                <span>Размер рулона</span>
+                <span>${wpInfo.rollLength}м × ${wpInfo.rollWidth}м</span>
+            </div>
             <div class="receipt__line">
-                <span>Клей для обоев</span>
-                <span>${wp.glue} кг</span>
+                <span>${wpInfo.glueName}</span>
+                <span>${wp.gluePackages} × ${wpInfo.glueWeight * 1000}г</span>
             </div>
             <div class="receipt__line receipt__muted">
                 <span>Стоимость обоев</span>

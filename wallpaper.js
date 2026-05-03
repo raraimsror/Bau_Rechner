@@ -7,14 +7,13 @@
    КОНСТАНТЫ
    ========================================================= */
 
-// Стандартный рулон обоев
+// Стандартный рулон обоев Erfurt Rauhfaser-Tapete Classico
 const ROLL_WIDTH = 0.53;   // м (53 см)
-const ROLL_LENGTH = 10;     // м
-const ROLL_AREA = ROLL_WIDTH * ROLL_LENGTH; // 5.3 м²
+const ROLL_LENGTH = 20;     // м
+const ROLL_AREA = 10.6;     // м² (20м × 0.53м)
 
 // Резервы
 const RESERVE_PERCENT = 0.10;  // 10% резерв на обрезки
-const RAPPORT_PERCENT = 0.05;  // 5% на подгонку рапорта
 
 /* =========================================================
    РАСЧЁТ КОЛИЧЕСТВА РУЛОНОВ
@@ -28,8 +27,9 @@ const RAPPORT_PERCENT = 0.05;  // 5% на подгонку рапорта
 function calculateWallpaperRolls(area) {
     if (!area || area <= 0) return 0;
 
-    // Формула: (площадь / площадь_рулона) × (1 + резерв + рапорт)
-    const totalReserve = 1 + RESERVE_PERCENT + RAPPORT_PERCENT;
+    // Формула: (площадь / площадь_рулона) × (1 + резерв)
+    // Без рапорта, так как Erfurt Rauhfaser без рисунка
+    const totalReserve = 1 + RESERVE_PERCENT;
     const rolls = (area / ROLL_AREA) * totalReserve;
 
     // Округляем вверх до целого рулона
@@ -42,15 +42,29 @@ function calculateWallpaperRolls(area) {
 
 /**
  * Рассчитывает количество клея для обоев
- * @param {number} rolls - Количество рулонов
- * @returns {number} - Количество клея в кг
+ * @param {number} area - Площадь стен в м²
+ * @param {object} pricing - Объект с ценами из pricing.json
+ * @returns {object} - { packages, totalWeight }
  */
-function calculateWallpaperGlue(rolls) {
-    if (!rolls || rolls <= 0) return 0;
+function calculateWallpaperGlue(area, pricing) {
+    if (!area || area <= 0 || !pricing || !pricing.wallpaper) {
+        return { packages: 0, totalWeight: 0 };
+    }
 
-    // Примерно 200г клея на 1 рулон
-    const gluePerRoll = 0.2; // кг
-    return rolls * gluePerRoll;
+    const wp = pricing.wallpaper;
+
+    // Tapetenkleister Spezial 200g покрывает 20-25м² (берём среднее 22.5м²)
+    const glueCoverage = wp.glueCoverage || 22.5; // м² на 200g
+    const glueWeight = wp.glueWeight || 0.2; // кг (200g)
+
+    // Сколько упаковок нужно
+    const packagesNeeded = Math.ceil(area / glueCoverage);
+    const totalWeight = packagesNeeded * glueWeight;
+
+    return {
+        packages: packagesNeeded,
+        totalWeight: parseFloat(totalWeight.toFixed(2))
+    };
 }
 
 /* =========================================================
@@ -67,7 +81,8 @@ function calculateWallpaperCost(area, pricing) {
     if (!pricing || !pricing.wallpaper) {
         return {
             rolls: 0,
-            glue: 0,
+            gluePackages: 0,
+            glueWeight: 0,
             rollCost: 0,
             glueCost: 0,
             totalCost: 0
@@ -76,15 +91,16 @@ function calculateWallpaperCost(area, pricing) {
 
     const wp = pricing.wallpaper;
     const rolls = calculateWallpaperRolls(area);
-    const glue = calculateWallpaperGlue(rolls);
+    const glueData = calculateWallpaperGlue(area, pricing);
 
     const rollCost = rolls * wp.rollPrice;
-    const glueCost = glue * wp.gluePrice;
+    const glueCost = glueData.packages * wp.gluePrice;
     const totalCost = rollCost + glueCost;
 
     return {
         rolls,
-        glue: parseFloat(glue.toFixed(2)),
+        gluePackages: glueData.packages,
+        glueWeight: glueData.totalWeight,
         rollCost: parseFloat(rollCost.toFixed(2)),
         glueCost: parseFloat(glueCost.toFixed(2)),
         totalCost: parseFloat(totalCost.toFixed(2))
