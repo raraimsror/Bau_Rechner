@@ -170,33 +170,19 @@ function calculateTotals(model) {
 
     const area = getWallsAreaM2();
 
-    // Для крашения используем Alpina
-    if (currentJob === "painting" && pricing.alpina) {
-        const alpina = pricing.alpina;
-
-        // Формула: (площадь / покрытие) * слои * (1 + резерв)
-        const litersNeeded = (area / alpina.coverage) * alpina.coats * 1.1;
-
-        // Округляем вверх до полных 10L ведер
-        const bucketsNeeded = Math.ceil(litersNeeded / alpina.size);
-        const totalLiters = bucketsNeeded * alpina.size;
-
-        // Рассчитываем стоимость
-        const paintCost = bucketsNeeded * alpina.price;
+    // Для крашения используем Alpina с оптимизацией вёдер
+    if (currentJob === "painting" && pricing.alpina && typeof window.calculatePaintQuantity === 'function') {
+        const paintData = window.calculatePaintQuantity(area, pricing.alpina);
 
         // Для ECO класса: только материалы (краска)
         if (currentClass === "econom") {
             return {
                 area,
                 workTotal: 0,
-                materialTotal: paintCost,
+                materialTotal: paintData.totalCost,
                 equipmentTotal: 0,
-                grandTotal: paintCost,
-                paintCost,
-                litersNeeded: Math.round(litersNeeded * 10) / 10,
-                bucketsNeeded,
-                totalLiters,
-                alpina
+                grandTotal: paintData.totalCost,
+                paintData
             };
         }
 
@@ -207,14 +193,10 @@ function calculateTotals(model) {
         return {
             area,
             workTotal,
-            materialTotal: paintCost,
+            materialTotal: paintData.totalCost,
             equipmentTotal: 0,
-            grandTotal: workTotal + paintCost,
-            paintCost,
-            litersNeeded: Math.round(litersNeeded * 10) / 10,
-            bucketsNeeded,
-            totalLiters,
-            alpina
+            grandTotal: workTotal + paintData.totalCost,
+            paintData
         };
     }
 
@@ -407,21 +389,44 @@ function renderReceipt(model) {
 
     // Добавляем детали краски для крашения с Alpina
     let paintDetailsHtml = "";
-    if (currentJob === "painting" && totals.alpina && totals.bucketsNeeded) {
-        const coverage = totals.totalLiters * totals.alpina.coverage / totals.alpina.coats;
+    if (currentJob === "painting" && totals.paintData) {
+        const pd = totals.paintData;
+
+        // Группируем вёдра по размеру для красивого отображения
+        const bucketGroups = {};
+        pd.buckets.forEach(bucket => {
+            const key = `${bucket.name}_${bucket.size}L`;
+            if (!bucketGroups[key]) {
+                bucketGroups[key] = {
+                    name: bucket.name,
+                    size: bucket.size,
+                    price: bucket.price,
+                    count: 0
+                };
+            }
+            bucketGroups[key].count++;
+        });
+
+        let bucketsHtml = "";
+        Object.values(bucketGroups).forEach(group => {
+            bucketsHtml += `
+                <div class="receipt__line">
+                    <span>${group.name} ${group.size}L</span>
+                    <span>${group.count} × ${group.price.toFixed(2)}€</span>
+                </div>
+            `;
+        });
+
         paintDetailsHtml = `
             <div class="receipt__group-title">Детали краски</div>
-            <div class="receipt__line">
-                <span>${totals.alpina.name}</span>
-                <span>${totals.bucketsNeeded} × ${totals.alpina.size}L</span>
-            </div>
+            ${bucketsHtml}
             <div class="receipt__line receipt__muted">
                 <span>Необходимо</span>
-                <span>${totals.litersNeeded}L</span>
+                <span>${pd.litersNeeded}L</span>
             </div>
             <div class="receipt__line receipt__muted">
-                <span>Покрытие</span>
-                <span>${Math.round(coverage)}m²</span>
+                <span>Всего краски</span>
+                <span>${pd.totalLiters}L</span>
             </div>
         `;
     }

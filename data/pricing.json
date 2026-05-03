@@ -1,14 +1,36 @@
 {
-  "alpina": {
-    "name": "Alpina Wandfarbe Raum-Weiß matt",
-    "size": 10,
-    "price": 26.99,
-    "coverage": 5.5,
-    "coats": 2,
-    "store": "OBI",
-    "url": "https://www.obi.de/",
-    "lastUpdated": "2026-05-03"
-  },
+  "alpina": [
+    {
+      "name": "Alpina Wandfarbe DIN-EN Weiß matt",
+      "size": 2.5,
+      "price": 23.99,
+      "coverage": 6,
+      "coats": 2,
+      "store": "OBI",
+      "url": "https://www.obi.de/",
+      "lastUpdated": "2026-05-03"
+    },
+    {
+      "name": "Alpina Wandfarbe DIN-EN Weiß matt",
+      "size": 5,
+      "price": 32.99,
+      "coverage": 6,
+      "coats": 2,
+      "store": "OBI",
+      "url": "https://www.obi.de/",
+      "lastUpdated": "2026-05-03"
+    },
+    {
+      "name": "Alpinaweiß Das Original matt",
+      "size": 25,
+      "price": 117.99,
+      "coverage": 8.48,
+      "coats": 2,
+      "store": "OBI",
+      "url": "https://www.obi.de/",
+      "lastUpdated": "2026-05-03"
+    }
+  ],
 
   "wallpaper": {
     "name": "Erfurt Rauhfaser-Tapete Classico",
