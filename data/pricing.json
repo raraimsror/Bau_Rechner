@@ -10,6 +10,17 @@
     "lastUpdated": "2026-05-03"
   },
 
+  "wallpaper": {
+    "rollWidth": 0.53,
+    "rollLength": 10,
+    "rollPrice": 15.99,
+    "gluePerRoll": 0.2,
+    "gluePrice": 8.50,
+    "store": "TOOM",
+    "url": "https://toom.lv/",
+    "lastUpdated": "2026-05-03"
+  },
+
   "paint": {
     "coverage_m2_per_liter": 8,
     "price_per_liter": 12

@@ -218,7 +218,37 @@ function calculateTotals(model) {
         };
     }
 
-    // Старая логика для обоев и других
+    // Для обоев используем wallpaper.js
+    if (currentJob === "wallpaper" && pricing.wallpaper && typeof window.calculateWallpaperCost === 'function') {
+        const wpData = window.calculateWallpaperCost(area, pricing);
+
+        // Для ECO класса: только материалы (обои + клей)
+        if (currentClass === "econom") {
+            return {
+                area,
+                workTotal: 0,
+                materialTotal: wpData.totalCost,
+                equipmentTotal: 0,
+                grandTotal: wpData.totalCost,
+                wallpaperData: wpData
+            };
+        }
+
+        // Для NORM и PRO: добавляем работу
+        const workRate = pricing.workRatePerM2?.[currentJob]?.[currentClass] || 0;
+        const workTotal = area * workRate;
+
+        return {
+            area,
+            workTotal,
+            materialTotal: wpData.totalCost,
+            equipmentTotal: 0,
+            grandTotal: workTotal + wpData.totalCost,
+            wallpaperData: wpData
+        };
+    }
+
+    // Старая логика для других типов работ
     // Эконом: считаем только материалы (краска по м² + фиксированные материалы)
     if (currentClass === "econom") {
         const coverage = pricing.paint.coverage_m2_per_liter;
@@ -396,6 +426,31 @@ function renderReceipt(model) {
         `;
     }
 
+    // Добавляем детали обоев для поклейки обоев
+    let wallpaperDetailsHtml = "";
+    if (currentJob === "wallpaper" && totals.wallpaperData) {
+        const wp = totals.wallpaperData;
+        wallpaperDetailsHtml = `
+            <div class="receipt__group-title">Детали обоев</div>
+            <div class="receipt__line">
+                <span>Обои (0.53×10м)</span>
+                <span>${wp.rolls} рулонов</span>
+            </div>
+            <div class="receipt__line">
+                <span>Клей для обоев</span>
+                <span>${wp.glue} кг</span>
+            </div>
+            <div class="receipt__line receipt__muted">
+                <span>Стоимость обоев</span>
+                <span>${wp.rollCost.toFixed(2)} €</span>
+            </div>
+            <div class="receipt__line receipt__muted">
+                <span>Стоимость клея</span>
+                <span>${wp.glueCost.toFixed(2)} €</span>
+            </div>
+        `;
+    }
+
     box.innerHTML = `
         <div class="receipt">
             <div class="receipt__title">${model.title}</div>
@@ -413,6 +468,7 @@ function renderReceipt(model) {
             ${htmlBlocks}
 
             ${paintDetailsHtml}
+            ${wallpaperDetailsHtml}
 
             <div class="receipt__total">
                 <div class="receipt__line">
@@ -434,7 +490,7 @@ function renderReceipt(model) {
             </div>
 
             <div class="receipt__muted" style="margin-top:6px;">
-                * Эконом: только материалы (краска по м² + комплект TOOM). Стандарт/Премиум: работа + материалы + оборудование.
+                * Эконом: только материалы. Стандарт/Премиум: работа + материалы + оборудование.
             </div>
         </div>
     `;
