@@ -21,6 +21,16 @@ function generateEcoPDF(totals, jobType) {
 
     // ========== SEITE 1: BERECHNUNG ==========
 
+    // Logo pievienošana
+    try {
+        const logoImg = new Image();
+        logoImg.src = 'pics/Logo-pdf.png';
+        // Pievienojam logo kreisajā pusē
+        doc.addImage(logoImg, 'PNG', 15, 10, 40, 20);
+    } catch (e) {
+        console.log('Logo nevarēja ielādēt:', e);
+    }
+
     // Überschrift
     doc.setFontSize(18);
     doc.setFont("helvetica", "bold");
