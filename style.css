@@ -325,7 +325,7 @@ header {
     }
 
     #zoomScene {
-        transform: scale(0.75);
+        transform: scale(0.6);
         transform-origin: center center;
     }
 
