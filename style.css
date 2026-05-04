@@ -319,9 +319,10 @@ header {
     }
 
     .viewport {
-        width: 100%;
+        width: 75%;
         height: 300px;
         max-width: none;
+        margin: 0 auto;
     }
 
     .xyz_value_inputs {
