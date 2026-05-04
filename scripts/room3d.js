@@ -31,6 +31,32 @@ function init3D() {
     setupWheelZoom();
     setupTouchControls();
     setupInputListeners();
+
+    // Mobile responsive scaling
+    adjustMobileScale();
+    window.addEventListener('resize', adjustMobileScale);
+    window.addEventListener('orientationchange', adjustMobileScale);
+}
+
+/* =========================================================
+   MOBILE RESPONSIVE SCALING
+   ========================================================= */
+
+function adjustMobileScale() {
+    if (window.innerWidth <= 768) {
+        const viewportWidth = vPort.offsetWidth;
+        const viewportHeight = vPort.offsetHeight;
+
+        // Calculate scale to fit 75% of viewport
+        const targetSize = Math.min(viewportWidth, viewportHeight) * 0.75;
+        const currentSize = 400; // Base size from updateRoom scale calculation
+        const mobileScale = targetSize / currentSize;
+
+        zoomScene.style.transform = `scale(${mobileScale})`;
+    } else {
+        // Desktop - reset to zoomLevel
+        zoomScene.style.transform = `scale(${zoomLevel})`;
+    }
 }
 
 /* =========================================================

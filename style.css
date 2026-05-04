@@ -330,19 +330,3 @@ header {
     }
 }
 
-/* Portrait orientation - larger scale */
-@media (max-width: 768px) and (orientation: portrait) {
-    #zoomScene {
-        transform: scale(0.75);
-        transform-origin: center center;
-    }
-}
-
-/* Landscape orientation - smaller scale */
-@media (max-width: 768px) and (orientation: landscape) {
-    #zoomScene {
-        transform: scale(0.5);
-        transform-origin: center center;
-    }
-}
-
