@@ -46,11 +46,21 @@ function adjustMobileScale() {
     if (window.innerWidth <= 768) {
         const viewportWidth = vPort.offsetWidth;
         const viewportHeight = vPort.offsetHeight;
+        const minDim = Math.min(viewportWidth, viewportHeight);
 
-        // Calculate scale to fit 75% of viewport
-        const targetSize = Math.min(viewportWidth, viewportHeight) * 0.75;
-        const currentSize = 400; // Base size from updateRoom scale calculation
-        const mobileScale = targetSize / currentSize;
+        // Get actual room dimensions from inputs
+        const x = +xInp.value || 400;
+        const y = +yInp.value || 300;
+        const z = +zInp.value || 250;
+
+        // Calculate actual rendered size
+        const maxDim = Math.max(x, y, z);
+        const roomScale = 400 / maxDim;
+        const actualSize = Math.max(x * roomScale, y * roomScale, z * roomScale);
+
+        // Target 75% of viewport's smallest dimension
+        const targetSize = minDim * 0.75;
+        const mobileScale = targetSize / actualSize;
 
         zoomScene.style.transform = `scale(${mobileScale})`;
     } else {
