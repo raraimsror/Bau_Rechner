@@ -324,6 +324,10 @@ header {
         max-width: none;
     }
 
+    #zoomScene {
+        transform: scale(0.75);
+    }
+
     .xyz_value_inputs {
         order: -1;
         width: 100%;
