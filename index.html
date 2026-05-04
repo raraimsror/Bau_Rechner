@@ -249,17 +249,30 @@
         function adjustStrategy6() {
             const viewport = document.getElementById('test6');
             const scene = document.getElementById('scene6');
-            if (!viewport || !scene) return;
+            const room = document.getElementById('room6');
+            if (!viewport || !scene || !room) return;
 
             const vw = viewport.offsetWidth;
             const vh = viewport.offsetHeight;
             const minDim = Math.min(vw, vh);
 
+            // Get actual room dimensions from inputs
+            const x = +document.getElementById('x6').value || 400;
+            const y = +document.getElementById('y6').value || 300;
+            const z = +document.getElementById('z6').value || 250;
+
+            // Calculate actual rendered size
+            const maxDim = Math.max(x, y, z);
+            const roomScale = 400 / maxDim;
+            const actualSize = Math.max(x * roomScale, y * roomScale, z * roomScale);
+
+            // Target 75% of viewport's smallest dimension
             const targetSize = minDim * 0.75;
-            const baseSize = 300;
-            const scale = targetSize / baseSize;
+            const scale = targetSize / actualSize;
 
             scene.style.transform = `scale(${scale})`;
+
+            console.log(`Viewport: ${vw}x${vh}, Room: ${x}x${y}x${z}, ActualSize: ${actualSize.toFixed(0)}, Scale: ${scale.toFixed(2)}`);
         }
 
         adjustStrategy6();
