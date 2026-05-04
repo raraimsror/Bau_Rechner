@@ -326,6 +326,7 @@ header {
 
     #zoomScene {
         transform: scale(0.75);
+        transform-origin: center center;
     }
 
     .xyz_value_inputs {
