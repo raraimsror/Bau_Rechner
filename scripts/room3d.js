@@ -143,73 +143,35 @@ function setupWheelZoom() {
    TOUCH УПРАВЛЕНИЕ
    ========================================================= */
 
-let initialPinchDistance = null;
-let initialZoomLevel = 1;
-
 function setupTouchControls() {
     vPort.addEventListener("touchstart", (e) => {
-        if (e.touches.length === 1) {
-            // Один палец - вращение
-            const t = e.touches[0];
-            drag = true;
-            px = t.clientX;
-            py = t.clientY;
-            document.body.classList.add("noselect");
-        } else if (e.touches.length === 2) {
-            // Два пальца - zoom
-            e.preventDefault();
-            drag = false;
-            const dx = e.touches[0].clientX - e.touches[1].clientX;
-            const dy = e.touches[0].clientY - e.touches[1].clientY;
-            initialPinchDistance = Math.sqrt(dx * dx + dy * dy);
-            initialZoomLevel = zoomLevel;
-            document.body.classList.add("noselect");
-        }
+        const t = e.touches[0];
+        drag = true;
+        px = t.clientX;
+        py = t.clientY;
+        document.body.classList.add("noselect");
     });
 
     vPort.addEventListener("touchmove", (e) => {
-        if (e.touches.length === 1 && drag) {
-            // Вращение одним пальцем
-            const t = e.touches[0];
+        if (!drag) return;
 
-            ry += (t.clientX - px) * 0.4;
-            rx -= (t.clientY - py) * 0.4;
-            rx = Math.max(-60, Math.min(60, rx));
+        const t = e.touches[0];
 
-            room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+        ry += (t.clientX - px) * 0.4;
+        rx -= (t.clientY - py) * 0.4;
+        rx = Math.max(-60, Math.min(60, rx));
 
-            px = t.clientX;
-            py = t.clientY;
+        room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
 
-            updateOpacity();
-        } else if (e.touches.length === 2 && initialPinchDistance) {
-            // Pinch-to-zoom двумя пальцами
-            e.preventDefault();
-            const dx = e.touches[0].clientX - e.touches[1].clientX;
-            const dy = e.touches[0].clientY - e.touches[1].clientY;
-            const currentDistance = Math.sqrt(dx * dx + dy * dy);
+        px = t.clientX;
+        py = t.clientY;
 
-            const scale = currentDistance / initialPinchDistance;
-            zoomLevel = initialZoomLevel * scale;
-            zoomLevel = Math.max(0.5, Math.min(2, zoomLevel));
-
-            zoomScene.style.transform = `scale(${zoomLevel})`;
-        }
+        updateOpacity();
     });
 
-    vPort.addEventListener("touchend", (e) => {
-        if (e.touches.length === 0) {
-            drag = false;
-            initialPinchDistance = null;
-            document.body.classList.remove("noselect");
-        } else if (e.touches.length === 1) {
-            // Остался один палец - переключаемся на вращение
-            initialPinchDistance = null;
-            const t = e.touches[0];
-            drag = true;
-            px = t.clientX;
-            py = t.clientY;
-        }
+    vPort.addEventListener("touchend", () => {
+        drag = false;
+        document.body.classList.remove("noselect");
     });
 }
 
