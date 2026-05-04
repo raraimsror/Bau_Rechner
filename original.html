@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RemontExpert 3D Pro - Русская версия</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- jsPDF библиотека для PDF экспорта (локальная версия) -->
+    <script src="libs/jspdf.umd.min.js"></script>
+    <script src="scripts/room3d.js" defer></script>
+    <script src="scripts/paint.js" defer></script>
+    <script src="scripts/wallpaper.js" defer></script>
+    <script src="scripts/tech-card.js" defer></script>
+    <script src="scripts/ECO.js" defer></script>
+    <script src="scripts/NORM.js" defer></script>
+    <script src="scripts/PRO.js" defer></script>
+    <script src="scripts/script.js" defer></script>
+    <script src="scripts/pdf-export.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+                <img src="pics/Logo.png" alt="RemontExpert Logo" style="height: 40px;">
+                <span>RemontExpert 3D</span>
+            </a>
+        </div>
+        <a href="#" class="login-btn">Вход / Регистрация</a>
+    </header>
+
+    <div class="layout">
+
+        <div class="panel left-panel">
+            <h3>Фильтры <button id="resetFiltersBtn" title="Сбросить фильтры" style="background: none; border: none; cursor: pointer; font-size: 18px; margin-left: 8px;">🔃</button></h3>
+
+            <div class="input-block">
+                <h4>Тип работ</h4>
+
+                <label class="radio-option">
+                    <input type="radio" name="jobType" value="painting" checked>
+                    Покраска
+                </label>
+
+                <label class="radio-option">
+                    <input type="radio" name="jobType" value="wallpaper">
+                    Поклейка обоев
+                </label>
+            </div>
+
+            <div class="input-block">
+                <label><input type="checkbox" id="selectAll"> Выбрать всё</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="front" checked> Передняя стена</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="back" checked> Задняя стена</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="left" checked> Левая стена</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="right" checked> Правая стена</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="floor"> Пол</label>
+                <label><input type="checkbox" class="plane-toggle" data-side="ceiling" checked> Потолок</label>
+            </div>
+
+        </div>
+
+        <div class="center-panel">
+
+            <div class="input-block xyz_value_inputs">
+                <img class="xyz_img" src="pics/Bildschirmfoto_27-12-2025_185527_static.vecteezy.com.jpeg" alt="">
+                <div>
+                    <h4>Размеры комнаты (см)</h4>
+                    <div>
+                        <input id="xInp" type="number" value="400" placeholder="X (см)" min="1" max="10000">
+                        <input id="yInp" type="number" value="300" placeholder="Y (см)" min="1" max="10000">
+                        <input id="zInp" type="number" value="250" placeholder="Z (см)" min="1" max="10000">
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="viewport" id="vPort">
+                <div class="scene three-d" id="zoomScene">
+                    <div class="room three-d" id="room">
+                        <div class="wall front" data-side="front"></div>
+                        <div class="wall back" data-side="back"></div>
+                        <div class="wall left" data-side="left"></div>
+                        <div class="wall right" data-side="right"></div>
+                        <div class="wall floor" data-side="floor"></div>
+                        <div class="wall ceiling" data-side="ceiling">
+                            <div class="lamp"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel right-panel">
+            <div class="repair-class-block">
+                <h4>Класс ремонта</h4>
+
+                <label class="radio-option" title="Эконом - только материалы, клиент работает сам">
+                    <input type="radio" name="repairClass" value="econom" checked>
+                    ECO
+                </label>
+
+                <label class="radio-option" title="Стандарт - выбор работ + связь с мастерами">
+                    <input type="radio" name="repairClass" value="standard">
+                    NORM
+                </label>
+
+                <label class="radio-option" title="Премиум - полный сервис под ключ">
+                    <input type="radio" name="repairClass" value="premium">
+                    PRO
+                </label>
+            </div>
+
+            <h3>Результаты <button id="resetWorkBlocksBtn" title="Сбросить выбор работ" style="background: none; border: none; cursor: pointer; font-size: 18px; margin-left: 8px;">🔃</button></h3>
+            <div id="resultsBox"></div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="pages/about.html">О нас</a>
+                <a href="pages/partners.html">Партнеры</a>
+                <a href="pages/mission.html">Миссия</a>
+                <a href="pages/contacts.html">Контакты</a>
+            </div>
+            <div class="footer-links" style="margin-top: 10px; font-size: 0.9em;">
+                <a href="pages/impressum.html">Impressum</a>
+                <a href="pages/datenschutz.html">Datenschutz</a>
+                <a href="pages/disclaimer.html">Haftungsausschluss</a>
+            </div>
+            © 2026 RemontExpert — Все права защищены
+        </div>
+    </div>
+</body>
+
+</html>
+
