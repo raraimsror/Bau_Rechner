@@ -319,10 +319,13 @@ header {
     }
 
     .viewport {
-        width: 75%;
+        width: 100%;
         height: 300px;
         max-width: none;
-        margin: 0 auto;
+    }
+
+    .room {
+        transform: scale(0.75);
     }
 
     .xyz_value_inputs {
