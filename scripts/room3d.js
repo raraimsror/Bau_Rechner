@@ -143,35 +143,73 @@ function setupWheelZoom() {
    TOUCH УПРАВЛЕНИЕ
    ========================================================= */
 
+let initialPinchDistance = null;
+let initialZoomLevel = 1;
+
 function setupTouchControls() {
     vPort.addEventListener("touchstart", (e) => {
-        const t = e.touches[0];
-        drag = true;
-        px = t.clientX;
-        py = t.clientY;
-        document.body.classList.add("noselect");
+        if (e.touches.length === 1) {
+            // Один палец - вращение
+            const t = e.touches[0];
+            drag = true;
+            px = t.clientX;
+            py = t.clientY;
+            document.body.classList.add("noselect");
+        } else if (e.touches.length === 2) {
+            // Два пальца - zoom
+            e.preventDefault();
+            drag = false;
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            initialPinchDistance = Math.sqrt(dx * dx + dy * dy);
+            initialZoomLevel = zoomLevel;
+            document.body.classList.add("noselect");
+        }
     });
 
     vPort.addEventListener("touchmove", (e) => {
-        if (!drag) return;
+        if (e.touches.length === 1 && drag) {
+            // Вращение одним пальцем
+            const t = e.touches[0];
 
-        const t = e.touches[0];
+            ry += (t.clientX - px) * 0.4;
+            rx -= (t.clientY - py) * 0.4;
+            rx = Math.max(-60, Math.min(60, rx));
 
-        ry += (t.clientX - px) * 0.4;
-        rx -= (t.clientY - py) * 0.4;
-        rx = Math.max(-60, Math.min(60, rx));
+            room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
 
-        room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+            px = t.clientX;
+            py = t.clientY;
 
-        px = t.clientX;
-        py = t.clientY;
+            updateOpacity();
+        } else if (e.touches.length === 2 && initialPinchDistance) {
+            // Pinch-to-zoom двумя пальцами
+            e.preventDefault();
+            const dx = e.touches[0].clientX - e.touches[1].clientX;
+            const dy = e.touches[0].clientY - e.touches[1].clientY;
+            const currentDistance = Math.sqrt(dx * dx + dy * dy);
 
-        updateOpacity();
+            const scale = currentDistance / initialPinchDistance;
+            zoomLevel = initialZoomLevel * scale;
+            zoomLevel = Math.max(0.5, Math.min(2, zoomLevel));
+
+            zoomScene.style.transform = `scale(${zoomLevel})`;
+        }
     });
 
-    vPort.addEventListener("touchend", () => {
-        drag = false;
-        document.body.classList.remove("noselect");
+    vPort.addEventListener("touchend", (e) => {
+        if (e.touches.length === 0) {
+            drag = false;
+            initialPinchDistance = null;
+            document.body.classList.remove("noselect");
+        } else if (e.touches.length === 1) {
+            // Остался один палец - переключаемся на вращение
+            initialPinchDistance = null;
+            const t = e.touches[0];
+            drag = true;
+            px = t.clientX;
+            py = t.clientY;
+        }
     });
 }
 

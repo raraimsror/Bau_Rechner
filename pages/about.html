@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О нас - RemontExpert 3D Pro</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .page-content {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .page-content h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .page-content h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .page-content p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .page-content ul {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            padding-left: 30px;
+        }
+        .page-content li {
+            margin-bottom: 10px;
+        }
+        .highlight-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .feature-card h3 {
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <a href="../index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+                <img src="../pics/Logo.png" alt="RemontExpert Logo" style="height: 40px;">
+                <span>RemontExpert 3D</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="page-content">
+        <a href="../index.html" class="back-link">← Назад на главную</a>
+
+        <h1>О проекте RemontExpert 3D Pro</h1>
+
+        <div class="highlight-box">
+            <strong>RemontExpert 3D Pro</strong> — это инновационный онлайн-калькулятор для точного расчёта материалов и стоимости ремонтных работ с интерактивной 3D-визуализацией помещения.
+        </div>
+
+        <h2>Наша миссия</h2>
+        <p>
+            Мы создали RemontExpert 3D Pro, чтобы сделать планирование ремонта простым, прозрачным и доступным каждому. Наша цель — помочь людям принимать обоснованные решения о ремонте, предоставляя точные расчёты и наглядную визуализацию.
+        </p>
+
+        <h2>Что мы предлагаем</h2>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🎨 3D Визуализация</h3>
+                <p>Интерактивная 3D-модель вашего помещения с возможностью вращения и масштабирования</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>📊 Точные расчёты</h3>
+                <p>Автоматический расчёт материалов на основе реальных данных производителей</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>💰 Три класса ремонта</h3>
+                <p>Эконом, Стандарт и Премиум — выберите подходящий уровень</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>📄 PDF-экспорт</h3>
+                <p>Сохраните смету в PDF для печати или отправки подрядчику</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔒 Конфиденциальность</h3>
+                <p>Все данные обрабатываются локально в вашем браузере</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>🌍 Актуальные цены</h3>
+                <p>Цены на материалы от реальных поставщиков (OBI, TOOM)</p>
+            </div>
+        </div>
+
+        <h2>Для кого этот инструмент</h2>
+        <ul>
+            <li><strong>Домовладельцы</strong> — планируйте ремонт самостоятельно и контролируйте бюджет</li>
+            <li><strong>Арендаторы</strong> — рассчитайте стоимость косметического ремонта перед въездом</li>
+            <li><strong>Мастера-частники</strong> — быстро составляйте сметы для клиентов</li>
+            <li><strong>Студенты</strong> — учебный проект для понимания строительных расчётов</li>
+            <li><strong>Инвесторы</strong> — оцените затраты на ремонт перед покупкой недвижимости</li>
+        </ul>
+
+        <h2>Технологии</h2>
+        <p>
+            RemontExpert 3D Pro построен на современных веб-технологиях:
+        </p>
+        <ul>
+            <li>Чистый JavaScript (без зависимостей от фреймворков)</li>
+            <li>CSS3 3D-трансформации для визуализации</li>
+            <li>Модульная архитектура для лёгкого расширения</li>
+            <li>Локальная обработка данных (без серверов)</li>
+            <li>jsPDF для генерации PDF-документов</li>
+        </ul>
+
+        <h2>Принципы работы</h2>
+        <p>
+            Мы используем реальные данные производителей материалов:
+        </p>
+        <ul>
+            <li><strong>Краска:</strong> Alpina (OBI) — расход 6-8.48 м²/л, 2 слоя</li>
+            <li><strong>Обои:</strong> Erfurt Rauhfaser-Tapete Classico (TOOM) — 10.6 м² на рулон</li>
+            <li><strong>Клей:</strong> Tapetenkleister Spezial — 22.5 м² на 200г</li>
+            <li><strong>Резерв:</strong> автоматически добавляем 10% на обрезки и потери</li>
+        </ul>
+
+        <h2>Развитие проекта</h2>
+        <p>
+            RemontExpert 3D Pro — это живой проект, который постоянно развивается. В планах:
+        </p>
+        <ul>
+            <li>Расчёт напольных покрытий (ламинат, паркет, плитка)</li>
+            <li>Расчёт электрики и освещения</li>
+            <li>Интеграция с онлайн-магазинами стройматериалов</li>
+            <li>Мобильное приложение</li>
+            <li>Библиотека готовых проектов</li>
+            <li>Система рекомендаций на основе AI</li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>Важно:</strong> Этот инструмент предоставляет расчётные данные для планирования. Для точной сметы рекомендуем консультацию с профессионалами и осмотр объекта.
+        </div>
+
+        <h2>Контакты</h2>
+        <p>
+            Есть вопросы или предложения? Свяжитесь с нами:
+        </p>
+        <p>
+            Email: [ваш email]<br>
+            Телефон: [ваш телефон]
+        </p>
+
+        <p style="text-align: center; margin-top: 50px; color: #7f8c8d;">
+            <em>RemontExpert 3D Pro — ваш надёжный помощник в планировании ремонта</em>
+        </p>
+    </div>
+</body>
+</html>
