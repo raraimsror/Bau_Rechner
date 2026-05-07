@@ -1,155 +1,375 @@
-# RemontExpert 3D Pro - План Разработки
+# RemontExpert 3D Pro - Development Plan
 
-**Обновлено:** 2026-05-03 15:24  
-**Статус:** Phase 6 Complete (~90%)
-
----
-
-## ✅ ВЫПОЛНЕНО
-
-### Phase 1-5: Основная функциональность
-- ✅ 3D визуализация (room3d.js)
-- ✅ Расчёт краски с оптимизацией (paint.js)
-- ✅ Расчёт обоев (wallpaper.js)
-- ✅ Реальные продукты (Alpina + Erfurt)
-- ✅ 3 класса ремонта (ECO/NORM/PRO)
-- ✅ Debounce пересчёта (1.5с)
-- ✅ Все комментарии на русском
-
-### Phase 6: Разделение расчётов по классам (COMPLETE)
-- ✅ Создан ECO.js (9.3KB) - checkbox для инструментов/оборудования
-- ✅ Создан NORM.js (9.5KB) - checkbox для каждой работы
-- ✅ Создан PRO.js (11KB) - все работы включены
-- ✅ Подключены в index.html
-- ✅ Обновлён calculateTotals() для использования модулей
-- ✅ Обновлён renderReceipt() для новой структуры
-- ✅ Динамический расчёт с starpsummām
-- ✅ Удалены старые функции и selectedWorkBlocks
-- ✅ Кнопка 🔃 сброса результатов работает для всех классов
+**Updated:** 2026-05-06 21:31  
+**Status:** PRODUCTION READY → UI/UX Improvements Phase
 
 ---
 
-## 📋 СЛЕДУЮЩИЕ ШАГИ
+## ✅ COMPLETED PHASES
 
-### Вариант 1: PRO класс - визуальная конфигурация
-**Время:** 1-2h
-- Сейчас PRO показывает только итоговые суммы
-- Нужно добавить детализацию работ/материалов/оборудования
-- Показать что именно входит в премиум пакет
+### Phase 1-9: Core Development (COMPLETE)
+- ✅ Critical bug fixes and validation
+- ✅ 3D visualization with mobile support
+- ✅ Paint calculation with bucket optimization
+- ✅ Wallpaper calculation (rolls + glue)
+- ✅ Modular ECO/NORM/PRO classes
+- ✅ PDF export with logo
+- ✅ Legal compliance pages (7 pages)
+- ✅ Mobile responsive design
+- ✅ Mobile 3D scaling (Strategy 6)
+- ✅ Debounce recalculation (1.5s)
+- ✅ All comments in Russian
 
-### Вариант 2: Тестирование всех классов
-**Время:** 30min - 1h
-- Протестировать ECO (checkbox инструментов)
-- Протестировать NORM (checkbox работ)
-- Протестировать PRO (детализация)
-- Проверить переключение между классами
-- Найти и исправить баги
-
-### Вариант 3: PDF Экспорт
-**Время:** 3-4h
-- Подключить jsPDF библиотеку
-- Создать кнопку "Скачать PDF"
-- Сформировать PDF с чеком
-- Добавить disclaimer
-
-### Вариант 4: UX улучшения
-**Время:** 2-3h
-- Loading spinner при расчёте
-- Анимации переходов
-- Подсказки (tooltips)
-- Улучшить мобильную версию
+**Result:** Fully functional MVP ready for production
 
 ---
 
-## 🎯 ЦЕЛИ
+## 🎯 CURRENT PRIORITY: UI/UX Design Improvements
 
-### Минимальная Demo (ГОТОВО)
-- ✅ Покраска + Обои
-- ✅ Реальные продукты
-- ✅ 3 класса ремонта
-- ✅ Детализированный чек
+### Goal
+Transform functional prototype into professional, visually appealing product that inspires trust and engagement.
 
-### Полная Demo (Optional)
-- ✅ Минимальная Demo
-- [ ] PDF экспорт
-- [ ] Улучшенный UX
-- [ ] Тестирование
-
-### Production (Будущее)
-- [ ] Backend интеграция
-- [ ] База данных цен
-- [ ] API магазинов
-- [ ] Многоязычность (LV/RU/DE)
-- [ ] Профили пользователей
-- [ ] История расчётов
+### Why
+Current design is functional but basic. Professional UI/UX will:
+- Increase user trust and credibility
+- Improve user engagement and retention
+- Enhance conversion rates (PDF exports, contact forms)
+- Make the product market-ready
 
 ---
 
-## 📊 ПРОГРЕСС
+## 📋 Phase 10: UI/UX Design (NEXT)
+
+### 10.1 Color Scheme & Branding
+**Time:** 2-3h
+
+**Tasks:**
+- [ ] Define primary color palette (3-5 colors)
+- [ ] Choose accent colors for CTAs and highlights
+- [ ] Ensure WCAG contrast ratios (accessibility)
+- [ ] Create consistent brand identity
+- [ ] Apply colors to all UI elements
+
+**Deliverables:**
+- Color variables in CSS
+- Consistent color usage across all pages
+- Accessible contrast ratios
+
+---
+
+### 10.2 Typography System
+**Time:** 1-2h
+
+**Tasks:**
+- [ ] Choose professional font families (heading + body)
+- [ ] Define font size scale (h1-h6, body, small)
+- [ ] Set proper line heights and letter spacing
+- [ ] Create clear visual hierarchy
+- [ ] Apply consistently across all pages
+
+**Deliverables:**
+- Typography CSS variables
+- Clear heading hierarchy
+- Readable body text
+
+---
+
+### 10.3 Layout & Spacing
+**Time:** 2-3h
+
+**Tasks:**
+- [ ] Implement consistent spacing system (8px grid)
+- [ ] Improve visual structure and alignment
+- [ ] Add card-based design for sections
+- [ ] Enhance responsive grid system
+- [ ] Better use of whitespace
+
+**Deliverables:**
+- Spacing utility classes
+- Card components
+- Improved visual rhythm
+
+---
+
+### 10.4 Interactive Elements
+**Time:** 2-3h
+
+**Tasks:**
+- [ ] Style buttons (primary, secondary, ghost)
+- [ ] Style input fields and labels
+- [ ] Add hover/focus/active states
+- [ ] Create loading indicators
+- [ ] Design error/success messages
+- [ ] Add smooth transitions
+
+**Deliverables:**
+- Button component styles
+- Form element styles
+- Interaction states
+- Micro-animations
+
+---
+
+### 10.5 3D Viewer Enhancement
+**Time:** 1-2h
+
+**Tasks:**
+- [ ] Improve controls visibility
+- [ ] Cleaner interface design
+- [ ] Better mobile UX
+- [ ] Add visual feedback for interactions
+- [ ] Enhance rotation/zoom controls
+
+**Deliverables:**
+- Improved 3D viewer UI
+- Better mobile controls
+- Visual interaction feedback
+
+---
+
+### 10.6 Receipt/Results Section
+**Time:** 1-2h
+
+**Tasks:**
+- [ ] Better visual hierarchy
+- [ ] Clearer price presentation
+- [ ] Improved table/list design
+- [ ] Highlight total costs
+- [ ] Better grouping of items
+
+**Deliverables:**
+- Professional receipt design
+- Clear cost breakdown
+- Visual emphasis on totals
+
+---
+
+### 10.7 Legal Pages Styling
+**Time:** 1h
+
+**Tasks:**
+- [ ] Apply consistent styling to all 7 pages
+- [ ] Improve readability
+- [ ] Add proper navigation
+- [ ] Ensure mobile responsiveness
+
+**Deliverables:**
+- Styled legal pages
+- Consistent navigation
+- Mobile-friendly layout
+
+---
+
+## 📊 Phase 10 Progress Tracker
 
 ```
-Phase 1: Критические ошибки     ✅ 100%
-Phase 2: Alpina расчёт          ✅ 100%
-Phase 3: 3D разделение          ✅ 100%
-Phase 4: Расчёт обоев           ✅ 100%
-Phase 5: Оптимизация вёдер      ✅ 100%
-Fix: Debounce                   ✅ 100%
-─────────────────────────────────────────
-Тестирование                    ⏳ 0%
-PDF экспорт                     ⏳ 0%
-UX улучшения                    ⏳ 0%
+10.1 Color Scheme         ⏳ 0%
+10.2 Typography           ⏳ 0%
+10.3 Layout & Spacing     ⏳ 0%
+10.4 Interactive Elements ⏳ 0%
+10.5 3D Viewer UI         ⏳ 0%
+10.6 Receipt Section      ⏳ 0%
+10.7 Legal Pages          ⏳ 0%
+─────────────────────────────────
+Overall Progress          ⏳ 0%
 ```
 
-**Общий прогресс:** 85%
+**Estimated Time:** 10-15 hours  
+**Target Completion:** 2026-05-08
 
 ---
 
-## 🐛 ИЗВЕСТНЫЕ ПРОБЛЕМЫ
+## 🔮 FUTURE ENHANCEMENTS (Backlog)
 
-*Пока нет*
+### Short-term (1-2 months)
+- [ ] User testing and feedback collection
+- [ ] Performance optimization
+- [ ] SEO optimization (meta tags, structured data)
+- [ ] Analytics integration (Google Analytics / Plausible)
+- [ ] A/B testing setup
 
----
+### Mid-term (3-6 months)
+- [ ] Store API integration (automatic price updates)
+- [ ] Extended material database (more brands)
+- [ ] User accounts and saved projects
+- [ ] Email notifications
+- [ ] Multi-language support (LV/RU/DE)
+- [ ] Comparison tool (multiple variants)
 
-## 💡 ИДЕИ НА БУДУЩЕЕ
-
-### Функциональность:
-- Сохранение расчётов в localStorage
-- Сравнение нескольких вариантов
-- Калькулятор времени работ
-- Интеграция с календарём
-- Чат с мастерами
-
-### Продукты:
-- Больше брендов краски
-- Разные типы обоев
-- Грунтовка, шпаклёвка
-- Инструменты в аренду
-
-### Технические:
-- React/Vue переписать
-- TypeScript
-- Unit тесты
-- E2E тесты
-- CI/CD
-
----
-
-## 📝 ЗАМЕТКИ
-
-### Что работает хорошо:
-- Модульная структура (4 JS файла)
-- Реальные данные продуктов
-- Оптимизация вёдер
-- Debounce пересчёта
-
-### Что можно улучшить:
-- Alpina дороже ожидаемого (искать альтернативы?)
-- Добавить больше размеров вёдер (0.75L, 1L, 10L)
-- UX feedback (loading, анимации)
-- Мобильная версия (тестировать)
+### Long-term (6-12 months)
+- [ ] AI assistant for material selection
+- [ ] Extended 3D geometry (roofs, facades, terraces)
+- [ ] Mobile app (React Native / Flutter)
+- [ ] Professional profiles (contractors, architects)
+- [ ] Marketplace integration
+- [ ] Work time calculator
+- [ ] Calendar integration
+- [ ] Chat with contractors
 
 ---
 
-**Следующий шаг:** Тестирование всех функций
+## 🎨 Design Inspiration & References
 
-**Обновлять этот файл после каждого выполненного шага!**
+### Color Schemes to Consider:
+- **Professional Blue:** Trust, reliability (banks, corporate)
+- **Modern Green:** Eco-friendly, renovation (sustainability)
+- **Warm Orange:** Energy, creativity (construction)
+- **Neutral Gray:** Clean, modern (minimalist)
+
+### Typography Suggestions:
+- **Headings:** Inter, Poppins, Montserrat (modern, clean)
+- **Body:** Open Sans, Roboto, Lato (readable, professional)
+
+### UI Patterns:
+- Card-based layouts
+- Subtle shadows and depth
+- Smooth transitions (200-300ms)
+- Clear CTAs with contrast
+- Generous whitespace
+
+---
+
+## 🐛 Known Issues
+
+**None critical** - all core functionality working
+
+**Minor improvements needed:**
+- UI/UX polish (current priority)
+- Code documentation (optional for MVP)
+- Unit tests (optional for MVP)
+
+---
+
+## 📈 Success Metrics (To Be Defined)
+
+### User Engagement:
+- Time on site
+- Number of calculations per session
+- PDF export rate
+- Contact form submissions
+
+### Technical:
+- Page load time (target: < 3s)
+- Mobile vs desktop usage ratio
+- Browser compatibility
+- Error rate
+
+### Business:
+- Conversion rate (visitor → calculation)
+- Return visitor rate
+- Most popular features
+- User feedback score
+
+**Action:** Set up analytics after UI/UX improvements
+
+---
+
+## 🚀 Deployment Plan
+
+### Current Setup:
+- **Hosting:** GitHub Pages (static hosting)
+- **Domain:** TBD
+- **SSL:** Automatic via GitHub Pages
+
+### Future Considerations:
+- **Netlify/Vercel:** Better performance, CI/CD, forms
+- **Custom Domain:** remontexpert.lv or similar
+- **CDN:** Automatic via hosting provider
+
+### Pre-launch Checklist:
+- [ ] UI/UX improvements complete
+- [ ] All pages tested on multiple devices
+- [ ] Analytics integrated
+- [ ] SEO meta tags added
+- [ ] Cookie banner (GDPR)
+- [ ] Custom domain configured
+- [ ] SSL certificate active
+
+---
+
+## 💡 Ideas for Future Consideration
+
+### Features:
+- Save calculations to localStorage
+- Share calculation via link
+- Print-friendly version
+- Dark mode toggle
+- Accessibility improvements (screen reader support)
+
+### Products:
+- More paint brands (Dulux, Tikkurila, etc.)
+- Different wallpaper types (vinyl, fabric, etc.)
+- Primer and putty calculations
+- Tool rental integration
+
+### Technical:
+- React/Vue rewrite (if scaling needed)
+- TypeScript migration
+- Unit tests (Jest)
+- E2E tests (Playwright)
+- CI/CD pipeline
+
+### Business:
+- Affiliate partnerships with stores
+- Premium features (advanced calculations)
+- Contractor directory
+- Material delivery integration
+
+---
+
+## 📝 Development Guidelines
+
+### Code Quality:
+- Keep modular structure
+- All comments in Russian (target audience)
+- Use meaningful variable names
+- Follow existing patterns
+- Test on multiple devices
+
+### Design Principles:
+- Mobile-first approach
+- Accessibility compliance (WCAG)
+- Performance optimization
+- Progressive enhancement
+- User-centered design
+
+### Testing:
+- Manual testing on Chrome, Firefox, Safari, Edge
+- Mobile testing on iOS and Android
+- Responsive design testing (320px - 1920px)
+- 3D visualization performance testing
+
+---
+
+## 🎯 Next Steps
+
+**Immediate (This Week):**
+1. Start Phase 10.1: Color Scheme & Branding
+2. Define color palette and apply to main page
+3. Test on multiple devices
+
+**This Month:**
+- Complete all Phase 10 tasks
+- User testing with 5-10 people
+- Gather feedback and iterate
+- Prepare for public launch
+
+**Next Month:**
+- Public launch
+- Marketing campaign
+- Collect user feedback
+- Plan next features based on usage data
+
+---
+
+**How to Apply:**
+- Focus on one sub-phase at a time
+- Test each change on mobile and desktop
+- Maintain consistency across all pages
+- Gather user feedback early and often
+- Iterate based on real usage data
+
+---
+
+**Last Updated:** 2026-05-06 21:31  
+**Next Review:** After Phase 10 completion
