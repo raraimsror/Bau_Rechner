@@ -120,5 +120,5 @@ function detectLanguage() {
     }
 
     // По умолчанию английский
-    return "en";
+    return "ru";
 }

@@ -294,6 +294,27 @@ header {
 }
 
 /* =========================================================
+   Кнопка информации (ℹ️)
+   ========================================================= */
+.ico-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 8px;
+    padding: 0;
+    transition: transform 0.2s ease;
+}
+
+.room-info-btn:hover {
+    transform: scale(1.2);
+}
+
+.room-info-btn:active {
+    transform: scale(0.95);
+}
+
+/* =========================================================
    Мобильная версия
    ========================================================= */
 @media (max-width: 768px) {
