@@ -1,6 +1,6 @@
 # RemontExpert 3D Pro - Development Plan
 
-**Updated:** 2026-05-06 21:31  
+**Updated:** 2026-05-12 19:49  
 **Status:** PRODUCTION READY → UI/UX Improvements Phase
 
 ---
@@ -40,14 +40,33 @@ Current design is functional but basic. Professional UI/UX will:
 
 ## 📋 Phase 10: UI/UX Design (NEXT)
 
-### 10.1 Color Scheme & Branding
-**Time:** 2-3h
+### 10.1 Visual Improvements
+**Time:** 3-4h
 
 **Tasks:**
+- [ ] Add gradient background to 3D viewer (grey gradient)
+- [ ] Simplify info-modal.js functionality (currently too complex)
 - [ ] Define primary color palette (3-5 colors)
 - [ ] Choose accent colors for CTAs and highlights
 - [ ] Ensure WCAG contrast ratios (accessibility)
 - [ ] Create consistent brand identity
+
+### 10.2 Multi-language Support
+**Time:** 4-6h
+
+**Tasks:**
+- [ ] Design 3-language architecture (DE/RU/EN or DE/RU/LV)
+- [ ] Implement language switcher UI
+- [ ] Translate all interface strings
+- [ ] Store language preference
+
+### 10.3 Store Selection Feature
+**Time:** 2-3h
+
+**Tasks:**
+- [ ] Add store/shop selection dropdown to results
+- [ ] Integrate with pricing data
+- [ ] Display store-specific prices
 - [ ] Apply colors to all UI elements
 
 **Deliverables:**
