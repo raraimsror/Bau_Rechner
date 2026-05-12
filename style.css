@@ -160,7 +160,7 @@ header {
     width: 100%;
     max-width: 700px;
     height: 450px;
-    background: #fff;
+    background: linear-gradient(to bottom, #e0e0e0, #555555);;
     perspective: 1200px;
     display: flex;
     align-items: center;
