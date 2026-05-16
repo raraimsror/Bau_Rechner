@@ -80,16 +80,16 @@ function calculateNormPainting(area, pricing) {
 
     // Работы для покраски (10 позиций)
     const workItems = [
-        { id: 'paintInspection', name: "Осмотр и консультация мастера", percent: 0.10, checked: selectedNormWorks.paintInspection },
-        { id: 'paintPrep', name: "Подготовка поверхности (очистка, шпаклёвка)", percent: 0.15, checked: selectedNormWorks.paintPrep },
-        { id: 'paintPrimer', name: "Грунтовка стен", percent: 0.10, checked: selectedNormWorks.paintPrimer },
-        { id: 'paintProtection', name: "Защита мебели и пола", percent: 0.05, checked: selectedNormWorks.paintProtection },
-        { id: 'paintCoat1', name: "Покраска первым слоем", percent: 0.20, checked: selectedNormWorks.paintCoat1 },
-        { id: 'paintCoat2', name: "Покраска вторым слоем", percent: 0.20, checked: selectedNormWorks.paintCoat2 },
-        { id: 'paintHardSpots', name: "Покраска труднодоступных мест", percent: 0.05, checked: selectedNormWorks.paintHardSpots },
-        { id: 'paintQuality', name: "Финишная проверка качества", percent: 0.05, checked: selectedNormWorks.paintQuality },
-        { id: 'paintCleanup', name: "Уборка помещения", percent: 0.05, checked: selectedNormWorks.paintCleanup },
-        { id: 'paintTrash', name: "Вывоз мусора", percent: 0.05, checked: selectedNormWorks.paintTrash }
+        { id: 'paintInspection', percent: 0.10, checked: selectedNormWorks.paintInspection },
+        { id: 'paintPrep', percent: 0.15, checked: selectedNormWorks.paintPrep },
+        { id: 'paintPrimer', percent: 0.10, checked: selectedNormWorks.paintPrimer },
+        { id: 'paintProtection', percent: 0.05, checked: selectedNormWorks.paintProtection },
+        { id: 'paintCoat1', percent: 0.20, checked: selectedNormWorks.paintCoat1 },
+        { id: 'paintCoat2', percent: 0.20, checked: selectedNormWorks.paintCoat2 },
+        { id: 'paintHardSpots', percent: 0.05, checked: selectedNormWorks.paintHardSpots },
+        { id: 'paintQuality', percent: 0.05, checked: selectedNormWorks.paintQuality },
+        { id: 'paintCleanup', percent: 0.05, checked: selectedNormWorks.paintCleanup },
+        { id: 'paintTrash', percent: 0.05, checked: selectedNormWorks.paintTrash }
     ];
 
     // Рассчитываем цену каждой работы
@@ -165,16 +165,16 @@ function calculateNormWallpaper(area, pricing) {
 
     // Работы для обоев (10 позиций)
     const workItems = [
-        { id: 'wpInspection', name: "Осмотр и консультация мастера", percent: 0.10, checked: selectedNormWorks.wpInspection },
-        { id: 'wpPrep', name: "Подготовка поверхности (очистка, выравнивание)", percent: 0.15, checked: selectedNormWorks.wpPrep },
-        { id: 'wpPrimer', name: "Грунтовка стен", percent: 0.10, checked: selectedNormWorks.wpPrimer },
-        { id: 'wpProtection', name: "Защита мебели и пола", percent: 0.05, checked: selectedNormWorks.wpProtection },
-        { id: 'wpCutting', name: "Разметка и раскрой обоев", percent: 0.10, checked: selectedNormWorks.wpCutting },
-        { id: 'wpHanging', name: "Поклейка обоев", percent: 0.25, checked: selectedNormWorks.wpHanging },
-        { id: 'wpTrimming', name: "Подрезка и подгонка стыков", percent: 0.10, checked: selectedNormWorks.wpTrimming },
-        { id: 'wpQuality', name: "Финишная проверка качества", percent: 0.05, checked: selectedNormWorks.wpQuality },
-        { id: 'wpCleanup', name: "Уборка помещения", percent: 0.05, checked: selectedNormWorks.wpCleanup },
-        { id: 'wpTrash', name: "Вывоз мусора", percent: 0.05, checked: selectedNormWorks.wpTrash }
+        { id: 'wpInspection', percent: 0.10, checked: selectedNormWorks.wpInspection },
+        { id: 'wpPrep', percent: 0.15, checked: selectedNormWorks.wpPrep },
+        { id: 'wpPrimer', percent: 0.10, checked: selectedNormWorks.wpPrimer },
+        { id: 'wpProtection', percent: 0.05, checked: selectedNormWorks.wpProtection },
+        { id: 'wpCutting', percent: 0.10, checked: selectedNormWorks.wpCutting },
+        { id: 'wpHanging', percent: 0.25, checked: selectedNormWorks.wpHanging },
+        { id: 'wpTrimming', percent: 0.10, checked: selectedNormWorks.wpTrimming },
+        { id: 'wpQuality', percent: 0.05, checked: selectedNormWorks.wpQuality },
+        { id: 'wpCleanup', percent: 0.05, checked: selectedNormWorks.wpCleanup },
+        { id: 'wpTrash', percent: 0.05, checked: selectedNormWorks.wpTrash }
     ];
 
     // Рассчитываем цену каждой работы

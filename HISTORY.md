@@ -1,3 +1,4 @@
+
 # RemontExpert 3D Pro - Development History
 
 **Project:** Renovation calculator with 3D visualization  
@@ -305,3 +306,67 @@ actual_room_size = Math.max(width, height, depth)
 ---
 
 **Last Updated:** 2026-05-06 21:28
+
+---
+
+## 📅 Phase 10: Full Localization (2026-05-16)
+
+### Complete i18n Implementation
+**Date:** 2026-05-16  
+**Time:** ~2h
+
+**Problem:** 
+- Hardcoded Russian texts duplicated across JS files and locales
+- Incomplete localization in calculation modules
+- Results not fully translated
+
+**Solution - Localization Optimization:**
+- ✅ Removed all hardcoded texts from ECO.js, NORM.js, PRO.js
+- ✅ Removed hardcoded texts from script.js (renderReceipt)
+- ✅ Extended locales/*/common.json with new keys
+- ✅ Extended locales/*/tasks.json with premium section
+- ✅ Extended locales/*/inventory.json with premium section
+- ✅ Enhanced getTranslatedLineName() for PRO class support
+- ✅ All calculation modules now use only IDs
+- ✅ Full RU/EN/DE support for all repair classes
+
+**Files Changed:**
+- scripts/ECO.js - removed name fields, kept only IDs
+- scripts/NORM.js - removed name fields, kept only IDs
+- scripts/PRO.js - removed name fields, added IDs for all items
+- scripts/script.js - replaced hardcoded texts with tr() calls
+- locales/*/common.json - added 7 new keys
+- locales/*/tasks.json - added premium.painting and premium.wallpaper
+- locales/*/inventory.json - added premium.materials, premium.equipment, premium.extras
+
+**New Translation Keys:**
+```
+common.json:
+  - receipt.primerRequired
+  - receipt.paintTwoCoats
+  - receipt.needed
+  - receipt.totalPrimer
+  - receipt.totalPaint
+  - receipt.rollSize
+  - receipt.note
+  - receipt.subtotal
+
+tasks.json:
+  - premium.painting.* (10 work items)
+  - premium.wallpaper.* (10 work items)
+
+inventory.json:
+  - premium.materials.* (8 items)
+  - premium.equipment.* (6 items)
+  - premium.extras.* (5 items)
+```
+
+**Result:**
+- No duplicate texts between JS and locales
+- Cleaner, more maintainable code
+- Complete localization for all 3 repair classes
+- Language switching works for all UI elements and results
+
+---
+
+**Last Updated:** 2026-05-16 23:55

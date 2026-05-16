@@ -40,5 +40,32 @@
     "laser": "Laser level",
     "steamer": "Steamer",
     "table": "Cutting table"
+  },
+  "premium": {
+    "materials": {
+      "paintPremium": "Alpina Premium Paint",
+      "primerPremium": "Premium primer",
+      "fillerFinish": "Finish filler",
+      "tapePro": "Professional masking tape",
+      "filmReinforced": "Reinforced protective film",
+      "wallpaperPremium": "Premium Wallpaper",
+      "gluePremium": "Premium Glue",
+      "primerWallpaper": "Wallpaper primer"
+    },
+    "equipment": {
+      "sprayGun": "Spray gun with compressor",
+      "ledLights": "LED floodlights",
+      "sander": "Sanding machine with vacuum",
+      "laser": "Laser level",
+      "table": "Wallpaper cutting table",
+      "proTools": "Professional tools"
+    },
+    "extras": {
+      "tapePlus": "Extra masking tape and film",
+      "toolsPlus": "Extra premium rollers and brushes",
+      "safety": "Safety equipment and supplies",
+      "gluePlus": "Extra glue and primer",
+      "proToolsPlus": "Professional tools"
+    }
   }
 }

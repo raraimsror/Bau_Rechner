@@ -22,5 +22,31 @@
     "quality": "Quality control",
     "cleanup": "Room cleaning",
     "trash": "Waste disposal"
+  },
+  "premium": {
+    "painting": {
+      "inspection": "Master inspection and consultation",
+      "prep": "Surface preparation (cleaning, filling)",
+      "primer": "Premium priming",
+      "protection": "Furniture and floor protection",
+      "coat1": "First coat of paint",
+      "coat2": "Second coat of paint",
+      "hardSpots": "Hard-to-reach areas painting",
+      "quality": "Final quality check",
+      "cleanup": "Room cleaning",
+      "trash": "Waste disposal"
+    },
+    "wallpaper": {
+      "inspection": "Master inspection and consultation",
+      "prep": "Surface preparation (cleaning, leveling)",
+      "primer": "Premium priming",
+      "protection": "Furniture and floor protection",
+      "cutting": "Marking and wallpaper cutting",
+      "hanging": "Premium wallpaper hanging",
+      "trimming": "Trimming and seam matching",
+      "quality": "Final quality check",
+      "cleanup": "Room cleaning",
+      "trash": "Waste disposal"
+    }
   }
 }

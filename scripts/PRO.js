@@ -63,16 +63,16 @@ function calculateProPainting(area, pricing) {
 
     // Блок работ (все работы включены)
     const allWorkBlocks = [
-        { name: "Осмотр и консультация мастера", cost: workTotal * 0.10 },
-        { name: "Подготовка поверхности (очистка, шпаклёвка)", cost: workTotal * 0.15 },
-        { name: "Грунтовка стен премиум составом", cost: workTotal * 0.10 },
-        { name: "Защита мебели и пола", cost: workTotal * 0.05 },
-        { name: "Покраска первым слоем", cost: workTotal * 0.20 },
-        { name: "Покраска вторым слоем", cost: workTotal * 0.20 },
-        { name: "Покраска труднодоступных мест", cost: workTotal * 0.05 },
-        { name: "Финишная проверка качества", cost: workTotal * 0.05 },
-        { name: "Уборка помещения", cost: workTotal * 0.05 },
-        { name: "Вывоз мусора", cost: workTotal * 0.05 }
+        { id: 'proInspection', cost: workTotal * 0.10 },
+        { id: 'proPrep', cost: workTotal * 0.15 },
+        { id: 'proPrimer', cost: workTotal * 0.10 },
+        { id: 'proProtection', cost: workTotal * 0.05 },
+        { id: 'proCoat1', cost: workTotal * 0.20 },
+        { id: 'proCoat2', cost: workTotal * 0.20 },
+        { id: 'proHardSpots', cost: workTotal * 0.05 },
+        { id: 'proQuality', cost: workTotal * 0.05 },
+        { id: 'proCleanup', cost: workTotal * 0.05 },
+        { id: 'proTrash', cost: workTotal * 0.05 }
     ];
 
     items.push({
@@ -84,11 +84,11 @@ function calculateProPainting(area, pricing) {
     items.push({
         category: "Материалы (OBI Premium)",
         lines: [
-            { name: "Краска Alpina Premium", cost: materialTotal },
-            { name: "Грунтовка премиум", cost: area * 0.5 },
-            { name: "Шпаклёвка финишная", cost: area * 0.3 },
-            { name: "Малярная лента профессиональная", cost: 8.0 },
-            { name: "Защитная плёнка усиленная", cost: 12.0 }
+            { id: 'paintPremium', cost: materialTotal },
+            { id: 'primerPremium', cost: area * 0.5 },
+            { id: 'fillerFinish', cost: area * 0.3 },
+            { id: 'tapePro', cost: 8.0 },
+            { id: 'filmReinforced', cost: 12.0 }
         ]
     });
 
@@ -96,10 +96,10 @@ function calculateProPainting(area, pricing) {
     items.push({
         category: "Аренда оборудования (Премиум)",
         lines: [
-            { name: "Краскопульт с компрессором", cost: equipmentTotal * 0.40 },
-            { name: "LED-прожекторы", cost: equipmentTotal * 0.20 },
-            { name: "Шлифмашина с пылесосом", cost: equipmentTotal * 0.25 },
-            { name: "Лазерный нивелир", cost: equipmentTotal * 0.15 }
+            { id: 'sprayGun', cost: equipmentTotal * 0.40 },
+            { id: 'ledLights', cost: equipmentTotal * 0.20 },
+            { id: 'sander', cost: equipmentTotal * 0.25 },
+            { id: 'laser', cost: equipmentTotal * 0.15 }
         ]
     });
 
@@ -108,9 +108,9 @@ function calculateProPainting(area, pricing) {
     items.push({
         category: "Дополнительные материалы",
         lines: [
-            { name: "Дополнительная малярная лента и плёнка", cost: additionalMaterials * 0.3 },
-            { name: "Дополнительные валики и кисти премиум", cost: additionalMaterials * 0.4 },
-            { name: "Средства защиты и расходники", cost: additionalMaterials * 0.3 }
+            { id: 'tapePlus', cost: additionalMaterials * 0.3 },
+            { id: 'toolsPlus', cost: additionalMaterials * 0.4 },
+            { id: 'safety', cost: additionalMaterials * 0.3 }
         ]
     });
 
@@ -179,16 +179,16 @@ function calculateProWallpaper(area, pricing) {
 
     // Блок работ (все работы включены)
     const allWorkBlocks = [
-        { name: "Осмотр и консультация мастера", cost: workTotal * 0.10 },
-        { name: "Подготовка поверхности (очистка, выравнивание)", cost: workTotal * 0.15 },
-        { name: "Грунтовка стен премиум составом", cost: workTotal * 0.10 },
-        { name: "Защита мебели и пола", cost: workTotal * 0.05 },
-        { name: "Разметка и раскрой обоев", cost: workTotal * 0.10 },
-        { name: "Поклейка обоев премиум качества", cost: workTotal * 0.25 },
-        { name: "Подрезка и подгонка стыков", cost: workTotal * 0.10 },
-        { name: "Финишная проверка качества", cost: workTotal * 0.05 },
-        { name: "Уборка помещения", cost: workTotal * 0.05 },
-        { name: "Вывоз мусора", cost: workTotal * 0.05 }
+        { id: 'proWpInspection', cost: workTotal * 0.10 },
+        { id: 'proWpPrep', cost: workTotal * 0.15 },
+        { id: 'proWpPrimer', cost: workTotal * 0.10 },
+        { id: 'proWpProtection', cost: workTotal * 0.05 },
+        { id: 'proWpCutting', cost: workTotal * 0.10 },
+        { id: 'proWpHanging', cost: workTotal * 0.25 },
+        { id: 'proWpTrimming', cost: workTotal * 0.10 },
+        { id: 'proWpQuality', cost: workTotal * 0.05 },
+        { id: 'proWpCleanup', cost: workTotal * 0.05 },
+        { id: 'proWpTrash', cost: workTotal * 0.05 }
     ];
 
     items.push({
@@ -200,10 +200,10 @@ function calculateProWallpaper(area, pricing) {
     items.push({
         category: "Материалы (TOOM Premium)",
         lines: [
-            { name: pricing.wallpaper.name + " Premium", cost: wpData.rollCost },
-            { name: pricing.wallpaper.glueName + " Premium", cost: wpData.glueCost },
-            { name: "Грунтовка для обоев", cost: area * 0.4 },
-            { name: "Шпаклёвка финишная", cost: area * 0.3 }
+            { id: 'wallpaperPremium', cost: wpData.rollCost },
+            { id: 'gluePremium', cost: wpData.glueCost },
+            { id: 'primerWallpaper', cost: area * 0.4 },
+            { id: 'fillerFinish', cost: area * 0.3 }
         ]
     });
 
@@ -211,10 +211,10 @@ function calculateProWallpaper(area, pricing) {
     items.push({
         category: "Аренда оборудования (Премиум)",
         lines: [
-            { name: "Стол для раскроя обоев", cost: equipmentTotal * 0.30 },
-            { name: "LED-прожекторы", cost: equipmentTotal * 0.25 },
-            { name: "Лазерный уровень", cost: equipmentTotal * 0.25 },
-            { name: "Профессиональные инструменты", cost: equipmentTotal * 0.20 }
+            { id: 'table', cost: equipmentTotal * 0.30 },
+            { id: 'ledLights', cost: equipmentTotal * 0.25 },
+            { id: 'laser', cost: equipmentTotal * 0.25 },
+            { id: 'proTools', cost: equipmentTotal * 0.20 }
         ]
     });
 
@@ -223,9 +223,9 @@ function calculateProWallpaper(area, pricing) {
     items.push({
         category: "Дополнительные материалы",
         lines: [
-            { name: "Дополнительный клей и грунтовка", cost: additionalMaterials * 0.4 },
-            { name: "Профессиональные инструменты", cost: additionalMaterials * 0.4 },
-            { name: "Средства защиты и расходники", cost: additionalMaterials * 0.2 }
+            { id: 'gluePlus', cost: additionalMaterials * 0.4 },
+            { id: 'proToolsPlus', cost: additionalMaterials * 0.4 },
+            { id: 'safety', cost: additionalMaterials * 0.2 }
         ]
     });
 

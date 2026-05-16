@@ -78,25 +78,25 @@ function calculateEcoPainting(area, pricing) {
 
     // Инструменты
     const toolsItems = [
-        { id: 'brushes', name: "Кисти малярные", price: ecoMat.brushes || 3.5, checked: selectedEcoTools.brushes },
-        { id: 'rollers', name: "Валики малярные", price: ecoMat.rollers || 4.0, checked: selectedEcoTools.rollers },
-        { id: 'tape', name: "Малярная лента", price: ecoMat.tape || 2.5, checked: selectedEcoTools.tape },
-        { id: 'covers', name: "Защитная плёнка", price: ecoMat.covers || 6.0, checked: selectedEcoTools.covers }
+        { id: 'brushes', price: ecoMat.brushes || 3.5, checked: selectedEcoTools.brushes },
+        { id: 'rollers', price: ecoMat.rollers || 4.0, checked: selectedEcoTools.rollers },
+        { id: 'tape', price: ecoMat.tape || 2.5, checked: selectedEcoTools.tape },
+        { id: 'covers', price: ecoMat.covers || 6.0, checked: selectedEcoTools.covers }
     ];
 
     // Аренда оборудования
     const equipmentItems = [
-        { id: 'sprayGun', name: "Краскопульт с компрессором", price: 15.0, checked: selectedEcoTools.sprayGun },
-        { id: 'ledLights', name: "LED-прожекторы", price: 10.0, checked: selectedEcoTools.ledLights },
-        { id: 'sander', name: "Шлифмашина с пылесосом", price: 12.0, checked: selectedEcoTools.sander },
-        { id: 'laser', name: "Лазерный нивелир", price: 8.0, checked: selectedEcoTools.laser }
+        { id: 'sprayGun', price: 15.0, checked: selectedEcoTools.sprayGun },
+        { id: 'ledLights', price: 10.0, checked: selectedEcoTools.ledLights },
+        { id: 'sander', price: 12.0, checked: selectedEcoTools.sander },
+        { id: 'laser', price: 8.0, checked: selectedEcoTools.laser }
     ];
 
     // Дополнительные материалы
     const extrasItems = [
-        { id: 'extraTape', name: "Дополнительная лента и плёнка", price: 5.0, checked: selectedEcoTools.extraTape },
-        { id: 'extraTools', name: "Дополнительные валики и кисти", price: 6.0, checked: selectedEcoTools.extraTools },
-        { id: 'safety', name: "Средства защиты и расходники", price: 4.0, checked: selectedEcoTools.safety }
+        { id: 'extraTape', price: 5.0, checked: selectedEcoTools.extraTape },
+        { id: 'extraTools', price: 6.0, checked: selectedEcoTools.extraTools },
+        { id: 'safety', price: 4.0, checked: selectedEcoTools.safety }
     ];
 
     // Расчёт сумм
@@ -183,17 +183,17 @@ function calculateEcoWallpaper(area, pricing) {
 
     // Инструменты для обоев
     const toolsItems = [
-        { id: 'wpKnife', name: "Обойный нож", price: 3.0, checked: true },
-        { id: 'wpSpatula', name: "Шпатель для обоев", price: 4.0, checked: true },
-        { id: 'wpRoller', name: "Валик для обоев", price: 5.0, checked: true },
-        { id: 'wpBucket', name: "Ведро для клея", price: 2.0, checked: true }
+        { id: 'wpKnife', price: 3.0, checked: true },
+        { id: 'wpSpatula', price: 4.0, checked: true },
+        { id: 'wpRoller', price: 5.0, checked: true },
+        { id: 'wpBucket', price: 2.0, checked: true }
     ];
 
     // Дополнительные материалы для обоев
     const extrasItems = [
-        { id: 'wpExtraGlue', name: "Дополнительный клей", price: 5.0, checked: false },
-        { id: 'wpExtraTools', name: "Дополнительные инструменты", price: 6.0, checked: false },
-        { id: 'wpSafety', name: "Средства защиты", price: 3.0, checked: false }
+        { id: 'wpExtraGlue', price: 5.0, checked: false },
+        { id: 'wpExtraTools', price: 6.0, checked: false },
+        { id: 'wpSafety', price: 3.0, checked: false }
     ];
 
     const toolsTotal = toolsItems.reduce((sum, item) => sum + (item.checked ? item.price : 0), 0);

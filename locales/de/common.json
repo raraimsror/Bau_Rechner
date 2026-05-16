@@ -19,6 +19,14 @@
     "materialDetails": "Materialdetails",
     "wallpaperDetails": "Tapetendetails",
     "wallpaperCost": "Tapetenkosten",
-    "glueCost": "Kleisterkosten"
+    "glueCost": "Kleisterkosten",
+    "primerRequired": "Grundierung (erforderlich)",
+    "paintTwoCoats": "Farbe (2 Schichten)",
+    "needed": "Benötigt",
+    "totalPrimer": "Grundierung gesamt",
+    "totalPaint": "Farbe gesamt",
+    "rollSize": "Rollengröße",
+    "note": "* Economy: nur Materialien + Werkzeuge. Standard/Premium: Arbeit + Materialien + Ausrüstung.",
+    "subtotal": "Zwischensumme"
   }
 }

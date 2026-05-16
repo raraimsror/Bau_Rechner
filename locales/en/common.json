@@ -19,6 +19,14 @@
     "materialDetails": "Material details",
     "wallpaperDetails": "Wallpaper details",
     "wallpaperCost": "Wallpaper cost",
-    "glueCost": "Glue cost"
+    "glueCost": "Glue cost",
+    "primerRequired": "Primer (required)",
+    "paintTwoCoats": "Paint (2 coats)",
+    "needed": "Needed",
+    "totalPrimer": "Total primer",
+    "totalPaint": "Total paint",
+    "rollSize": "Roll size",
+    "note": "* Economy: materials + tools only. Standard/Premium: work + materials + equipment.",
+    "subtotal": "Subtotal"
   }
 }

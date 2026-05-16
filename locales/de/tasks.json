@@ -22,5 +22,31 @@
     "quality": "Qualitätskontrolle",
     "cleanup": "Raumreinigung",
     "trash": "Müllentsorgung"
+  },
+  "premium": {
+    "painting": {
+      "inspection": "Meisterbesichtigung und Beratung",
+      "prep": "Oberflächenvorbereitung (Reinigung, Spachteln)",
+      "primer": "Premium-Grundierung",
+      "protection": "Möbel- und Bodenschutz",
+      "coat1": "Erste Farbschicht",
+      "coat2": "Zweite Farbschicht",
+      "hardSpots": "Streichen schwer zugänglicher Stellen",
+      "quality": "Abschlusskontrolle",
+      "cleanup": "Raumreinigung",
+      "trash": "Müllentsorgung"
+    },
+    "wallpaper": {
+      "inspection": "Meisterbesichtigung und Beratung",
+      "prep": "Oberflächenvorbereitung (Reinigung, Nivellierung)",
+      "primer": "Premium-Grundierung",
+      "protection": "Möbel- und Bodenschutz",
+      "cutting": "Markierung und Tapetenzuschnitt",
+      "hanging": "Premium-Tapezieren",
+      "trimming": "Zuschneiden und Nahtanpassung",
+      "quality": "Abschlusskontrolle",
+      "cleanup": "Raumreinigung",
+      "trash": "Müllentsorgung"
+    }
   }
 }

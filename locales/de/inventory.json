@@ -40,5 +40,32 @@
     "laser": "Lasernivelliergerät",
     "steamer": "Dampfgerät",
     "table": "Zuschneidetisch"
+  },
+  "premium": {
+    "materials": {
+      "paintPremium": "Alpina Premium Farbe",
+      "primerPremium": "Premium-Grundierung",
+      "fillerFinish": "Finish-Spachtelmasse",
+      "tapePro": "Professionelles Malerband",
+      "filmReinforced": "Verstärkte Schutzfolie",
+      "wallpaperPremium": "Premium-Tapete",
+      "gluePremium": "Premium-Kleister",
+      "primerWallpaper": "Tapetengrundierung"
+    },
+    "equipment": {
+      "sprayGun": "Farbspritzgerät mit Kompressor",
+      "ledLights": "LED-Strahler",
+      "sander": "Schleifmaschine mit Staubsauger",
+      "laser": "Lasernivelliergerät",
+      "table": "Tapetenzuschneidetisch",
+      "proTools": "Professionelle Werkzeuge"
+    },
+    "extras": {
+      "tapePlus": "Zusätzliches Malerband und Folie",
+      "toolsPlus": "Zusätzliche Premium-Walzen und Pinsel",
+      "safety": "Sicherheitsausrüstung und Verbrauchsmaterial",
+      "gluePlus": "Zusätzlicher Kleister und Grundierung",
+      "proToolsPlus": "Professionelle Werkzeuge"
+    }
   }
 }
