@@ -137,5 +137,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-export { setLanguage, currentLang, translations, t, localize };
