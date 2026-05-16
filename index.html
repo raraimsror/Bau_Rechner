@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- jsPDF библиотека для PDF экспорта (локальная версия) -->
     <script src="libs/jspdf.umd.min.js"></script>
+    <script src="scripts/lang.js" defer></script>
     <script src="scripts/room3d.js" defer></script>
     <script src="scripts/paint.js" defer></script>
     <script src="scripts/wallpaper.js" defer></script>
@@ -27,38 +28,46 @@
                 <span>RemontExpert 3D</span>
             </a>
         </div>
-        <a href="#" class="login-btn">Вход / Регистрация</a>
+        <a href="#" class="login-btn" data-i18n="loginRegister">Вход / Регистрация</a>
+        <select id="langSelect" class="ico-btn">
+            <option value="ru">Рус</option>
+            <option value="en">Eng</option>
+            <option value="de">Deu</option>
+        </select>
     </header>
 
     <div class="layout">
 
         <div class="panel left-panel">
-            <h3>Фильтры <button id="resetFiltersBtn" 
-                title="Сбросить фильтры" 
-                class="ico-btn">🔃</button></h3>
+            <h3><span data-i18n="filters">Фильтры</span>
+                <button id="resetFiltersBtn"
+                data-i18n-title="resetFilters"
+                title="Сбросить фильтры"
+                class="ico-btn">🔃</button>
+            </h3>
 
             <div class="input-block">
-                <h4>Тип работ</h4>
+                <h4><span data-i18n="jobTypes">Тип работ</span></h4>
 
                 <label class="radio-option">
                     <input type="radio" name="jobType" value="painting" checked>
-                    Покраска
+                    <span data-i18n="painting">Покраска</span>
                 </label>
 
                 <label class="radio-option">
                     <input type="radio" name="jobType" value="wallpaper">
-                    Поклейка обоев
+                    <span data-i18n="wallpaper">Поклейка обоев</span>
                 </label>
             </div>
 
             <div class="input-block">
-                <label><input type="checkbox" id="selectAll"> Выбрать всё</label>
-                <label><input type="checkbox" class="plane-toggle" data-side="front" checked> Передняя стена</label>
-                <label><input type="checkbox" class="plane-toggle" data-side="back" checked> Задняя стена</label>
-                <label><input type="checkbox" class="plane-toggle" data-side="left" checked> Левая стена</label>
-                <label><input type="checkbox" class="plane-toggle" data-side="right" checked> Правая стена</label>
-                <label><input type="checkbox" class="plane-toggle" data-side="floor"> Пол</label>
-                <label><input type="checkbox" class="plane-toggle" data-side="ceiling" checked> Потолок</label>
+                <label><input type="checkbox" id="selectAll"> <span data-i18n="selectAll">Выбрать всё</span></label>
+                <label><input type="checkbox" class="plane-toggle" data-side="front" checked> <span data-i18n="frontWall">Передняя стена</span></label>
+                <label><input type="checkbox" class="plane-toggle" data-side="back" checked> <span data-i18n="backWall">Задняя стена</span></label>
+                <label><input type="checkbox" class="plane-toggle" data-side="left" checked> <span data-i18n="leftWall">Левая стена</span></label>
+                <label><input type="checkbox" class="plane-toggle" data-side="right" checked> <span data-i18n="rightWall">Правая стена</span></label>
+                <label><input type="checkbox" class="plane-toggle" data-side="floor"> <span data-i18n="floor">Пол</span></label>
+                <label><input type="checkbox" class="plane-toggle" data-side="ceiling" checked> <span data-i18n="ceiling">Потолок</span></label>
             </div>
 
         </div>
@@ -68,7 +77,7 @@
             <div class="input-block xyz_value_inputs">
                 <img class="xyz_img" src="pics/Bildschirmfoto_27-12-2025_185527_static.vecteezy.com.jpeg" alt="">
                 <div>
-                    <h4>Размеры комнаты (см) <button id="roomInfoBtn" class="ico-btn" title="info">ℹ️</button></h4>
+                    <h4><span data-i18n="roomSize">Размеры комнаты (см)</span> <button id="roomInfoBtn" class="ico-btn" title="info">ℹ️</button></h4>
                     <div>
                         <input id="xInp" type="number" value="400" placeholder="X (см)" min="1" max="10000">
                         <input id="yInp" type="number" value="300" placeholder="Y (см)" min="1" max="10000">
@@ -76,7 +85,7 @@
                     </div>
                 </div>
             </div>
-            
+
 
             <div class="viewport" id="vPort">
                 <div class="scene three-d" id="zoomScene">
@@ -97,28 +106,30 @@
 
         <div class="panel right-panel">
             <div class="repair-class-block">
-                <h4>Класс ремонта</h4>
+                <h4><span data-i18n="repairClass">Класс ремонта</span></h4>
 
-                <label class="radio-option" title="Эконом - только материалы, клиент работает сам">
+                <label class="radio-option" data-i18n-title="econom" title="Эконом - только материалы, клиент работает сам">
                     <input type="radio" name="repairClass" value="econom" checked>
                     ECO
                 </label>
 
-                <label class="radio-option" title="Стандарт - выбор работ + связь с мастерами">
+                <label class="radio-option" data-i18n-title="standard" title="Стандарт - выбор работ + связь с мастерами">
                     <input type="radio" name="repairClass" value="standard">
                     NORM
                 </label>
 
-                <label class="radio-option" title="Премиум - полный сервис под ключ">
+                <label class="radio-option" data-i18n-title="premium" title="Премиум - полный сервис под ключ">
                     <input type="radio" name="repairClass" value="premium">
                     PRO
                 </label>
             </div>
 
-            <h3>Результаты 
-                <button id="resetWorkBlocksBtn" title="Сбросить выбор работ" 
-                class="ico-btn">
-                🔃</button></h3>
+            <h3><span data-i18n="results">Результаты</span>
+                <button id="resetWorkBlocksBtn"
+                data-i18n-title="resetWorkBlocks"
+                title="Сбросить выбор работ"
+                class="ico-btn">🔃</button>
+            </h3>
             <div id="resultsBox"></div>
         </div>
 
@@ -127,17 +138,17 @@
     <div class="footer">
         <div class="footer-content">
             <div class="footer-links">
-                <a href="pages/about.html">О нас</a>
-                <a href="pages/partners.html">Партнеры</a>
-                <a href="pages/mission.html">Миссия</a>
-                <a href="pages/contacts.html">Контакты</a>
+                <a href="pages/about.html" data-i18n="aboutUs">О нас</a>
+                <a href="pages/partners.html" data-i18n="partners">Партнеры</a>
+                <a href="pages/mission.html" data-i18n="mission">Миссия</a>
+                <a href="pages/contacts.html" data-i18n="contacts">Контакты</a>
             </div>
             <div class="footer-links" style="margin-top: 10px; font-size: 0.9em;">
                 <a href="pages/impressum.html">Impressum</a>
                 <a href="pages/datenschutz.html">Datenschutz</a>
                 <a href="pages/disclaimer.html">Haftungsausschluss</a>
             </div>
-            © 2026 RemontExpert — Все права защищены
+            <span data-i18n="copyright">© 2026 RemontExpert — Все права защищены</span>
         </div>
     </div>
 <link rel="stylesheet" href="info-modal.css"><script src="scripts/info-modal.js"></script>
