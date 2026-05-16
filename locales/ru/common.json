@@ -1,0 +1,24 @@
+{
+  "units": {
+    "sqm": "м²",
+    "liters": "л",
+    "rolls": "рулонов",
+    "pieces": "шт",
+    "set": "комплект"
+  },
+  "totals": {
+    "area": "Площадь",
+    "wallArea": "Площадь стен",
+    "grandTotal": "ИТОГО",
+    "perSqm": "за м²"
+  },
+  "receipt": {
+    "object": "Объект",
+    "repairClass": "Класс ремонта",
+    "downloadPdf": "📄 Скачать PDF",
+    "materialDetails": "Детали материалов",
+    "wallpaperDetails": "Детали обоев",
+    "wallpaperCost": "Стоимость обоев",
+    "glueCost": "Стоимость клея"
+  }
+}

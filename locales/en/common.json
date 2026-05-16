@@ -1,0 +1,24 @@
+{
+  "units": {
+    "sqm": "m²",
+    "liters": "l",
+    "rolls": "rolls",
+    "pieces": "pcs",
+    "set": "set"
+  },
+  "totals": {
+    "area": "Area",
+    "wallArea": "Wall area",
+    "grandTotal": "TOTAL",
+    "perSqm": "per m²"
+  },
+  "receipt": {
+    "object": "Object",
+    "repairClass": "Repair class",
+    "downloadPdf": "📄 Download PDF",
+    "materialDetails": "Material details",
+    "wallpaperDetails": "Wallpaper details",
+    "wallpaperCost": "Wallpaper cost",
+    "glueCost": "Glue cost"
+  }
+}

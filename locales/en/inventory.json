@@ -1,0 +1,40 @@
+{
+  "tools": {
+    "brushes": "Brushes and rollers",
+    "rollers": "Paint rollers",
+    "tape": "Masking tape",
+    "covers": "Protective film",
+    "sprayGun": "Spray gun (rental)",
+    "ledLights": "LED lighting (rental)",
+    "sander": "Sanding machine (rental)",
+    "laser": "Laser level (rental)",
+    "extraTape": "Extra masking tape",
+    "extraTools": "Extra tools",
+    "safety": "Safety equipment",
+    "wpBrush": "Wallpaper brush",
+    "wpRoller": "Paste roller",
+    "wpSmoother": "Wallpaper smoother",
+    "wpKnife": "Wallpaper knife",
+    "wpTape": "Masking tape",
+    "wpBucket": "Paste bucket",
+    "wpSteamer": "Steamer (rental)",
+    "wpTable": "Cutting table (rental)",
+    "wpLaser": "Laser level (rental)"
+  },
+  "materials": {
+    "primer": "Alpina Primer",
+    "paint": "Alpina Paint",
+    "bucket": "Bucket",
+    "wallpaper": "Wallpaper",
+    "glue": "Wallpaper paste"
+  },
+  "equipment": {
+    "proSet": "Professional set",
+    "sprayGun": "Spray gun",
+    "ledLights": "LED lighting",
+    "sander": "Sanding machine",
+    "laser": "Laser level",
+    "steamer": "Steamer",
+    "table": "Cutting table"
+  }
+}

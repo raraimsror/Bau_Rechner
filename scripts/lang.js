@@ -88,6 +88,30 @@ const translations = {
 };
 
 let currentLang = 'ru';
+let resultsTranslations = {
+    categories: {},
+    tasks: {},
+    inventory: {},
+    common: {}
+};
+
+// Load JSON translations for results
+async function loadResultsTranslations(lang) {
+    try {
+        const [categories, tasks, inventory, common] = await Promise.all([
+            fetch(`locales/${lang}/categories.json`).then(r => r.json()),
+            fetch(`locales/${lang}/tasks.json`).then(r => r.json()),
+            fetch(`locales/${lang}/inventory.json`).then(r => r.json()),
+            fetch(`locales/${lang}/common.json`).then(r => r.json())
+        ]);
+
+        resultsTranslations = { categories, tasks, inventory, common };
+        return true;
+    } catch (error) {
+        console.error('Failed to load translations:', error);
+        return false;
+    }
+}
 
 function setLanguage(lang) {
     if (translations[lang]) {
@@ -95,12 +119,41 @@ function setLanguage(lang) {
         localStorage.setItem('language', lang);
         document.documentElement.lang = lang;
         document.title = t('title');
-        localize();
+
+        // Load results translations and then update UI
+        loadResultsTranslations(lang).then(() => {
+            localize();
+            // Trigger results recalculation if loadReceipt exists
+            if (typeof loadReceipt === 'function' && typeof currentJob !== 'undefined') {
+                loadReceipt(currentJob);
+            }
+        });
     }
 }
 
 function t(key) {
     return translations[currentLang][key] || key;
+}
+
+// Translation function for results
+function tr(category, key) {
+    if (resultsTranslations[category] && resultsTranslations[category][key]) {
+        return resultsTranslations[category][key];
+    }
+    // Handle nested keys (e.g., "painting.inspection")
+    if (category && key && resultsTranslations[category]) {
+        const parts = key.split('.');
+        let value = resultsTranslations[category];
+        for (const part of parts) {
+            if (value && value[part]) {
+                value = value[part];
+            } else {
+                return key;
+            }
+        }
+        return value;
+    }
+    return key;
 }
 
 function localize() {
@@ -119,8 +172,9 @@ function localize() {
 // Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
     // Set language from localStorage or detect
-    if (localStorage.getItem('language')) {
-        setLanguage(localStorage.getItem('language'));
+    const savedLang = localStorage.getItem('language');
+    if (savedLang) {
+        setLanguage(savedLang);
     } else {
         const userLang = navigator.language || navigator.userLanguage;
         if (userLang.startsWith('en')) setLanguage('en');

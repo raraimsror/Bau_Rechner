@@ -1,0 +1,26 @@
+{
+  "painting": {
+    "inspection": "Besichtigung und Beratung",
+    "prep": "Oberflächenvorbereitung",
+    "primer": "Grundierung",
+    "protection": "Schutz von Boden/Möbeln",
+    "coat1": "Erste Farbschicht",
+    "coat2": "Zweite Farbschicht",
+    "hardSpots": "Schwer zugängliche Stellen",
+    "quality": "Qualitätskontrolle",
+    "cleanup": "Raumreinigung",
+    "trash": "Müllentsorgung"
+  },
+  "wallpaper": {
+    "inspection": "Besichtigung und Beratung",
+    "prep": "Wandvorbereitung",
+    "primer": "Grundierung",
+    "protection": "Schutz von Boden/Möbeln",
+    "cutting": "Tapetenzuschnitt",
+    "hanging": "Tapezieren",
+    "trimming": "Zuschneiden und Anpassen",
+    "quality": "Qualitätskontrolle",
+    "cleanup": "Raumreinigung",
+    "trash": "Müllentsorgung"
+  }
+}

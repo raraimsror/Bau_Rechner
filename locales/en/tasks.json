@@ -1,0 +1,26 @@
+{
+  "painting": {
+    "inspection": "Inspection and consultation",
+    "prep": "Surface preparation",
+    "primer": "Priming",
+    "protection": "Floor/furniture protection",
+    "coat1": "First coat of paint",
+    "coat2": "Second coat of paint",
+    "hardSpots": "Hard-to-reach areas",
+    "quality": "Quality control",
+    "cleanup": "Room cleaning",
+    "trash": "Waste disposal"
+  },
+  "wallpaper": {
+    "inspection": "Inspection and consultation",
+    "prep": "Wall preparation",
+    "primer": "Priming",
+    "protection": "Floor/furniture protection",
+    "cutting": "Wallpaper cutting",
+    "hanging": "Wallpaper hanging",
+    "trimming": "Trimming and matching",
+    "quality": "Quality control",
+    "cleanup": "Room cleaning",
+    "trash": "Waste disposal"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "units": {
+    "sqm": "m²",
+    "liters": "l",
+    "rolls": "Rollen",
+    "pieces": "Stk",
+    "set": "Set"
+  },
+  "totals": {
+    "area": "Fläche",
+    "wallArea": "Wandfläche",
+    "grandTotal": "GESAMT",
+    "perSqm": "pro m²"
+  },
+  "receipt": {
+    "object": "Objekt",
+    "repairClass": "Renovierungsklasse",
+    "downloadPdf": "📄 PDF herunterladen",
+    "materialDetails": "Materialdetails",
+    "wallpaperDetails": "Tapetendetails",
+    "wallpaperCost": "Tapetenkosten",
+    "glueCost": "Kleisterkosten"
+  }
+}

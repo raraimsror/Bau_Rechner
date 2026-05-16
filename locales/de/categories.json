@@ -1,0 +1,14 @@
+{
+  "materials": "Materialien",
+  "materialsTotal": "Materialien gesamt",
+  "work": "Arbeiten",
+  "workTotal": "Arbeiten gesamt",
+  "workPremium": "Arbeiten (Premium)",
+  "tools": "Werkzeuge",
+  "equipment": "Ausrüstung",
+  "equipmentRental": "Ausrüstungsmiete",
+  "extras": "Zusätzlich",
+  "extraMaterials": "Zusätzliche Materialien",
+  "materialsObiPremium": "Materialien (OBI Premium)",
+  "materialsToomPremium": "Materialien (TOOM Premium)"
+}

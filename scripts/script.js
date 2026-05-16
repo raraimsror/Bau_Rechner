@@ -2,6 +2,22 @@
    ИНИЦИАЛИЗАЦИЯ ПРОЕКТА
    ========================================================= */
 
+// Helper function to map Russian category names to translation keys
+function getCategoryKey(categoryName) {
+    const categoryMap = {
+        "Инструменты": "tools",
+        "Аренда оборудования": "equipmentRental",
+        "Дополнительные материалы": "extraMaterials",
+        "Работы (Премиум)": "workPremium",
+        "Материалы (OBI Premium)": "materialsObiPremium",
+        "Материалы (TOOM Premium)": "materialsToomPremium",
+        "Оборудование": "equipment",
+        "Работы": "work",
+        "Материалы": "materials"
+    };
+    return categoryMap[categoryName] || null;
+}
+
 window.addEventListener("load", () => {
     // Инициализируем 3D визуализацию (из room3d.js)
     if (typeof init3D === 'function') {
@@ -230,8 +246,10 @@ function renderReceipt(model) {
     // Рендерим блоки из новой структуры (items из ECO/NORM/PRO модулей)
     if (totals.items && totals.items.length > 0) {
         totals.items.forEach(itemGroup => {
-            // Заголовок категории
-            htmlBlocks += `<div class="receipt__group-title">${itemGroup.category}</div>`;
+            // Заголовок категории с переводом
+            const categoryKey = getCategoryKey(itemGroup.category);
+            const translatedCategory = categoryKey ? tr('categories', categoryKey) : itemGroup.category;
+            htmlBlocks += `<div class="receipt__group-title">${translatedCategory}</div>`;
 
             // Pozīcijas ar checkbox (ECO un NORM klases)
             if (itemGroup.lines && itemGroup.lines.length > 0) {
@@ -285,7 +303,7 @@ function renderReceipt(model) {
     if (currentJob === "painting" && totals.paintData) {
         const pd = totals.paintData;
 
-        paintDetailsHtml = `<div class="receipt__group-title">Детали материалов</div>`;
+        paintDetailsHtml = `<div class="receipt__group-title">${tr('common', 'receipt.materialDetails')}</div>`;
 
         // Грунтовка (если есть)
         if (totals.primerData) {
@@ -384,10 +402,10 @@ function renderReceipt(model) {
         const wp = totals.wallpaperData;
         const wpInfo = pricing.wallpaper;
         wallpaperDetailsHtml = `
-            <div class="receipt__group-title">Детали обоев</div>
+            <div class="receipt__group-title">${tr('common', 'receipt.wallpaperDetails')}</div>
             <div class="receipt__line">
                 <span>${wpInfo.name}</span>
-                <span>${wp.rolls} рулонов</span>
+                <span>${wp.rolls} ${tr('common', 'units.rolls')}</span>
             </div>
             <div class="receipt__line receipt__muted">
                 <span>Размер рулона</span>
@@ -398,11 +416,11 @@ function renderReceipt(model) {
                 <span>${wp.gluePackages} × ${wpInfo.glueWeight * 1000}г</span>
             </div>
             <div class="receipt__line receipt__muted">
-                <span>Стоимость обоев</span>
+                <span>${tr('common', 'receipt.wallpaperCost')}</span>
                 <span>${wp.rollCost.toFixed(2)} €</span>
             </div>
             <div class="receipt__line receipt__muted">
-                <span>Стоимость клея</span>
+                <span>${tr('common', 'receipt.glueCost')}</span>
                 <span>${wp.glueCost.toFixed(2)} €</span>
             </div>
         `;
@@ -414,23 +432,23 @@ function renderReceipt(model) {
         // Для ECO: Материалы + Инструменты + Оборудование + Дополнительно
         totalSummaryHtml = `
             <div class="receipt__line">
-                <span>Материалы всего</span>
+                <span>${tr('categories', 'materialsTotal')}</span>
                 <span>${totals.materialTotal.toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>Инструменты</span>
+                <span>${tr('categories', 'tools')}</span>
                 <span>${(totals.toolsTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>Оборудование</span>
+                <span>${tr('categories', 'equipment')}</span>
                 <span>${(totals.equipmentTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>Дополнительно</span>
+                <span>${tr('categories', 'extras')}</span>
                 <span>${(totals.extrasTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>ИТОГО</span>
+                <span>${tr('common', 'totals.grandTotal')}</span>
                 <span>${totals.grandTotal.toFixed(2)} €</span>
             </div>
         `;
@@ -438,19 +456,19 @@ function renderReceipt(model) {
         // Для NORM и PRO: Работы + Материалы + Оборудование
         totalSummaryHtml = `
             <div class="receipt__line">
-                <span>Работы всего</span>
+                <span>${tr('categories', 'workTotal')}</span>
                 <span>${(totals.workTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>Материалы всего</span>
+                <span>${tr('categories', 'materialsTotal')}</span>
                 <span>${totals.materialTotal.toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>Оборудование</span>
+                <span>${tr('categories', 'equipment')}</span>
                 <span>${(totals.equipmentTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>ИТОГО</span>
+                <span>${tr('common', 'totals.grandTotal')}</span>
                 <span>${totals.grandTotal.toFixed(2)} €</span>
             </div>
         `;
@@ -460,13 +478,13 @@ function renderReceipt(model) {
         <div class="receipt">
             <div class="receipt__title">${model.title}</div>
 
-            <div class="receipt__group-title">Объект</div>
+            <div class="receipt__group-title">${tr('common', 'receipt.object')}</div>
             <div class="receipt__line">
-                <span>Площадь стен</span>
-                <span>${totals.area.toFixed(2)} м²</span>
+                <span>${tr('common', 'totals.wallArea')}</span>
+                <span>${totals.area.toFixed(2)} ${tr('common', 'units.sqm')}</span>
             </div>
             <div class="receipt__line">
-                <span>Класс ремонта</span>
+                <span>${tr('common', 'receipt.repairClass')}</span>
                 <span>${currentClass.toUpperCase()}</span>
             </div>
 
@@ -493,7 +511,7 @@ function renderReceipt(model) {
                     cursor: pointer;
                     transition: background 0.3s;
                 ">
-                    📄 Скачать PDF
+                    ${tr('common', 'receipt.downloadPdf')}
                 </button>
             ` : ''}
 

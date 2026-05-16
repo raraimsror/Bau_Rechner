@@ -1,0 +1,40 @@
+{
+  "tools": {
+    "brushes": "Pinsel und Rollen",
+    "rollers": "Malerwalzen",
+    "tape": "Malerband",
+    "covers": "Schutzfolie",
+    "sprayGun": "Farbspritzgerät (Miete)",
+    "ledLights": "LED-Beleuchtung (Miete)",
+    "sander": "Schleifmaschine (Miete)",
+    "laser": "Laserwasserwaage (Miete)",
+    "extraTape": "Zusätzliches Malerband",
+    "extraTools": "Zusätzliche Werkzeuge",
+    "safety": "Schutzausrüstung",
+    "wpBrush": "Tapetenbürste",
+    "wpRoller": "Kleisterwalze",
+    "wpSmoother": "Tapetenspachtel",
+    "wpKnife": "Tapetenmesser",
+    "wpTape": "Malerband",
+    "wpBucket": "Kleistereimer",
+    "wpSteamer": "Dampfgerät (Miete)",
+    "wpTable": "Zuschneidetisch (Miete)",
+    "wpLaser": "Laserwasserwaage (Miete)"
+  },
+  "materials": {
+    "primer": "Alpina Grundierung",
+    "paint": "Alpina Farbe",
+    "bucket": "Eimer",
+    "wallpaper": "Tapete",
+    "glue": "Tapetenkleister"
+  },
+  "equipment": {
+    "proSet": "Professionelles Set",
+    "sprayGun": "Farbspritzgerät",
+    "ledLights": "LED-Beleuchtung",
+    "sander": "Schleifmaschine",
+    "laser": "Laserwasserwaage",
+    "steamer": "Dampfgerät",
+    "table": "Zuschneidetisch"
+  }
+}
