@@ -18,6 +18,44 @@ function getCategoryKey(categoryName) {
     return categoryMap[categoryName] || null;
 }
 
+// Helper function to translate line names based on id
+function getTranslatedLineName(lineId, fallbackName, repairClass, jobType) {
+    // For ECO class - check tools/equipment in inventory
+    if (repairClass === "econom") {
+        // Try tools first
+        let translated = tr('inventory', 'tools.' + lineId);
+        if (translated !== 'tools.' + lineId) return translated;
+
+        // Try equipment
+        translated = tr('inventory', 'equipment.' + lineId);
+        if (translated !== 'equipment.' + lineId) return translated;
+
+        // Try materials
+        translated = tr('inventory', 'materials.' + lineId);
+        if (translated !== 'materials.' + lineId) return translated;
+    }
+
+    // For NORM and PRO classes - check tasks (painting/wallpaper work items)
+    if (repairClass === "standard" || repairClass === "premium") {
+        // Remove prefix (paintInspection -> inspection, wpInspection -> inspection)
+        let taskId = lineId;
+        if (lineId.startsWith('paint')) {
+            taskId = lineId.replace('paint', '');
+            taskId = taskId.charAt(0).toLowerCase() + taskId.slice(1);
+            let translated = tr('tasks', 'painting.' + taskId);
+            if (translated !== 'painting.' + taskId) return translated;
+        } else if (lineId.startsWith('wp')) {
+            taskId = lineId.replace('wp', '');
+            taskId = taskId.charAt(0).toLowerCase() + taskId.slice(1);
+            let translated = tr('tasks', 'wallpaper.' + taskId);
+            if (translated !== 'wallpaper.' + taskId) return translated;
+        }
+    }
+
+    // Fallback to original name
+    return fallbackName;
+}
+
 window.addEventListener("load", () => {
     // Инициализируем 3D визуализацию (из room3d.js)
     if (typeof init3D === 'function') {
@@ -263,12 +301,15 @@ function renderReceipt(model) {
                         const checkboxClass = currentClass === "econom" ? "eco-tool-toggle" : "norm-work-toggle";
                         const dataAttr = currentClass === "econom" ? "data-tool-id" : "data-work-id";
 
+                        // Translate line name based on id
+                        const translatedName = getTranslatedLineName(line.id, line.name, currentClass, currentJob);
+
                         htmlBlocks += `
                             <div class="receipt__line">
                                 <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
                                     <input type="checkbox" class="${checkboxClass}" ${dataAttr}="${line.id}" ${isChecked}
                                            style="margin-right: 8px; cursor: pointer;">
-                                    <span style="flex: 1;">${line.name}</span>
+                                    <span style="flex: 1;">${translatedName}</span>
                                 </label>
                                 <span>${cost.toFixed(2)} €</span>
                             </div>
@@ -276,9 +317,11 @@ function renderReceipt(model) {
                     }
                     // Parastā pozīcija bez checkbox
                     else {
+                        // Translate line name for non-checkbox items too
+                        const translatedName = getTranslatedLineName(line.id, line.name, currentClass, currentJob);
                         htmlBlocks += `
                             <div class="receipt__line">
-                                <span>${line.name}</span>
+                                <span>${translatedName}</span>
                                 <span>${line.cost.toFixed(2)} €</span>
                             </div>
                         `;

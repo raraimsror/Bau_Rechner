@@ -1,25 +1,29 @@
 {
   "tools": {
-    "brushes": "Pinsel und Rollen",
+    "brushes": "Malerpinsel",
     "rollers": "Malerwalzen",
     "tape": "Malerband",
     "covers": "Schutzfolie",
-    "sprayGun": "Farbspritzgerät (Miete)",
-    "ledLights": "LED-Beleuchtung (Miete)",
-    "sander": "Schleifmaschine (Miete)",
-    "laser": "Laserwasserwaage (Miete)",
-    "extraTape": "Zusätzliches Malerband",
-    "extraTools": "Zusätzliche Werkzeuge",
-    "safety": "Schutzausrüstung",
+    "sprayGun": "Farbspritzgerät mit Kompressor",
+    "ledLights": "LED-Strahler",
+    "sander": "Schleifmaschine mit Staubsauger",
+    "laser": "Lasernivelliergerät",
+    "extraTape": "Zusätzliches Band und Folie",
+    "extraTools": "Zusätzliche Walzen und Pinsel",
+    "safety": "Schutzausrüstung und Verbrauchsmaterial",
     "wpBrush": "Tapetenbürste",
-    "wpRoller": "Kleisterwalze",
+    "wpRoller": "Tapetenwalze",
     "wpSmoother": "Tapetenspachtel",
+    "wpSpatula": "Tapetenspachtel",
     "wpKnife": "Tapetenmesser",
     "wpTape": "Malerband",
     "wpBucket": "Kleistereimer",
     "wpSteamer": "Dampfgerät (Miete)",
     "wpTable": "Zuschneidetisch (Miete)",
-    "wpLaser": "Laserwasserwaage (Miete)"
+    "wpLaser": "Lasernivelliergerät (Miete)",
+    "wpExtraGlue": "Zusätzlicher Kleister",
+    "wpExtraTools": "Zusätzliche Werkzeuge",
+    "wpSafety": "Schutzausrüstung"
   },
   "materials": {
     "primer": "Alpina Grundierung",
@@ -33,7 +37,7 @@
     "sprayGun": "Farbspritzgerät",
     "ledLights": "LED-Beleuchtung",
     "sander": "Schleifmaschine",
-    "laser": "Laserwasserwaage",
+    "laser": "Lasernivelliergerät",
     "steamer": "Dampfgerät",
     "table": "Zuschneidetisch"
   }
