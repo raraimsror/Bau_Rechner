@@ -1,7 +1,7 @@
 # RemontExpert 3D Pro - Development Plan
 
-**Updated:** 2026-05-12 19:49  
-**Status:** PRODUCTION READY → UI/UX Improvements Phase
+**Updated:** 2026-05-16 21:19  
+**Status:** PRODUCTION READY → React Migration Phase
 
 ---
 
@@ -18,189 +18,260 @@
 - ✅ Mobile responsive design
 - ✅ Mobile 3D scaling (Strategy 6)
 - ✅ Debounce recalculation (1.5s)
-- ✅ All comments in Russian
+- ✅ Full localization (RU/EN/DE)
 
 **Result:** Fully functional MVP ready for production
 
 ---
 
-## 🎯 CURRENT PRIORITY: UI/UX Design Improvements
+## 🎯 CURRENT PRIORITY: React Migration
 
-### Goal
-Transform functional prototype into professional, visually appealing product that inspires trust and engagement.
+### Why React?
+Current Vanilla JS implementation works perfectly, but React migration will provide:
+- Better state management and component reusability
+- Easier maintenance and scalability
+- Modern development workflow with hot reload
+- Better TypeScript integration potential (future)
+- Improved testing capabilities
+- Cleaner separation of concerns
 
-### Why
-Current design is functional but basic. Professional UI/UX will:
-- Increase user trust and credibility
-- Improve user engagement and retention
-- Enhance conversion rates (PDF exports, contact forms)
-- Make the product market-ready
+### Migration Strategy
+**Approach:** Create new React project alongside existing one
+- Keep original as reference and fallback
+- Gradual migration with feature parity verification
+- No feature loss - maintain all existing functionality
 
 ---
 
-## 📋 Phase 10: UI/UX Design (NEXT)
+## 📋 Phase 11: React Migration (CURRENT)
 
-### 10.1 Visual Improvements
-**Time:** 3-4h
-
-**Tasks:**
-- [ ] Add gradient background to 3D viewer (grey gradient)
-- [ ] Simplify info-modal.js functionality (currently too complex)
-- [ ] Define primary color palette (3-5 colors)
-- [ ] Choose accent colors for CTAs and highlights
-- [ ] Ensure WCAG contrast ratios (accessibility)
-- [ ] Create consistent brand identity
-
-### 10.2 Multi-language Support
+### 11.1 Project Setup & Architecture
 **Time:** 4-6h
 
 **Tasks:**
-- [ ] Design 3-language architecture (DE/RU/EN or DE/RU/LV)
-- [ ] Implement language switcher UI
-- [ ] Translate all interface strings
-- [ ] Store language preference
+- [ ] Create Bau_Rechner_React/ folder alongside existing project
+- [ ] Initialize Vite + React project
+- [ ] Install dependencies (react-router-dom, i18next, jspdf)
+- [ ] Set up folder structure (components/, services/, hooks/, context/)
+- [ ] Configure Vite for absolute imports
+- [ ] Copy static assets (data/, locales/, pics/, libs/)
 
-### 10.3 Store Selection Feature
+**Deliverables:**
+- Working React dev server
+- Folder structure ready
+- All static assets accessible
+
+---
+
+### 11.2 State Management & Context
+**Time:** 3-4h
+
+**Tasks:**
+- [ ] Create AppContext with useReducer
+- [ ] Define all state variables (dimensions, selections, pricing)
+- [ ] Implement all reducer actions
+- [ ] Create custom hooks (useAppContext, useDebounce)
+- [ ] Set up i18next configuration
+- [ ] Create LanguageProvider
+
+**Deliverables:**
+- Global state management working
+- Language switching functional
+- Custom hooks ready
+
+---
+
+### 11.3 Layout Components
 **Time:** 2-3h
 
 **Tasks:**
-- [ ] Add store/shop selection dropdown to results
-- [ ] Integrate with pricing data
-- [ ] Display store-specific prices
-- [ ] Apply colors to all UI elements
+- [ ] Create Header component (logo, language selector)
+- [ ] Create Footer component (links, copyright)
+- [ ] Create MainLayout (3-column responsive grid)
+- [ ] Apply CSS Modules for styling
+- [ ] Test responsive behavior
 
 **Deliverables:**
-- Color variables in CSS
-- Consistent color usage across all pages
-- Accessible contrast ratios
+- Basic layout structure
+- Responsive design working
+- Header and footer functional
 
 ---
 
-### 10.2 Typography System
-**Time:** 1-2h
-
-**Tasks:**
-- [ ] Choose professional font families (heading + body)
-- [ ] Define font size scale (h1-h6, body, small)
-- [ ] Set proper line heights and letter spacing
-- [ ] Create clear visual hierarchy
-- [ ] Apply consistently across all pages
-
-**Deliverables:**
-- Typography CSS variables
-- Clear heading hierarchy
-- Readable body text
-
----
-
-### 10.3 Layout & Spacing
+### 11.4 Filters Panel (Left Column)
 **Time:** 2-3h
 
 **Tasks:**
-- [ ] Implement consistent spacing system (8px grid)
-- [ ] Improve visual structure and alignment
-- [ ] Add card-based design for sections
-- [ ] Enhance responsive grid system
-- [ ] Better use of whitespace
+- [ ] Create JobTypeSelector component (radio buttons)
+- [ ] Create WallSelector component (6 checkboxes)
+- [ ] Create ResetFiltersButton component
+- [ ] Connect to AppContext
+- [ ] Apply translations
 
 **Deliverables:**
-- Spacing utility classes
-- Card components
-- Improved visual rhythm
+- Left panel fully functional
+- State updates working
+- Translations applied
 
 ---
 
-### 10.4 Interactive Elements
+### 11.5 3D Viewer (Center Column)
+**Time:** 4-5h
+
+**Tasks:**
+- [ ] Create RoomInputs component (X, Y, Z inputs)
+- [ ] Create Room3D component (port room3d.js logic)
+- [ ] Implement mouse/touch controls
+- [ ] Implement mobile scaling (Strategy 6)
+- [ ] Create InfoModal component
+- [ ] Test 3D interactions
+
+**Deliverables:**
+- 3D visualization working
+- Mobile scaling functional
+- Touch controls working
+- Info modal functional
+
+---
+
+### 11.6 Results Panel (Right Column)
+**Time:** 3-4h
+
+**Tasks:**
+- [ ] Create RepairClassSelector component
+- [ ] Create Receipt component
+- [ ] Create ReceiptLine component (with checkboxes)
+- [ ] Create ResetWorkBlocksButton component
+- [ ] Implement dynamic rendering based on repair class
+
+**Deliverables:**
+- Right panel fully functional
+- Receipt rendering correctly
+- Checkboxes working
+
+---
+
+### 11.7 Calculation Services
+**Time:** 4-5h
+
+**Tasks:**
+- [ ] Port ECO.js to services/calculations/eco.js
+- [ ] Port NORM.js to services/calculations/norm.js
+- [ ] Port PRO.js to services/calculations/pro.js
+- [ ] Port paint.js to services/calculations/paint.js
+- [ ] Port wallpaper.js to services/calculations/wallpaper.js
+- [ ] Port tech-card.js to services/calculations/techCard.js
+- [ ] Create useCalculations hook
+- [ ] Implement debounced recalculation (1.5s)
+
+**Deliverables:**
+- All calculation logic working
+- Pure functions (no global state)
+- Debounce working correctly
+
+---
+
+### 11.8 PDF Export
 **Time:** 2-3h
 
 **Tasks:**
-- [ ] Style buttons (primary, secondary, ghost)
-- [ ] Style input fields and labels
-- [ ] Add hover/focus/active states
-- [ ] Create loading indicators
-- [ ] Design error/success messages
-- [ ] Add smooth transitions
+- [ ] Port pdf-export.js to services/pdfExport.js
+- [ ] Integrate jsPDF npm package
+- [ ] Create PDFExportButton component
+- [ ] Test PDF generation with all data
+- [ ] Verify logo appears correctly
 
 **Deliverables:**
-- Button component styles
-- Form element styles
-- Interaction states
-- Micro-animations
+- PDF export working
+- All data included
+- Formatting matches original
 
 ---
 
-### 10.5 3D Viewer Enhancement
+### 11.9 Testing & Verification
+**Time:** 4-6h
+
+**Tasks:**
+- [ ] Test all 3 repair classes (ECO/NORM/PRO)
+- [ ] Test both job types (painting/wallpaper)
+- [ ] Test all 3 languages (RU/EN/DE)
+- [ ] Test mobile responsiveness (320px - 1920px)
+- [ ] Test 3D viewer on mobile devices
+- [ ] Test PDF export
+- [ ] Test all checkbox interactions
+- [ ] Test reset buttons
+- [ ] Verify calculations match original
+- [ ] Fix any bugs found
+
+**Deliverables:**
+- All features working
+- Feature parity with original
+- No critical bugs
+
+---
+
+### 11.10 Build & Documentation
 **Time:** 1-2h
 
 **Tasks:**
-- [ ] Improve controls visibility
-- [ ] Cleaner interface design
-- [ ] Better mobile UX
-- [ ] Add visual feedback for interactions
-- [ ] Enhance rotation/zoom controls
+- [ ] Run production build
+- [ ] Test production bundle
+- [ ] Update README.md with React instructions
+- [ ] Document component structure
+- [ ] Document state management
+- [ ] Create migration notes
 
 **Deliverables:**
-- Improved 3D viewer UI
-- Better mobile controls
-- Visual interaction feedback
+- Production build ready
+- Documentation updated
+- Migration complete
 
 ---
 
-### 10.6 Receipt/Results Section
-**Time:** 1-2h
-
-**Tasks:**
-- [ ] Better visual hierarchy
-- [ ] Clearer price presentation
-- [ ] Improved table/list design
-- [ ] Highlight total costs
-- [ ] Better grouping of items
-
-**Deliverables:**
-- Professional receipt design
-- Clear cost breakdown
-- Visual emphasis on totals
-
----
-
-### 10.7 Legal Pages Styling
-**Time:** 1h
-
-**Tasks:**
-- [ ] Apply consistent styling to all 7 pages
-- [ ] Improve readability
-- [ ] Add proper navigation
-- [ ] Ensure mobile responsiveness
-
-**Deliverables:**
-- Styled legal pages
-- Consistent navigation
-- Mobile-friendly layout
-
----
-
-## 📊 Phase 10 Progress Tracker
+## 📊 Phase 11 Progress Tracker
 
 ```
-10.1 Color Scheme         ⏳ 0%
-10.2 Typography           ⏳ 0%
-10.3 Layout & Spacing     ⏳ 0%
-10.4 Interactive Elements ⏳ 0%
-10.5 3D Viewer UI         ⏳ 0%
-10.6 Receipt Section      ⏳ 0%
-10.7 Legal Pages          ⏳ 0%
+11.1 Project Setup         ⏳ 0%
+11.2 State Management      ⏳ 0%
+11.3 Layout Components     ⏳ 0%
+11.4 Filters Panel         ⏳ 0%
+11.5 3D Viewer             ⏳ 0%
+11.6 Results Panel         ⏳ 0%
+11.7 Calculation Services  ⏳ 0%
+11.8 PDF Export            ⏳ 0%
+11.9 Testing               ⏳ 0%
+11.10 Build & Docs         ⏳ 0%
 ─────────────────────────────────
-Overall Progress          ⏳ 0%
+Overall Progress           ⏳ 0%
 ```
 
-**Estimated Time:** 10-15 hours  
-**Target Completion:** 2026-05-08
+**Estimated Time:** 28-38 hours  
+**Target Completion:** 2026-05-25
 
 ---
 
-## 🔮 FUTURE ENHANCEMENTS (Backlog)
+## 🔮 FUTURE ENHANCEMENTS (After React Migration)
+
+### Phase 10: UI/UX Design Improvements (POSTPONED)
+*Will be implemented in React after migration*
+
+**Planned improvements:**
+- Color scheme and branding
+- Typography system
+- Layout and spacing improvements
+- Interactive elements styling
+- 3D viewer UI enhancements
+- Receipt section redesign
+- Legal pages styling
+
+**Reason for postponement:** React migration takes priority. UI/UX improvements will be easier to implement with React components and CSS Modules.
+
+---
+
+## 🔮 FUTURE ENHANCEMENTS (After React Migration)
 
 ### Short-term (1-2 months)
+- [ ] UI/UX design improvements (Phase 10)
 - [ ] User testing and feedback collection
 - [ ] Performance optimization
 - [ ] SEO optimization (meta tags, structured data)
@@ -208,17 +279,19 @@ Overall Progress          ⏳ 0%
 - [ ] A/B testing setup
 
 ### Mid-term (3-6 months)
+- [ ] TypeScript migration
+- [ ] Unit tests (Jest + React Testing Library)
+- [ ] E2E tests (Playwright)
 - [ ] Store API integration (automatic price updates)
 - [ ] Extended material database (more brands)
 - [ ] User accounts and saved projects
 - [ ] Email notifications
-- [ ] Multi-language support (LV/RU/DE)
 - [ ] Comparison tool (multiple variants)
 
 ### Long-term (6-12 months)
 - [ ] AI assistant for material selection
 - [ ] Extended 3D geometry (roofs, facades, terraces)
-- [ ] Mobile app (React Native / Flutter)
+- [ ] Mobile app (React Native)
 - [ ] Professional profiles (contractors, architects)
 - [ ] Marketplace integration
 - [ ] Work time calculator
@@ -227,168 +300,226 @@ Overall Progress          ⏳ 0%
 
 ---
 
-## 🎨 Design Inspiration & References
+## 📝 React Migration Technical Details
 
-### Color Schemes to Consider:
-- **Professional Blue:** Trust, reliability (banks, corporate)
-- **Modern Green:** Eco-friendly, renovation (sustainability)
-- **Warm Orange:** Energy, creativity (construction)
-- **Neutral Gray:** Clean, modern (minimalist)
+### Technology Stack
 
-### Typography Suggestions:
-- **Headings:** Inter, Poppins, Montserrat (modern, clean)
-- **Body:** Open Sans, Roboto, Lato (readable, professional)
+**Core:**
+- React 18 (hooks, concurrent features)
+- Vite 5 (fast dev server, optimized builds)
+- React Router 6 (future multi-page support)
 
-### UI Patterns:
-- Card-based layouts
-- Subtle shadows and depth
-- Smooth transitions (200-300ms)
-- Clear CTAs with contrast
-- Generous whitespace
+**State Management:**
+- Context API + useReducer (recommended for this project size)
+- Alternative: Zustand (if more complex state needed)
 
----
+**Styling:**
+- CSS Modules (recommended - easy migration from existing CSS)
+- Alternative: Styled Components (if dynamic styling needed)
 
-## 🐛 Known Issues
+**Localization:**
+- i18next + react-i18next (industry standard)
+- Keep existing JSON structure in locales/
 
-**None critical** - all core functionality working
+**PDF Export:**
+- jsPDF (npm package, same as current)
 
-**Minor improvements needed:**
-- UI/UX polish (current priority)
-- Code documentation (optional for MVP)
-- Unit tests (optional for MVP)
+**Development:**
+- ESLint + Prettier (code quality)
+- Vite dev server with HMR
 
----
+### Folder Structure
 
-## 📈 Success Metrics (To Be Defined)
+```
+Bau_Rechner_React/
+├── public/
+│   ├── data/              # Copy from original
+│   ├── locales/           # Copy from original
+│   ├── pics/              # Copy from original
+│   └── libs/              # Copy from original
+├── src/
+│   ├── components/
+│   │   ├── Layout/
+│   │   │   ├── Header.jsx
+│   │   │   ├── Header.module.css
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Footer.module.css
+│   │   │   ├── MainLayout.jsx
+│   │   │   └── MainLayout.module.css
+│   │   ├── Filters/
+│   │   │   ├── JobTypeSelector.jsx
+│   │   │   ├── WallSelector.jsx
+│   │   │   └── ResetFiltersButton.jsx
+│   │   ├── RoomViewer/
+│   │   │   ├── Room3D.jsx
+│   │   │   ├── Room3D.module.css
+│   │   │   ├── RoomInputs.jsx
+│   │   │   ├── InfoModal.jsx
+│   │   │   └── InfoModal.module.css
+│   │   ├── Results/
+│   │   │   ├── RepairClassSelector.jsx
+│   │   │   ├── Receipt.jsx
+│   │   │   ├── Receipt.module.css
+│   │   │   ├── ReceiptLine.jsx
+│   │   │   ├── PDFExportButton.jsx
+│   │   │   └── ResetWorkBlocksButton.jsx
+│   │   └── UI/
+│   │       ├── Button.jsx
+│   │       ├── Checkbox.jsx
+│   │       └── RadioButton.jsx
+│   ├── hooks/
+│   │   ├── useCalculations.js
+│   │   ├── useDebounce.js
+│   │   ├── useLocalStorage.js
+│   │   └── useAppContext.js
+│   ├── services/
+│   │   ├── calculations/
+│   │   │   ├── eco.js
+│   │   │   ├── norm.js
+│   │   │   ├── pro.js
+│   │   │   ├── paint.js
+│   │   │   ├── wallpaper.js
+│   │   │   └── techCard.js
+│   │   ├── pdfExport.js
+│   │   └── dataLoader.js
+│   ├── context/
+│   │   ├── AppContext.jsx
+│   │   └── LanguageContext.jsx
+│   ├── i18n/
+│   │   └── config.js
+│   ├── styles/
+│   │   ├── global.css
+│   │   └── variables.css
+│   ├── App.jsx
+│   └── main.jsx
+├── package.json
+├── vite.config.js
+├── .eslintrc.js
+└── README.md
+```
 
-### User Engagement:
-- Time on site
-- Number of calculations per session
-- PDF export rate
-- Contact form submissions
+### Key Implementation Patterns
 
-### Technical:
-- Page load time (target: < 3s)
-- Mobile vs desktop usage ratio
-- Browser compatibility
-- Error rate
+**1. Global State (AppContext.jsx):**
+```javascript
+const initialState = {
+  dimensions: { x: 400, y: 300, z: 250 },
+  selectedWalls: { front: true, back: true, left: true, right: true, floor: false, ceiling: true },
+  currentJob: 'painting',
+  currentClass: 'econom',
+  pricing: null,
+  selectedEcoTools: { /* ... */ },
+  selectedNormWorks: { /* ... */ }
+};
 
-### Business:
-- Conversion rate (visitor → calculation)
-- Return visitor rate
-- Most popular features
-- User feedback score
+function appReducer(state, action) {
+  switch (action.type) {
+    case 'SET_DIMENSIONS': return { ...state, dimensions: action.payload };
+    case 'TOGGLE_WALL': return { ...state, selectedWalls: { ...state.selectedWalls, [action.payload]: !state.selectedWalls[action.payload] }};
+    // ... more actions
+  }
+}
+```
 
-**Action:** Set up analytics after UI/UX improvements
+**2. Calculations Hook (useCalculations.js):**
+```javascript
+export function useCalculations() {
+  const { state } = useAppContext();
+  const [totals, setTotals] = useState(null);
+  const debouncedDimensions = useDebounce(state.dimensions, 1500);
+  
+  useEffect(() => {
+    const area = calculateArea(debouncedDimensions, state.selectedWalls);
+    const result = state.currentClass === 'econom' 
+      ? calculateEco(state.currentJob, area, state.pricing, state.selectedEcoTools)
+      : state.currentClass === 'standard'
+      ? calculateNorm(state.currentJob, area, state.pricing, state.selectedNormWorks)
+      : calculatePro(state.currentJob, area, state.pricing);
+    setTotals(result);
+  }, [debouncedDimensions, state.selectedWalls, state.currentJob, state.currentClass, state.pricing]);
+  
+  return totals;
+}
+```
 
----
+**3. Component Example (Receipt.jsx):**
+```javascript
+export function Receipt() {
+  const { state } = useAppContext();
+  const { t } = useTranslation();
+  const totals = useCalculations();
+  
+  if (!totals) return <div>Loading...</div>;
+  
+  return (
+    <div className={styles.receipt}>
+      <h3>{t('results')}</h3>
+      {totals.items.map(group => (
+        <ReceiptGroup key={group.category} group={group} />
+      ))}
+      <ReceiptTotal totals={totals} />
+    </div>
+  );
+}
+```
 
-## 🚀 Deployment Plan
+### Migration Checklist
 
-### Current Setup:
-- **Hosting:** GitHub Pages (static hosting)
-- **Domain:** TBD
-- **SSL:** Automatic via GitHub Pages
+**Before starting:**
+- [ ] Backup current project
+- [ ] Create git branch or new folder
+- [ ] Review detailed plan in `.claude/plans/pure-spinning-pebble.md`
 
-### Future Considerations:
-- **Netlify/Vercel:** Better performance, CI/CD, forms
-- **Custom Domain:** remontexpert.lv or similar
-- **CDN:** Automatic via hosting provider
+**During migration:**
+- [ ] Keep original project running for comparison
+- [ ] Test each component as you build it
+- [ ] Verify calculations match original exactly
+- [ ] Test on mobile devices regularly
 
-### Pre-launch Checklist:
-- [ ] UI/UX improvements complete
-- [ ] All pages tested on multiple devices
-- [ ] Analytics integrated
-- [ ] SEO meta tags added
-- [ ] Cookie banner (GDPR)
-- [ ] Custom domain configured
-- [ ] SSL certificate active
-
----
-
-## 💡 Ideas for Future Consideration
-
-### Features:
-- Save calculations to localStorage
-- Share calculation via link
-- Print-friendly version
-- Dark mode toggle
-- Accessibility improvements (screen reader support)
-
-### Products:
-- More paint brands (Dulux, Tikkurila, etc.)
-- Different wallpaper types (vinyl, fabric, etc.)
-- Primer and putty calculations
-- Tool rental integration
-
-### Technical:
-- React/Vue rewrite (if scaling needed)
-- TypeScript migration
-- Unit tests (Jest)
-- E2E tests (Playwright)
-- CI/CD pipeline
-
-### Business:
-- Affiliate partnerships with stores
-- Premium features (advanced calculations)
-- Contractor directory
-- Material delivery integration
-
----
-
-## 📝 Development Guidelines
-
-### Code Quality:
-- Keep modular structure
-- All comments in Russian (target audience)
-- Use meaningful variable names
-- Follow existing patterns
-- Test on multiple devices
-
-### Design Principles:
-- Mobile-first approach
-- Accessibility compliance (WCAG)
-- Performance optimization
-- Progressive enhancement
-- User-centered design
-
-### Testing:
-- Manual testing on Chrome, Firefox, Safari, Edge
-- Mobile testing on iOS and Android
-- Responsive design testing (320px - 1920px)
-- 3D visualization performance testing
+**After migration:**
+- [ ] Full feature comparison test
+- [ ] Performance comparison
+- [ ] Bundle size analysis
+- [ ] Update documentation
 
 ---
 
 ## 🎯 Next Steps
 
 **Immediate (This Week):**
-1. Start Phase 10.1: Color Scheme & Branding
-2. Define color palette and apply to main page
-3. Test on multiple devices
+1. Review React migration plan
+2. Decide on technical choices (state management, styling)
+3. Start Phase 11.1: Project Setup
 
 **This Month:**
-- Complete all Phase 10 tasks
-- User testing with 5-10 people
-- Gather feedback and iterate
-- Prepare for public launch
+- Complete React migration (Phase 11)
+- Full testing and verification
+- Deploy React version
 
 **Next Month:**
-- Public launch
-- Marketing campaign
-- Collect user feedback
-- Plan next features based on usage data
+- UI/UX improvements (Phase 10 in React)
+- User testing
+- Performance optimization
 
 ---
 
-**How to Apply:**
-- Focus on one sub-phase at a time
-- Test each change on mobile and desktop
-- Maintain consistency across all pages
-- Gather user feedback early and often
-- Iterate based on real usage data
+## 📚 Resources
+
+**React Migration Plan:**
+- Detailed plan: `.claude/plans/pure-spinning-pebble.md`
+- Estimated time: 28-38 hours
+- Approach: New project alongside original
+
+**Documentation:**
+- Current architecture: HISTORY.md
+- Original plan: PLAN.md (this file)
+- Component structure: Will be documented during migration
+
+**Testing:**
+- Manual testing checklist in migration plan
+- Automated tests: After migration complete
 
 ---
 
-**Last Updated:** 2026-05-06 21:31  
-**Next Review:** After Phase 10 completion
+**Last Updated:** 2026-05-16 21:22  
+**Next Review:** After Phase 11.1 completion
