@@ -600,11 +600,24 @@ function renderReceipt(model) {
     // Привязываем обработчик к кнопке PDF (только для ECO)
     if (currentClass === "econom") {
         const pdfBtn = document.getElementById("downloadPdfBtn");
+        console.log('[PDF] Looking for button, found:', pdfBtn);
         if (pdfBtn) {
+            console.log('[PDF] Button element:', pdfBtn, 'disabled:', pdfBtn.disabled);
+            console.log('[PDF] Button styles - pointerEvents:', window.getComputedStyle(pdfBtn).pointerEvents);
+            console.log('[PDF] Button styles - display:', window.getComputedStyle(pdfBtn).display);
+            console.log('[PDF] Button styles - visibility:', window.getComputedStyle(pdfBtn).visibility);
             pdfBtn.addEventListener("click", () => {
+                console.log('[PDF] Button clicked');
                 if (typeof window.generateEcoPDF === 'function') {
-                    window.generateEcoPDF(totals, currentJob);
+                    try {
+                        window.generateEcoPDF(totals, currentJob);
+                        console.log('[PDF] Generation started');
+                    } catch (err) {
+                        console.error('[PDF] Generation error:', err);
+                        alert('Ошибка: сбой при генерации PDF');
+                    }
                 } else {
+                    console.warn('[PDF] Генерация PDF не загружена');
                     alert('Ошибка: функция генерации PDF не загружена');
                 }
             });

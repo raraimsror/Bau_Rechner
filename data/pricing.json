@@ -47,16 +47,11 @@
     "lastUpdated": "2026-05-03"
   },
 
-  "paint": {
-    "coverage_m2_per_liter": 8,
-    "price_per_liter": 12
-  },
-
   "ecoMaterials": {
-    "brushes": 3.5,
-    "rollers": 4.0,
-    "tape": 2.5,
-    "covers": 6.0
+    "brushes": 4.19,
+    "rollers": 13.59,
+    "tape": 3.99,
+    "covers": 3.19
   },
 
   "workRatePerM2": {

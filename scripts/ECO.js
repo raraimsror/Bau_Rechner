@@ -78,25 +78,25 @@ function calculateEcoPainting(area, pricing) {
 
     // Инструменты
     const toolsItems = [
-        { id: 'brushes', price: ecoMat.brushes || 3.5, checked: selectedEcoTools.brushes },
-        { id: 'rollers', price: ecoMat.rollers || 4.0, checked: selectedEcoTools.rollers },
-        { id: 'tape', price: ecoMat.tape || 2.5, checked: selectedEcoTools.tape },
-        { id: 'covers', price: ecoMat.covers || 6.0, checked: selectedEcoTools.covers }
+        { id: 'brushes',  name: 'brushes',  price: ecoMat.brushes || 3.5, checked: selectedEcoTools.brushes },
+        { id: 'rollers',  name: 'rollers',  price: ecoMat.rollers || 4.0, checked: selectedEcoTools.rollers },
+        { id: 'tape',     name: 'tape',     price: ecoMat.tape   || 2.5, checked: selectedEcoTools.tape },
+        { id: 'covers',   name: 'covers',   price: ecoMat.covers || 6.0, checked: selectedEcoTools.covers }
     ];
 
     // Аренда оборудования
     const equipmentItems = [
-        { id: 'sprayGun', price: 15.0, checked: selectedEcoTools.sprayGun },
-        { id: 'ledLights', price: 10.0, checked: selectedEcoTools.ledLights },
-        { id: 'sander', price: 12.0, checked: selectedEcoTools.sander },
-        { id: 'laser', price: 8.0, checked: selectedEcoTools.laser }
+        { id: 'sprayGun',  name: 'sprayGun',  price: 15.0, checked: selectedEcoTools.sprayGun },
+        { id: 'ledLights', name: 'ledLights', price: 10.0, checked: selectedEcoTools.ledLights },
+        { id: 'sander',    name: 'sander',    price: 12.0, checked: selectedEcoTools.sander },
+        { id: 'laser',     name: 'laser',     price: 8.0,  checked: selectedEcoTools.laser }
     ];
 
     // Дополнительные материалы
     const extrasItems = [
-        { id: 'extraTape', price: 5.0, checked: selectedEcoTools.extraTape },
-        { id: 'extraTools', price: 6.0, checked: selectedEcoTools.extraTools },
-        { id: 'safety', price: 4.0, checked: selectedEcoTools.safety }
+        { id: 'extraTape',  name: 'extraTape',  price: 5.0, checked: selectedEcoTools.extraTape },
+        { id: 'extraTools', name: 'extraTools', price: 6.0, checked: selectedEcoTools.extraTools },
+        { id: 'safety',     name: 'safety',     price: 4.0, checked: selectedEcoTools.safety }
     ];
 
     // Расчёт сумм
@@ -107,17 +107,17 @@ function calculateEcoPainting(area, pricing) {
     // Формируем структуру для чека
     const items = [
         {
-            category: "Инструменты",
+            category: "tools",
             lines: toolsItems,
             subtotal: toolsTotal
         },
         {
-            category: "Аренда оборудования",
+            category: "equipment",
             lines: equipmentItems,
             subtotal: equipmentTotal
         },
         {
-            category: "Дополнительные материалы",
+            category: "extras",
             lines: extrasItems,
             subtotal: extrasTotal
         }
@@ -183,17 +183,17 @@ function calculateEcoWallpaper(area, pricing) {
 
     // Инструменты для обоев
     const toolsItems = [
-        { id: 'wpKnife', price: 3.0, checked: true },
-        { id: 'wpSpatula', price: 4.0, checked: true },
-        { id: 'wpRoller', price: 5.0, checked: true },
-        { id: 'wpBucket', price: 2.0, checked: true }
+        { id: 'wpKnife',   name: 'wpKnife',   price: 3.0, checked: true },
+        { id: 'wpSpatula', name: 'wpSpatula', price: 4.0, checked: true },
+        { id: 'wpRoller',  name: 'wpRoller',  price: 5.0, checked: true },
+        { id: 'wpBucket',  name: 'wpBucket',  price: 2.0, checked: true }
     ];
 
     // Дополнительные материалы для обоев
     const extrasItems = [
-        { id: 'wpExtraGlue', price: 5.0, checked: false },
-        { id: 'wpExtraTools', price: 6.0, checked: false },
-        { id: 'wpSafety', price: 3.0, checked: false }
+        { id: 'wpExtraGlue',  name: 'wpExtraGlue',  price: 5.0, checked: false },
+        { id: 'wpExtraTools', name: 'wpExtraTools', price: 6.0, checked: false },
+        { id: 'wpSafety',     name: 'wpSafety',     price: 3.0, checked: false }
     ];
 
     const toolsTotal = toolsItems.reduce((sum, item) => sum + (item.checked ? item.price : 0), 0);
@@ -201,12 +201,12 @@ function calculateEcoWallpaper(area, pricing) {
 
     const items = [
         {
-            category: "Инструменты",
+            category: "tools",
             lines: toolsItems,
             subtotal: toolsTotal
         },
         {
-            category: "Дополнительные материалы",
+            category: "extras",
             lines: extrasItems,
             subtotal: extrasTotal
         }
