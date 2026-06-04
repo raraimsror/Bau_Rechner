@@ -1,0 +1,110 @@
+[
+  {
+    "key": "brushes",
+    "category": "tools",
+    "label": "Malerpinsel",
+    "price": 4.19
+  },
+  {
+    "key": "rollers",
+    "category": "tools",
+    "label": "Malerwalzen",
+    "price": 13.59
+  },
+  {
+    "key": "tape",
+    "category": "tools",
+    "label": "Malerband",
+    "price": 3.99
+  },
+  {
+    "key": "covers",
+    "category": "tools",
+    "label": "Schutzfolie",
+    "price": 3.19
+  },
+  {
+    "key": "sprayGun",
+    "category": "equipment",
+    "label": "Farbspritzgerät mit Kompressor",
+    "price": 15.0
+  },
+  {
+    "key": "ledLights",
+    "category": "equipment",
+    "label": "LED-Strahler",
+    "price": 10.0
+  },
+  {
+    "key": "sander",
+    "category": "equipment",
+    "label": "Schleifmaschine mit Staubsauger",
+    "price": 12.0
+  },
+  {
+    "key": "laser",
+    "category": "equipment",
+    "label": "Lasernivelliergerät",
+    "price": 8.0
+  },
+  {
+    "key": "extraTape",
+    "category": "extras",
+    "label": "Zusätzliches Band und Folie",
+    "price": 5.0
+  },
+  {
+    "key": "extraTools",
+    "category": "extras",
+    "label": "Zusätzliche Walzen und Pinsel",
+    "price": 6.0
+  },
+  {
+    "key": "safety",
+    "category": "extras",
+    "label": "Schutzausrüstung und Verbrauchsmaterial",
+    "price": 4.0
+  },
+  {
+    "key": "wpKnife",
+    "category": "tools",
+    "label": "Tapetenmesser",
+    "price": 3.0
+  },
+  {
+    "key": "wpSpatula",
+    "category": "tools",
+    "label": "Tapetenspachtel",
+    "price": 4.0
+  },
+  {
+    "key": "wpRoller",
+    "category": "tools",
+    "label": "Tapetenwalze",
+    "price": 5.0
+  },
+  {
+    "key": "wpBucket",
+    "category": "tools",
+    "label": "Kleistereimer",
+    "price": 2.0
+  },
+  {
+    "key": "wpExtraGlue",
+    "category": "extras",
+    "label": "Zusätzlicher Kleister",
+    "price": 5.0
+  },
+  {
+    "key": "wpExtraTools",
+    "category": "extras",
+    "label": "Zusätzliche Werkzeuge",
+    "price": 6.0
+  },
+  {
+    "key": "wpSafety",
+    "category": "extras",
+    "label": "Schutzausrüstung",
+    "price": 3.0
+  }
+]

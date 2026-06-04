@@ -2,91 +2,128 @@
    ИНИЦИАЛИЗАЦИЯ ПРОЕКТА
    ========================================================= */
 
-// Helper function to map Russian category names to translation keys
-function getCategoryKey(categoryName) {
-    const categoryMap = {
-        "Инструменты": "tools",
-        "Аренда оборудования": "equipmentRental",
-        "Дополнительные материалы": "extraMaterials",
-        "Работы (Премиум)": "workPremium",
-        "Материалы (OBI Premium)": "materialsObiPremium",
-        "Материалы (TOOM Premium)": "materialsToomPremium",
-        "Оборудование": "equipment",
-        "Работы": "work",
-        "Материалы": "materials"
+// Global locale data cache
+let localeServiceItems = [];
+let localeCategoryLabels = {};
+
+// Load locale data based on current language
+async function loadLocaleData(lang) {
+    try {
+        const [itemsResponse, categoriesResponse] = await Promise.all([
+            fetch(`locales/${lang}/serviceItems.json`),
+            fetch(`locales/${lang}/categoryLabels.json`)
+        ]);
+
+        if (!itemsResponse.ok || !categoriesResponse.ok) {
+            throw new Error('Failed to load locale data');
+        }
+
+        localeServiceItems = await itemsResponse.json();
+        localeCategoryLabels = await categoriesResponse.json();
+
+        console.log(`[Locale] Loaded ${localeServiceItems.length} items for ${lang}`);
+    } catch (err) {
+        console.error('[Locale] Error loading data:', err);
+        localeServiceItems = [];
+        localeCategoryLabels = {};
+    }
+}
+
+// Get item label and price by key
+function getItemData(key) {
+    const item = localeServiceItems.find(i => i.key === key);
+    return item || { key, category: '', label: key, price: 0 };
+}
+
+// Get localized UI text
+function getUIText(key) {
+    const currentLang = window.currentLang || 'ru';
+
+    const texts = {
+        ru: {
+            object: 'Объект',
+            wallArea: 'Площадь стен',
+            repairClass: 'Класс ремонта',
+            materialsTotal: 'Материалы всего',
+            tools: 'Инструменты',
+            equipment: 'Аренда оборудования',
+            extras: 'Дополнительные материалы',
+            workTotal: 'Работы всего',
+            grandTotal: 'ИТОГО',
+            sqm: 'м²',
+            downloadPdf: 'Скачать PDF',
+            note: '* Цены ориентировочные. Точный расчёт после осмотра объекта.',
+            materialDetails: 'Детали материалов',
+            primerRequired: 'Грунтовка',
+            paintTwoCoats: 'Краска (2 слоя)',
+            needed: 'Требуется',
+            totalPrimer: 'Всего грунтовки',
+            totalPaint: 'Всего краски',
+            wallpaperDetails: 'Детали обоев',
+            rolls: 'рулонов',
+            rollSize: 'Размер рулона',
+            wallpaperCost: 'Стоимость обоев',
+            glueCost: 'Стоимость клея',
+            subtotal: 'Промежуточная сумма'
+        },
+        en: {
+            object: 'Object',
+            wallArea: 'Wall area',
+            repairClass: 'Repair class',
+            materialsTotal: 'Materials total',
+            tools: 'Tools',
+            equipment: 'Equipment rental',
+            extras: 'Extra materials',
+            workTotal: 'Work total',
+            grandTotal: 'TOTAL',
+            sqm: 'm²',
+            downloadPdf: 'Download PDF',
+            note: '* Prices are indicative. Exact calculation after site inspection.',
+            materialDetails: 'Material details',
+            primerRequired: 'Primer',
+            paintTwoCoats: 'Paint (2 coats)',
+            needed: 'Needed',
+            totalPrimer: 'Total primer',
+            totalPaint: 'Total paint',
+            wallpaperDetails: 'Wallpaper details',
+            rolls: 'rolls',
+            rollSize: 'Roll size',
+            wallpaperCost: 'Wallpaper cost',
+            glueCost: 'Glue cost',
+            subtotal: 'Subtotal'
+        },
+        de: {
+            object: 'Objekt',
+            wallArea: 'Wandfläche',
+            repairClass: 'Renovierungsklasse',
+            materialsTotal: 'Materialien gesamt',
+            tools: 'Werkzeuge',
+            equipment: 'Gerätemiete',
+            extras: 'Zusatzmaterialien',
+            workTotal: 'Arbeiten gesamt',
+            grandTotal: 'GESAMT',
+            sqm: 'm²',
+            downloadPdf: 'PDF herunterladen',
+            note: '* Preise sind Richtwerte. Genaue Berechnung nach Objektbesichtigung.',
+            materialDetails: 'Materialdetails',
+            primerRequired: 'Grundierung',
+            paintTwoCoats: 'Farbe (2 Schichten)',
+            needed: 'Benötigt',
+            totalPrimer: 'Grundierung gesamt',
+            totalPaint: 'Farbe gesamt',
+            wallpaperDetails: 'Tapetendetails',
+            rolls: 'Rollen',
+            rollSize: 'Rollengröße',
+            wallpaperCost: 'Tapetenkosten',
+            glueCost: 'Kleisterkosten',
+            subtotal: 'Zwischensumme'
+        }
     };
-    return categoryMap[categoryName] || null;
+
+    return texts[currentLang]?.[key] || texts.ru[key] || key;
 }
 
-// Helper function to translate line names based on id
-function getTranslatedLineName(lineId, fallbackName, repairClass, jobType) {
-    // For ECO class - check tools/equipment in inventory
-    if (repairClass === "econom") {
-        // Try tools first
-        let translated = tr('inventory', 'tools.' + lineId);
-        if (translated !== 'tools.' + lineId) return translated;
-
-        // Try equipment
-        translated = tr('inventory', 'equipment.' + lineId);
-        if (translated !== 'equipment.' + lineId) return translated;
-
-        // Try materials
-        translated = tr('inventory', 'materials.' + lineId);
-        if (translated !== 'materials.' + lineId) return translated;
-    }
-
-    // For NORM and PRO classes - check tasks (painting/wallpaper work items)
-    if (repairClass === "standard" || repairClass === "premium") {
-        // PRO class - check premium tasks first
-        if (repairClass === "premium") {
-            // Check if it's a PRO painting work (proInspection, proPrep, etc.)
-            if (lineId.startsWith('pro') && !lineId.startsWith('proWp')) {
-                let taskId = lineId.replace('pro', '');
-                taskId = taskId.charAt(0).toLowerCase() + taskId.slice(1);
-                let translated = tr('tasks', 'premium.painting.' + taskId);
-                if (translated !== 'premium.painting.' + taskId) return translated;
-            }
-            // Check if it's a PRO wallpaper work (proWpInspection, proWpPrep, etc.)
-            else if (lineId.startsWith('proWp')) {
-                let taskId = lineId.replace('proWp', '');
-                taskId = taskId.charAt(0).toLowerCase() + taskId.slice(1);
-                let translated = tr('tasks', 'premium.wallpaper.' + taskId);
-                if (translated !== 'premium.wallpaper.' + taskId) return translated;
-            }
-            // Check premium materials
-            let translated = tr('inventory', 'premium.materials.' + lineId);
-            if (translated !== 'premium.materials.' + lineId) return translated;
-
-            // Check premium equipment
-            translated = tr('inventory', 'premium.equipment.' + lineId);
-            if (translated !== 'premium.equipment.' + lineId) return translated;
-
-            // Check premium extras
-            translated = tr('inventory', 'premium.extras.' + lineId);
-            if (translated !== 'premium.extras.' + lineId) return translated;
-        }
-
-        // NORM class or fallback for PRO
-        // Remove prefix (paintInspection -> inspection, wpInspection -> inspection)
-        let taskId = lineId;
-        if (lineId.startsWith('paint')) {
-            taskId = lineId.replace('paint', '');
-            taskId = taskId.charAt(0).toLowerCase() + taskId.slice(1);
-            let translated = tr('tasks', 'painting.' + taskId);
-            if (translated !== 'painting.' + taskId) return translated;
-        } else if (lineId.startsWith('wp')) {
-            taskId = lineId.replace('wp', '');
-            taskId = taskId.charAt(0).toLowerCase() + taskId.slice(1);
-            let translated = tr('tasks', 'wallpaper.' + taskId);
-            if (translated !== 'wallpaper.' + taskId) return translated;
-        }
-    }
-
-    // Fallback to original name
-    return fallbackName;
-}
-
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
     // Инициализируем 3D визуализацию (из room3d.js)
     if (typeof init3D === 'function') {
         init3D();
@@ -103,10 +140,13 @@ window.addEventListener("load", () => {
         if (wall) wall.classList.add("selected");
     });
 
-    // Загружаем цены, затем чек
-    loadPricing().then(() => {
-        loadReceipt(currentJob);
-    });
+    // Определяем текущий язык
+    const currentLang = window.currentLang || 'ru';
+
+    // Загружаем locale данные, цены, затем чек
+    await loadLocaleData(currentLang);
+    await loadPricing();
+    loadReceipt(currentJob);
 
     // Привязка радиокнопок
     initJobTypeRadios();
@@ -314,10 +354,9 @@ function renderReceipt(model) {
     // Рендерим блоки из новой структуры (items из ECO/NORM/PRO модулей)
     if (totals.items && totals.items.length > 0) {
         totals.items.forEach(itemGroup => {
-            // Заголовок категории с переводом
-            const categoryKey = getCategoryKey(itemGroup.category);
-            const translatedCategory = categoryKey ? tr('categories', categoryKey) : itemGroup.category;
-            htmlBlocks += `<div class="receipt__group-title">${translatedCategory}</div>`;
+            // Заголовок категории из локализованного JSON
+            const categoryLabel = localeCategoryLabels[itemGroup.category] || itemGroup.category;
+            htmlBlocks += `<div class="receipt__group-title">${categoryLabel}</div>`;
 
             // Pozīcijas ar checkbox (ECO un NORM klases)
             if (itemGroup.lines && itemGroup.lines.length > 0) {
@@ -331,15 +370,22 @@ function renderReceipt(model) {
                         const checkboxClass = currentClass === "econom" ? "eco-tool-toggle" : "norm-work-toggle";
                         const dataAttr = currentClass === "econom" ? "data-tool-id" : "data-work-id";
 
-                        // Translate line name based on id
-                        const translatedName = getTranslatedLineName(line.id, line.name || line.id, currentClass, currentJob);
+                        // Получаем локализованные данные из serviceItems.json
+                        const itemData = getItemData(line.id);
 
                         htmlBlocks += `
                             <div class="receipt__line">
                                 <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
-                                    <input type="checkbox" class="${checkboxClass}" ${dataAttr}="${line.id}" ${isChecked}
+                                    <input type="checkbox"
+                                           class="${checkboxClass}"
+                                           ${dataAttr}="${line.id}"
+                                           data-key="${itemData.key}"
+                                           data-category="${itemData.category}"
+                                           data-label="${itemData.label}"
+                                           data-price="${itemData.price}"
+                                           ${isChecked}
                                            style="margin-right: 8px; cursor: pointer;">
-                                    <span style="flex: 1;">${translatedName}</span>
+                                    <span style="flex: 1;">${itemData.label}</span>
                                 </label>
                                 <span>${cost.toFixed(2)} €</span>
                             </div>
@@ -347,11 +393,11 @@ function renderReceipt(model) {
                     }
                     // Parastā pozīcija bez checkbox
                     else {
-                        // Translate line name for non-checkbox items too
-                        const translatedName = getTranslatedLineName(line.id, line.name, currentClass, currentJob);
+                        // Получаем локализованные данные для non-checkbox items
+                        const itemData = getItemData(line.id);
                         htmlBlocks += `
                             <div class="receipt__line">
-                                <span>${translatedName}</span>
+                                <span>${itemData.label || line.name}</span>
                                 <span>${line.cost.toFixed(2)} €</span>
                             </div>
                         `;
@@ -360,9 +406,10 @@ function renderReceipt(model) {
 
                 // Pievienojam starpsummu ja ir
                 if (itemGroup.hasOwnProperty('subtotal')) {
+                    const categoryLabel = localeCategoryLabels[itemGroup.category] || itemGroup.category;
                     htmlBlocks += `
                         <div class="receipt__line" style="border-top: 1px solid #ddd; margin-top: 4px; padding-top: 4px; font-weight: 600;">
-                            <span>${tr('common', 'receipt.subtotal')} ${itemGroup.category.toLowerCase()}</span>
+                            <span>Subtotal ${categoryLabel.toLowerCase()}</span>
                             <span>${itemGroup.subtotal.toFixed(2)} €</span>
                         </div>
                     `;
@@ -376,7 +423,7 @@ function renderReceipt(model) {
     if (currentJob === "painting" && totals.paintData) {
         const pd = totals.paintData;
 
-        paintDetailsHtml = `<div class="receipt__group-title">${tr('common', 'receipt.materialDetails')}</div>`;
+        paintDetailsHtml = `<div class="receipt__group-title">${getUIText('materialDetails')}</div>`;
 
         // Грунтовка (если есть)
         if (totals.primerData) {
@@ -384,7 +431,7 @@ function renderReceipt(model) {
 
             paintDetailsHtml += `<div style="margin-bottom: 10px;">`;
             paintDetailsHtml += `<div class="receipt__line" style="font-weight: 600;">
-                <span>${tr('common', 'receipt.primerRequired')}</span>
+                <span>${getUIText('primerRequired')}</span>
                 <span></span>
             </div>`;
 
@@ -414,11 +461,11 @@ function renderReceipt(model) {
 
             paintDetailsHtml += `
                 <div class="receipt__line receipt__muted">
-                    <span>${tr('common', 'receipt.needed')}</span>
+                    <span>${getUIText('needed')}</span>
                     <span>${primer.litersNeeded}L</span>
                 </div>
                 <div class="receipt__line receipt__muted">
-                    <span>${tr('common', 'receipt.totalPrimer')}</span>
+                    <span>${getUIText('totalPrimer')}</span>
                     <span>${primer.totalLiters}L</span>
                 </div>
             `;
@@ -428,7 +475,7 @@ function renderReceipt(model) {
         // Краска
         paintDetailsHtml += `<div style="margin-bottom: 10px;">`;
         paintDetailsHtml += `<div class="receipt__line" style="font-weight: 600;">
-            <span>${tr('common', 'receipt.paintTwoCoats')}</span>
+            <span>${getUIText('paintTwoCoats')}</span>
             <span></span>
         </div>`;
 
@@ -458,11 +505,11 @@ function renderReceipt(model) {
 
         paintDetailsHtml += `
             <div class="receipt__line receipt__muted">
-                <span>${tr('common', 'receipt.needed')}</span>
+                <span>${getUIText('needed')}</span>
                 <span>${pd.litersNeeded}L</span>
             </div>
             <div class="receipt__line receipt__muted">
-                <span>${tr('common', 'receipt.totalPaint')}</span>
+                <span>${getUIText('totalPaint')}</span>
                 <span>${pd.totalLiters}L</span>
             </div>
         `;
@@ -475,13 +522,13 @@ function renderReceipt(model) {
         const wp = totals.wallpaperData;
         const wpInfo = pricing.wallpaper;
         wallpaperDetailsHtml = `
-            <div class="receipt__group-title">${tr('common', 'receipt.wallpaperDetails')}</div>
+            <div class="receipt__group-title">${getUIText('wallpaperDetails')}</div>
             <div class="receipt__line">
                 <span>${wpInfo.name}</span>
-                <span>${wp.rolls} ${tr('common', 'units.rolls')}</span>
+                <span>${wp.rolls} ${getUIText('rolls')}</span>
             </div>
             <div class="receipt__line receipt__muted">
-                <span>${tr('common', 'receipt.rollSize')}</span>
+                <span>${getUIText('rollSize')}</span>
                 <span>${wpInfo.rollLength}м × ${wpInfo.rollWidth}м</span>
             </div>
             <div class="receipt__line">
@@ -489,11 +536,11 @@ function renderReceipt(model) {
                 <span>${wp.gluePackages} × ${wpInfo.glueWeight * 1000}г</span>
             </div>
             <div class="receipt__line receipt__muted">
-                <span>${tr('common', 'receipt.wallpaperCost')}</span>
+                <span>${getUIText('wallpaperCost')}</span>
                 <span>${wp.rollCost.toFixed(2)} €</span>
             </div>
             <div class="receipt__line receipt__muted">
-                <span>${tr('common', 'receipt.glueCost')}</span>
+                <span>${getUIText('glueCost')}</span>
                 <span>${wp.glueCost.toFixed(2)} €</span>
             </div>
         `;
@@ -505,23 +552,23 @@ function renderReceipt(model) {
         // Для ECO: Материалы + Инструменты + Оборудование + Дополнительно
         totalSummaryHtml = `
             <div class="receipt__line">
-                <span>${tr('categories', 'materialsTotal')}</span>
+                <span>${getUIText('materialsTotal')}</span>
                 <span>${totals.materialTotal.toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>${tr('categories', 'tools')}</span>
+                <span>${getUIText('tools')}</span>
                 <span>${(totals.toolsTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>${tr('categories', 'equipment')}</span>
+                <span>${getUIText('equipment')}</span>
                 <span>${(totals.equipmentTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>${tr('categories', 'extras')}</span>
+                <span>${getUIText('extras')}</span>
                 <span>${(totals.extrasTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>${tr('common', 'totals.grandTotal')}</span>
+                <span>${getUIText('grandTotal')}</span>
                 <span>${totals.grandTotal.toFixed(2)} €</span>
             </div>
         `;
@@ -529,19 +576,19 @@ function renderReceipt(model) {
         // Для NORM и PRO: Работы + Материалы + Оборудование
         totalSummaryHtml = `
             <div class="receipt__line">
-                <span>${tr('categories', 'workTotal')}</span>
+                <span>${getUIText('workTotal')}</span>
                 <span>${(totals.workTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>${tr('categories', 'materialsTotal')}</span>
+                <span>${getUIText('materialsTotal')}</span>
                 <span>${totals.materialTotal.toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>${tr('categories', 'equipment')}</span>
+                <span>${getUIText('equipment')}</span>
                 <span>${(totals.equipmentTotal || 0).toFixed(2)} €</span>
             </div>
             <div class="receipt__line">
-                <span>${tr('common', 'totals.grandTotal')}</span>
+                <span>${getUIText('grandTotal')}</span>
                 <span>${totals.grandTotal.toFixed(2)} €</span>
             </div>
         `;

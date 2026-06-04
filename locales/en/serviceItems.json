@@ -1,0 +1,110 @@
+[
+  {
+    "key": "brushes",
+    "category": "tools",
+    "label": "Paint brushes",
+    "price": 4.19
+  },
+  {
+    "key": "rollers",
+    "category": "tools",
+    "label": "Paint rollers",
+    "price": 13.59
+  },
+  {
+    "key": "tape",
+    "category": "tools",
+    "label": "Masking tape",
+    "price": 3.99
+  },
+  {
+    "key": "covers",
+    "category": "tools",
+    "label": "Protective film",
+    "price": 3.19
+  },
+  {
+    "key": "sprayGun",
+    "category": "equipment",
+    "label": "Spray gun with compressor",
+    "price": 15.0
+  },
+  {
+    "key": "ledLights",
+    "category": "equipment",
+    "label": "LED floodlights",
+    "price": 10.0
+  },
+  {
+    "key": "sander",
+    "category": "equipment",
+    "label": "Sanding machine with vacuum",
+    "price": 12.0
+  },
+  {
+    "key": "laser",
+    "category": "equipment",
+    "label": "Laser level",
+    "price": 8.0
+  },
+  {
+    "key": "extraTape",
+    "category": "extras",
+    "label": "Extra tape and film",
+    "price": 5.0
+  },
+  {
+    "key": "extraTools",
+    "category": "extras",
+    "label": "Extra rollers and brushes",
+    "price": 6.0
+  },
+  {
+    "key": "safety",
+    "category": "extras",
+    "label": "Safety equipment and supplies",
+    "price": 4.0
+  },
+  {
+    "key": "wpKnife",
+    "category": "tools",
+    "label": "Wallpaper knife",
+    "price": 3.0
+  },
+  {
+    "key": "wpSpatula",
+    "category": "tools",
+    "label": "Wallpaper spatula",
+    "price": 4.0
+  },
+  {
+    "key": "wpRoller",
+    "category": "tools",
+    "label": "Wallpaper roller",
+    "price": 5.0
+  },
+  {
+    "key": "wpBucket",
+    "category": "tools",
+    "label": "Paste bucket",
+    "price": 2.0
+  },
+  {
+    "key": "wpExtraGlue",
+    "category": "extras",
+    "label": "Extra paste",
+    "price": 5.0
+  },
+  {
+    "key": "wpExtraTools",
+    "category": "extras",
+    "label": "Extra tools",
+    "price": 6.0
+  },
+  {
+    "key": "wpSafety",
+    "category": "extras",
+    "label": "Safety equipment",
+    "price": 3.0
+  }
+]

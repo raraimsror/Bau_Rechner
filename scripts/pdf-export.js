@@ -1,35 +1,14 @@
 /* =========================================================
    RemontExpert 3D Pro
-   STABLE PDF EXPORT SYSTEM
-   AUTO JSON MAPPING VERSION
-   v2.2 — FIXED: direct itemsDict lookup, robust language detection
+   PDF EXPORT - DOM-BASED VERSION
+   v3.0 — Reads data directly from DOM dataset attributes
    ========================================================= */
-
-/*
-REQUIRED:
----------------------------------------------------------
-
-window.inventoryData = inventory.json content
-
-Example:
-
-fetch('data/inventory.json')
-    .then(r => r.json())
-    .then(data => {
-        window.inventoryData = data;
-    });
-
----------------------------------------------------------
-*/
 
 /* =========================================================
    CYRILLIC → LATIN TRANSLITERATION
-   Fixes jsPDF standard font encoding issues (=AB@C<5=BK bug)
-   Long-term fix: embed a TTF Unicode font via doc.addFileToVFS
    ========================================================= */
 
 function cyrillicToLatin(text) {
-
     const map = {
         'А': 'A',  'Б': 'B',  'В': 'V',  'Г': 'G',  'Д': 'D',
         'Е': 'E',  'Ё': 'Yo', 'Ж': 'Zh', 'З': 'Z',  'И': 'I',
@@ -53,35 +32,27 @@ function cyrillicToLatin(text) {
         .join('');
 }
 
-/* renderText is defined inside generateEcoPDF after font loading */
-
-
 /* =========================================================
-   FONT LOADER — PT Sans (Latin + Cyrillic, ~300 KB)
-   Loads TTF from local fonts/ directory, caches in window._pdfFontBase64.
-   Falls back to transliteration if fetch fails.
+   FONT LOADER — PT Sans (Latin + Cyrillic)
    ========================================================= */
 
 async function loadCyrillicFont(fontPath = 'fonts/PTSans-Regular.ttf') {
-
-    // Cache fonts separately by path
     if (!window._pdfFontCache) {
         window._pdfFontCache = {};
     }
 
     if (window._pdfFontCache[fontPath]) {
-        return window._pdfFontCache[fontPath];         // already cached
+        return window._pdfFontCache[fontPath];
     }
 
     try {
         const response = await fetch(fontPath);
-
         if (!response.ok) {
             throw new Error('HTTP ' + response.status);
         }
 
         const buffer = await response.arrayBuffer();
-        const bytes  = new Uint8Array(buffer);
+        const bytes = new Uint8Array(buffer);
         let bin = '';
         for (let i = 0; i < bytes.byteLength; i++) {
             bin += String.fromCharCode(bytes[i]);
@@ -99,11 +70,50 @@ async function loadCyrillicFont(fontPath = 'fonts/PTSans-Regular.ttf') {
 }
 
 /* =========================================================
-   MAIN EXPORT FUNCTION  (async — awaits font when lang = ru)
+   COLLECT SELECTED ITEMS FROM DOM
+   ========================================================= */
+
+function collectSelectedItemsFromDOM() {
+    const items = [];
+    const checkboxes = document.querySelectorAll('.receipt__line input[type=checkbox]:checked');
+
+    checkboxes.forEach(checkbox => {
+        const dataset = checkbox.dataset;
+        if (dataset.label && dataset.price) {
+            items.push({
+                category: dataset.category || '',
+                label: dataset.label,
+                price: parseFloat(dataset.price) || 0
+            });
+        }
+    });
+
+    return items;
+}
+
+/* =========================================================
+   GROUP ITEMS BY CATEGORY
+   ========================================================= */
+
+function groupItemsByCategory(items) {
+    const groups = {};
+
+    items.forEach(item => {
+        const cat = item.category || 'other';
+        if (!groups[cat]) {
+            groups[cat] = [];
+        }
+        groups[cat].push(item);
+    });
+
+    return groups;
+}
+
+/* =========================================================
+   MAIN EXPORT FUNCTION
    ========================================================= */
 
 async function generateEcoPDF(totals, jobType) {
-
     if (typeof window.jspdf === 'undefined') {
         alert('jsPDF library not loaded');
         return;
@@ -114,21 +124,15 @@ async function generateEcoPDF(totals, jobType) {
 
     let yPos = 20;
 
-    // Robust language detection — checks all common global variable names
+    // Detect current language
     const currentLang = (
-        window.currentLang       ||  // most common
-        window.appLang           ||
-        window.selectedLang      ||
-        window.lang              ||
-        window.language          ||
-        document.documentElement.lang ||  // <html lang="de">
-        'de'                            // final fallback
-    ).toLowerCase().slice(0, 2);        // normalize: "de-DE" → "de"
+        window.currentLang ||
+        document.documentElement.lang ||
+        'ru'
+    ).toLowerCase().slice(0, 2);
 
     /* =========================================================
        CYRILLIC FONT REGISTRATION
-       For Russian: load PT Sans TTF and register with jsPDF.
-       For DE/EN: use built-in helvetica (no fetch needed).
        ========================================================= */
 
     let useCustomFont = false;
@@ -145,20 +149,20 @@ async function generateEcoPDF(totals, jobType) {
             doc.addFileToVFS('PTSans-Bold.ttf', fontBold);
             doc.addFont('PTSans-Bold.ttf', 'PTSans', 'bold');
             useCustomFont = true;
-            console.log('[PDF] PTSans fonts (Regular + Bold) registered for Cyrillic rendering.');
+            console.log('[PDF] PTSans fonts registered.');
         } else {
             console.warn('[PDF] Font loading failed, using transliteration fallback');
         }
     }
 
-    /* Override safeText — if custom font loaded, pass text as-is (no transliteration) */
+    /* Helper: render text with font support */
     function renderText(value) {
         if (value === null || value === undefined) return '';
         const str = String(value);
         return useCustomFont ? str : cyrillicToLatin(str);
     }
 
-    /* Override setFont helper — uses PTSans for RU, helvetica otherwise */
+    /* Helper: set font */
     function setFont(style) {
         if (useCustomFont) {
             doc.setFont('PTSans', style || 'normal');
@@ -167,295 +171,8 @@ async function generateEcoPDF(totals, jobType) {
         }
     }
 
-    const inventory = window.inventoryData || {};
-
-    /* =========================================================
-       LOCAL UI TRANSLATIONS
-       ========================================================= */
-
-    const ui = {
-
-        de: {
-            title:           'RemontExpert 3D Pro',
-            subtitle:        'Materialberechnung - Klasse ECONOM',
-            object:          'Objekt:',
-            wallArea:        'Wandfläche',
-            workType:        'Arbeitstyp',
-            painting:        'Malerarbeiten',
-            wallpaper:       'Tapezieren',
-            repairClass:     'Renovierungsklasse',
-            matDetails:      'Materialdetails',
-            wpDetails:       'Tapetendetails',
-            subtotal:        'Summe',
-            grandTotal:      'GESAMT',
-            materialsTotal:  'Materialien gesamt',
-            tools:           'Werkzeuge',
-            equipment:       'Gerätemiete',
-            extras:          'Zusatzmaterialien',
-            note:            '* ECONOM-Klasse: nur Materialien und Werkzeuge. Kunde arbeitet selbständig.',
-            page:            'Seite',
-            of:              'von',
-            legal:           'RECHTLICHE HINWEISE',
-            /* --- category keys --- */
-            primerRequired:  'Grundierung',
-            paintTwoCoats:   'Farbe (2 Schichten)',
-            tools_cat:       'Werkzeuge',
-            equipment_cat:   'Gerätemiete',
-            extras_cat:      'Zusatzmaterialien'
-        },
-
-        en: {
-            title:           'RemontExpert 3D Pro',
-            subtitle:        'Material Calculation - ECONOMY Class',
-            object:          'Object:',
-            wallArea:        'Wall area',
-            workType:        'Work type',
-            painting:        'Painting',
-            wallpaper:       'Wallpapering',
-            repairClass:     'Repair class',
-            matDetails:      'Material details',
-            wpDetails:       'Wallpaper details',
-            subtotal:        'Subtotal',
-            grandTotal:      'TOTAL',
-            materialsTotal:  'Materials total',
-            tools:           'Tools',
-            equipment:       'Equipment rental',
-            extras:          'Extra materials',
-            note:            '* ECONOMY class: materials and tools only. Customer works independently.',
-            page:            'Page',
-            of:              'of',
-            legal:           'LEGAL INFORMATION',
-            /* --- category keys --- */
-            primerRequired:  'Primer',
-            paintTwoCoats:   'Paint (2 coats)',
-            tools_cat:       'Tools',
-            equipment_cat:   'Equipment rental',
-            extras_cat:      'Extra materials'
-        },
-
-        ru: {
-            title:           'RemontExpert 3D Pro',
-            subtitle:        'Raschet materialov - ECONOM',
-            object:          'Obekt:',
-            wallArea:        'Ploshchad sten',
-            workType:        'Tip rabot',
-            painting:        'Pokraska',
-            wallpaper:       'Pokleka oboev',
-            repairClass:     'Klass remonta',
-            matDetails:      'Materialy',
-            wpDetails:       'Detali oboev',
-            subtotal:        'Summa',
-            grandTotal:      'ITOGO',
-            materialsTotal:  'Materialy vsego',
-            tools:           'Instrumenty',
-            equipment:       'Arenda oborudovaniya',
-            extras:          'Dop. materialy',
-            note:            '* ECONOM klass: tolko materialy i instrumenty. Klient rabotaet samostoyatelno.',
-            page:            'Stranitsa',
-            of:              'iz',
-            legal:           'YURIDICHESKAYA INFORMATSIYA',
-            /* --- category keys --- */
-            primerRequired:  'Gruntovka',
-            paintTwoCoats:   'Kraska (2 sloya)',
-            tools_cat:       'Instrumenty',
-            equipment_cat:   'Arenda oborudovaniya',
-            extras_cat:      'Dop. materialy'
-        }
-
-    };
-
-    const lbl = ui[currentLang] || ui.de;
-
-    /* =========================================================
-       AUTO FLATTEN INVENTORY
-       ========================================================= */
-
-    function flattenInventory(obj, result = {}) {
-
-        Object.entries(obj).forEach(([key, value]) => {
-
-            if (
-                typeof value === 'object'
-                && value !== null
-                && !Array.isArray(value)
-            ) {
-
-                flattenInventory(value, result);
-
-            } else {
-
-                result[value] = key;
-
-            }
-
-        });
-
-        return result;
-    }
-
-    const reverseInventory = flattenInventory(inventory);
-
-    /* =========================================================
-       ITEM TRANSLATIONS
-       ========================================================= */
-
-    const itemTranslations = {
-
-        de: {
-            brushes:      'Malerpinsel',
-            rollers:      'Malerwalzen',
-            tape:         'Malerband',
-            covers:       'Schutzfolie',
-            sprayGun:     'Farbspritzgerät',
-            ledLights:    'LED-Strahler',
-            sander:       'Schleifmaschine',
-            laser:        'Lasernivelliergerät',
-            extraTape:    'Extra Band und Folie',
-            extraTools:   'Extra Werkzeuge',
-            safety:       'Schutzausrüstung',
-            wpBrush:      'Tapezierbürste',
-            wpRoller:     'Andrückwalze',
-            wpSmoother:   'Tapezierwischer',
-            wpSpatula:    'Tapezierspachtel',
-            wpKnife:      'Tapeziermesser',
-            wpTape:       'Malerband',
-            wpBucket:     'Kleistereimer',
-            wpSteamer:    'Dampfablöser',
-            wpTable:      'Tapeziertisch',
-            wpLaser:      'Lasergerät',
-            wpExtraGlue:  'Extra Kleister',
-            wpExtraTools: 'Extra Werkzeuge',
-            wpSafety:     'Schutzausrüstung'
-        },
-
-        en: {
-            brushes:      'Paint brushes',
-            rollers:      'Paint rollers',
-            tape:         'Masking tape',
-            covers:       'Protective film',
-            sprayGun:     'Spray gun with compressor',
-            ledLights:    'LED floodlights',
-            sander:       'Sanding machine',
-            laser:        'Laser level',
-            extraTape:    'Extra tape and film',
-            extraTools:   'Extra tools',
-            safety:       'Safety equipment',
-            wpBrush:      'Wallpaper brush',
-            wpRoller:     'Seam roller',
-            wpSmoother:   'Smoother',
-            wpSpatula:    'Spatula',
-            wpKnife:      'Wallpaper knife',
-            wpTape:       'Masking tape',
-            wpBucket:     'Paste bucket',
-            wpSteamer:    'Steam stripper',
-            wpTable:      'Pasting table',
-            wpLaser:      'Laser level',
-            wpExtraGlue:  'Extra paste',
-            wpExtraTools: 'Extra tools',
-            wpSafety:     'Safety equipment'
-        },
-
-        ru: {
-            brushes:      'Kisti malyarnye',
-            rollers:      'Valiki malyarnye',
-            tape:         'Malyarnaya lenta',
-            covers:       'Zashchitnaya plenka',
-            sprayGun:     'Kraskopult',
-            ledLights:    'LED prozhektory',
-            sander:       'Shlifmashina',
-            laser:        'Lazernyy uroven',
-            extraTape:    'Dop. plenka i lenta',
-            extraTools:   'Dop. instrumenty',
-            safety:       'Sredstva zashchity',
-            wpBrush:      'Shchetka oboynaya',
-            wpRoller:     'Prizhimnyy valik',
-            wpSmoother:   'Gladilka',
-            wpSpatula:    'Shpatel',
-            wpKnife:      'Oboinyy nozh',
-            wpTape:       'Malyarnaya lenta',
-            wpBucket:     'Vedro dlya kleya',
-            wpSteamer:    'Parogenerator',
-            wpTable:      'Oboinyy stol',
-            wpLaser:      'Lazernyy uroven',
-            wpExtraGlue:  'Dop. kley',
-            wpExtraTools: 'Dop. instrumenty',
-            wpSafety:     'Sredstva zashchity'
-        }
-
-    };
-
-    const itemsDict =
-        itemTranslations[currentLang]
-        || itemTranslations.de;
-
-    /* =========================================================
-       SAFE ITEM TRANSLATION
-       Priority:
-         1. Direct key lookup:  name = "brushes"  → itemsDict["brushes"]
-         2. Reverse inventory:  name = "Malerpinsel" → key → itemsDict[key]
-         3. safeText fallback:  return original name
-       ========================================================= */
-
-    function translateItem(name) {
-
-        /* Guard: undefined, null, empty, or literal string "undefined" */
-        if (
-            name === null
-            || name === undefined
-            || name === 'undefined'
-            || name === 'null'
-            || String(name).trim() === ''
-        ) {
-            return '—';
-        }
-
-        const trimmed = String(name).trim();
-
-        /* 1. Direct: name IS already the translation key (e.g. "brushes") */
-        if (itemsDict[trimmed]) {
-            return renderText(itemsDict[trimmed]);
-        }
-
-        /* 2. Reverse: name is a display value, look up its key */
-        const key = reverseInventory[trimmed];
-
-        if (!key) {
-            console.warn('[translateItem] Key not found for:', trimmed);
-            return renderText(trimmed);
-        }
-
-        return renderText(itemsDict[key] || trimmed);
-    }
-
-    /* =========================================================
-       RESOLVE CATEGORY LABEL
-       FIX: maps raw keys like "primerRequired" to translated labels
-       ========================================================= */
-
-    function resolveCategoryLabel(category) {
-
-        if (!category) return '';
-
-        /* Direct hit in lbl (tools, equipment, extras, primerRequired, etc.) */
-        if (lbl[category]) {
-            return renderText(lbl[category]);
-        }
-
-        /* Try category + '_cat' suffix variant */
-        if (lbl[category + '_cat']) {
-            return renderText(lbl[category + '_cat']);
-        }
-
-        /* Fallback: return the raw key as-is */
-        return renderText(category);
-    }
-
-    /* =========================================================
-       SAFE PAGE BREAK
-       ========================================================= */
-
+    /* Helper: page break */
     function checkPageBreak() {
-
         if (yPos > 270) {
             doc.addPage();
             yPos = 20;
@@ -463,383 +180,241 @@ async function generateEcoPDF(totals, jobType) {
     }
 
     /* =========================================================
-       HEADER
+       UI LABELS
        ========================================================= */
 
-    setFont('bold');
-    doc.setFontSize(18);
+    const labels = {
+        ru: {
+            title: 'RemontExpert 3D Pro',
+            subtitle: 'Raschet materialov - ECONOM',
+            object: 'Obekt:',
+            wallArea: 'Ploshchad sten',
+            workType: 'Tip rabot',
+            painting: 'Pokraska',
+            wallpaper: 'Pokleka oboev',
+            repairClass: 'Klass remonta',
+            selectedItems: 'Vybrannye pozitsii',
+            subtotal: 'Summa',
+            total: 'ITOGO',
+            note: '* ECONOM: tolko materialy i instrumenty. Klient rabotaet samostoyatelno.'
+        },
+        en: {
+            title: 'RemontExpert 3D Pro',
+            subtitle: 'Material Calculation - ECONOMY Class',
+            object: 'Object:',
+            wallArea: 'Wall area',
+            workType: 'Work type',
+            painting: 'Painting',
+            wallpaper: 'Wallpapering',
+            repairClass: 'Repair class',
+            selectedItems: 'Selected items',
+            subtotal: 'Subtotal',
+            total: 'TOTAL',
+            note: '* ECONOMY class: materials and tools only. Customer works independently.'
+        },
+        de: {
+            title: 'RemontExpert 3D Pro',
+            subtitle: 'Materialberechnung - Klasse ECONOM',
+            object: 'Objekt:',
+            wallArea: 'Wandflaeche',
+            workType: 'Arbeitstyp',
+            painting: 'Malerarbeiten',
+            wallpaper: 'Tapezieren',
+            repairClass: 'Renovierungsklasse',
+            selectedItems: 'Ausgewaehlte Positionen',
+            subtotal: 'Summe',
+            total: 'GESAMT',
+            note: '* ECONOM-Klasse: nur Materialien und Werkzeuge. Kunde arbeitet selbstaendig.'
+        }
+    };
 
-    doc.text(renderText(lbl.title), 105, yPos, { align: 'center' });
-
-    yPos += 10;
-
-    doc.setFontSize(12);
-
-    doc.text(renderText(lbl.subtitle), 105, yPos, { align: 'center' });
-
-    yPos += 15;
+    const lbl = labels[currentLang] || labels.de;
 
     /* =========================================================
-       GENERAL INFO
+       PDF HEADER
        ========================================================= */
 
-    doc.setFontSize(10);
-
     setFont('bold');
-    doc.text(renderText(lbl.object), 20, yPos);
-
+    doc.setFontSize(16);
+    doc.text(renderText(lbl.title), 105, yPos, { align: 'center' });
     yPos += 8;
 
     setFont('normal');
+    doc.setFontSize(11);
+    doc.text(renderText(lbl.subtitle), 105, yPos, { align: 'center' });
+    yPos += 12;
 
+    doc.line(20, yPos, 190, yPos);
+    yPos += 10;
+
+    /* =========================================================
+       OBJECT INFORMATION
+       ========================================================= */
+
+    setFont('bold');
+    doc.text(renderText(lbl.object), 20, yPos);
+    yPos += 8;
+
+    setFont('normal');
     doc.text(
-        renderText(`${lbl.wallArea}: ${totals.area.toFixed(2)} m\u00B2`),
+        renderText(`${lbl.wallArea}: ${(totals.area || 0).toFixed(2)} m²`),
         20,
         yPos
     );
-
     yPos += 6;
 
     doc.text(
         renderText(
             `${lbl.workType}: ${
-                jobType === 'painting'
-                    ? lbl.painting
-                    : lbl.wallpaper
+                jobType === 'painting' ? lbl.painting : lbl.wallpaper
             }`
         ),
         20,
         yPos
     );
-
     yPos += 6;
 
-    doc.text(
-        renderText(`${lbl.repairClass}: ECONOM`),
-        20,
-        yPos
-    );
-
+    doc.text(renderText(`${lbl.repairClass}: ECONOM`), 20, yPos);
     yPos += 10;
 
     doc.line(20, yPos, 190, yPos);
-
     yPos += 10;
 
     /* =========================================================
-       MATERIALS — PAINTING
+       SELECTED ITEMS FROM DOM
        ========================================================= */
 
-    if (jobType === 'painting' && totals.paintData) {
+    const selectedItems = collectSelectedItemsFromDOM();
+    const groupedItems = groupItemsByCategory(selectedItems);
 
+    if (Object.keys(groupedItems).length > 0) {
         setFont('bold');
-        doc.text(renderText(lbl.matDetails), 20, yPos);
+        doc.text(renderText(lbl.selectedItems), 20, yPos);
         yPos += 8;
 
-        /* Primer */
-        if (totals.primerData && totals.primerData.cans) {
+        let grandTotal = 0;
 
+        Object.entries(groupedItems).forEach(([category, items]) => {
             setFont('bold');
-            doc.text(renderText(lbl.primerRequired), 22, yPos);
+            doc.text(renderText(category.toUpperCase()), 22, yPos);
             yPos += 6;
 
             setFont('normal');
 
-            totals.primerData.cans.forEach(can => {
+            let categoryTotal = 0;
 
-                const label = renderText(`${can.name || ''} ${can.size || ''}L`);
-
-                doc.text(label, 25, yPos);
-
+            items.forEach(item => {
+                doc.text(renderText(item.label), 25, yPos);
                 doc.text(
-                    `${(can.price || 0).toFixed(2)} EUR`,
+                    `${item.price.toFixed(2)} EUR`,
                     170,
                     yPos,
                     { align: 'right' }
                 );
 
+                categoryTotal += item.price;
                 yPos += 6;
                 checkPageBreak();
             });
 
-            yPos += 4;
-        }
-
-        /* Paint */
-        if (totals.paintData && totals.paintData.buckets) {
-
+            // Category subtotal
             setFont('bold');
-            doc.text(renderText(lbl.paintTwoCoats), 22, yPos);
-            yPos += 6;
-
+            doc.text(renderText(`${lbl.subtotal}:`), 25, yPos);
+            doc.text(
+                `${categoryTotal.toFixed(2)} EUR`,
+                170,
+                yPos,
+                { align: 'right' }
+            );
+            yPos += 8;
             setFont('normal');
 
-            totals.paintData.buckets.forEach(bucket => {
-
-                const label = renderText(`${bucket.name || ''} ${bucket.size || ''}L`);
-
-                doc.text(label, 25, yPos);
-
-                doc.text(
-                    `${(bucket.price || 0).toFixed(2)} EUR`,
-                    170,
-                    yPos,
-                    { align: 'right' }
-                );
-
-                yPos += 6;
-                checkPageBreak();
-            });
-
-            /* Materials subtotal line */
-            if (totals.materialsTotal !== undefined) {
-
-                yPos += 2;
-
-                setFont('bold');
-
-                doc.text(
-                    renderText(`${lbl.materialsTotal}:`),
-                    25,
-                    yPos
-                );
-
-                doc.text(
-                    `${(totals.materialsTotal || 0).toFixed(2)} EUR`,
-                    170,
-                    yPos,
-                    { align: 'right' }
-                );
-
-                yPos += 10;
-
-                setFont('normal');
-            }
-        }
-    }
-
-    /* =========================================================
-       TOOL GROUPS
-       ========================================================= */
-
-    if (totals.items && totals.items.length > 0) {
-
-        totals.items.forEach(group => {
-
-            if (!group.lines || !group.lines.length) return;
-
-            const checkedLines = group.lines.filter(l => l.checked);
-
-            if (!checkedLines.length) return;
-
-            setFont('bold');
-
-            const categoryLabel = resolveCategoryLabel(group.category);
-
-            doc.text(categoryLabel, 20, yPos);
-
-            yPos += 7;
-
-            setFont('normal');
-
-            checkedLines.forEach(line => {
-
-                const displayName = translateItem(line.name);
-
-                doc.text(
-                    `[X] ${displayName}`,
-                    25,
-                    yPos
-                );
-
-                doc.text(
-                    `${(line.price || 0).toFixed(2)} EUR`,
-                    170,
-                    yPos,
-                    { align: 'right' }
-                );
-
-                yPos += 6;
-                checkPageBreak();
-            });
-
-            if (group.subtotal > 0) {
-
-                yPos += 2;
-
-                setFont('bold');
-
-                doc.text(
-                    renderText(`${lbl.subtotal}:`),
-                    25,
-                    yPos
-                );
-
-                doc.text(
-                    `${group.subtotal.toFixed(2)} EUR`,
-                    170,
-                    yPos,
-                    { align: 'right' }
-                );
-
-                yPos += 8;
-
-                setFont('normal');
-            }
-
+            grandTotal += categoryTotal;
         });
 
+        yPos += 4;
+        doc.line(20, yPos, 190, yPos);
+        yPos += 8;
+
+        // Grand total
+        setFont('bold');
+        doc.setFontSize(12);
+        doc.text(renderText(lbl.total), 20, yPos);
+        doc.text(
+            `${grandTotal.toFixed(2)} EUR`,
+            170,
+            yPos,
+            { align: 'right' }
+        );
+        yPos += 10;
+        doc.setFontSize(11);
+        setFont('normal');
     }
 
     /* =========================================================
-       TOTALS SECTION
+       MATERIALS DETAILS (if available)
        ========================================================= */
 
-    doc.line(20, yPos, 190, yPos);
+    if (totals.materialTotal && totals.materialTotal > 0) {
+        doc.line(20, yPos, 190, yPos);
+        yPos += 8;
+
+        setFont('bold');
+        doc.text(renderText('Materials'), 20, yPos);
+        yPos += 6;
+        setFont('normal');
+
+        doc.text(renderText('Materials total:'), 25, yPos);
+        doc.text(
+            `${totals.materialTotal.toFixed(2)} EUR`,
+            170,
+            yPos,
+            { align: 'right' }
+        );
+        yPos += 10;
+    }
+
+    /* =========================================================
+       FOOTER NOTE
+       ========================================================= */
+
     yPos += 10;
-
-    setFont('normal');
-    doc.setFontSize(10);
-
-    doc.text(renderText(`${lbl.tools}:`), 20, yPos);
-    doc.text(
-        `${(totals.toolsTotal || 0).toFixed(2)} EUR`,
-        170, yPos, { align: 'right' }
-    );
-    yPos += 6;
-
-    doc.text(renderText(`${lbl.equipment}:`), 20, yPos);
-    doc.text(
-        `${(totals.equipmentTotal || 0).toFixed(2)} EUR`,
-        170, yPos, { align: 'right' }
-    );
-    yPos += 6;
-
-    doc.text(renderText(`${lbl.extras}:`), 20, yPos);
-    doc.text(
-        `${(totals.extrasTotal || 0).toFixed(2)} EUR`,
-        170, yPos, { align: 'right' }
-    );
-    yPos += 10;
-
-    /* Grand total */
-    setFont('bold');
-    doc.setFontSize(14);
-
-    doc.text(renderText(`${lbl.grandTotal}:`), 20, yPos);
-    doc.text(
-        `${(totals.grandTotal || 0).toFixed(2)} EUR`,
-        170, yPos, { align: 'right' }
-    );
-    yPos += 12;
-
-    /* Note */
-    setFont('italic');
-    doc.setFontSize(8);
+    doc.setFontSize(9);
     doc.text(renderText(lbl.note), 20, yPos);
 
     /* =========================================================
-       FOOTER — PAGE 1
+       DISCLAIMER (if available)
        ========================================================= */
 
-    setFont('normal');
-    doc.setFontSize(9);
-    doc.text(
-        renderText(`${lbl.page} 1 ${lbl.of} 2`),
-        105, 290, { align: 'center' }
-    );
+    if (window.PdfDisclaimers && window.PdfDisclaimers[currentLang]) {
+        doc.addPage();
+        yPos = 20;
 
-    /* =========================================================
-       LEGAL PAGE — PAGE 2 (uses window.PdfDisclaimers from pdf-disclaimer.js)
-       ========================================================= */
+        setFont('bold');
+        doc.setFontSize(14);
+        doc.text(renderText('Legal Information'), 105, yPos, { align: 'center' });
+        yPos += 10;
 
-    doc.addPage();
-    yPos = 20;
+        setFont('normal');
+        doc.setFontSize(10);
 
-    setFont('bold');
-    doc.setFontSize(14);
-    doc.text(renderText(lbl.legal), 105, yPos, { align: 'center' });
-
-    yPos += 20;
-
-    setFont('normal');
-    doc.setFontSize(10);
-
-    const disclaimer = window.PdfDisclaimers?.[currentLang] ?? window.PdfDisclaimers?.de;
-    const lines = [];
-
-    if (disclaimer) {
-        // Sections (1. TITLE, text, blank line)
-        if (disclaimer.sections) {
-            disclaimer.sections.forEach(s => {
-                lines.push(s.title);
-                lines.push(s.text);
-                lines.push('');
-            });
-        }
-
-        // Privacy section
-        lines.push('');
-        if (disclaimer.privacyTitle) lines.push(disclaimer.privacyTitle);
-        if (disclaimer.privacyText) lines.push(disclaimer.privacyText);
-
-        // Impressum section
-        lines.push('');
-        if (disclaimer.impressumTitle) lines.push(disclaimer.impressumTitle);
-        if (disclaimer.responsible) lines.push(disclaimer.responsible);
-        lines.push('[YOUR NAME / COMPANY]');
-        lines.push('[ADDRESS]');
-        lines.push('[CITY, COUNTRY]');
-        lines.push('E-Mail: [YOUR EMAIL]');
-
-        // Important note
-        lines.push('');
-        if (disclaimer.importantNote) lines.push(disclaimer.importantNote);
+        const disclaimer = window.PdfDisclaimers[currentLang];
+        const lines = doc.splitTextToSize(renderText(disclaimer), 170);
+        lines.forEach(line => {
+            doc.text(line, 20, yPos);
+            yPos += 5;
+            checkPageBreak();
+        });
     }
 
-    lines.forEach(line => {
-        if (!line) {
-            yPos += 4;
-        } else {
-            doc.text(renderText(line), 20, yPos);
-            yPos += 6;
-        }
-        checkPageBreak();
-    });
-
-    /* Footer — page 2 */
-    setFont('italic');
-    doc.setFontSize(9);
-    doc.text(
-        renderText(`RemontExpert 3D Pro - ${lbl.page} 2 ${lbl.of} 2`),
-        105, 290, { align: 'center' }
-    );
-
-
     /* =========================================================
-       SAVE
+       SAVE PDF
        ========================================================= */
 
-    const now = new Date();
-
-    const dateStr =
-        `${now.getFullYear()}-`
-        + `${String(now.getMonth() + 1).padStart(2, '0')}-`
-        + `${String(now.getDate()).padStart(2, '0')}`;
-
-    const langSuffix = currentLang.toUpperCase();   // DE, EN, RU
-
-    doc.save(
-        `RemontExpert_ECO_${jobType}_${langSuffix}_${dateStr}.pdf`
-    );
-
+    const filename = `RemontExpert_ECONOM_${jobType}_${Date.now()}.pdf`;
+    doc.save(filename);
+    console.log('[PDF] Saved:', filename);
 }
 
-/* =========================================================
-   GLOBAL EXPORT
-   ========================================================= */
-
-// generateEcoPDF is async — call with await or .then()
-// Example: await generateEcoPDF(totals, 'painting');
-// Example: generateEcoPDF(totals, 'painting').then(() => console.log('done'));
+// Export to global scope
 window.generateEcoPDF = generateEcoPDF;

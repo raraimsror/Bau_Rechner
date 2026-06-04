@@ -95,6 +95,9 @@ let resultsTranslations = {
     common: {}
 };
 
+// Export currentLang to global scope
+window.currentLang = currentLang;
+
 // Load JSON translations for results
 async function loadResultsTranslations(lang) {
     try {
@@ -120,14 +123,22 @@ function setLanguage(lang) {
         document.documentElement.lang = lang;
         document.title = t('title');
 
-        // Load results translations and then update UI
-        loadResultsTranslations(lang).then(() => {
+        // Load locale service items and category labels
+        if (typeof loadLocaleData === 'function') {
+            loadLocaleData(lang).then(() => {
+                localize();
+                // Trigger results recalculation if loadReceipt exists
+                if (typeof loadReceipt === 'function' && typeof currentJob !== 'undefined') {
+                    loadReceipt(currentJob);
+                }
+            });
+        } else {
+            // Fallback: just localize and reload receipt
             localize();
-            // Trigger results recalculation if loadReceipt exists
             if (typeof loadReceipt === 'function' && typeof currentJob !== 'undefined') {
                 loadReceipt(currentJob);
             }
-        });
+        }
     }
 }
 

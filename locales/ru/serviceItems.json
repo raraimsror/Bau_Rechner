@@ -1,0 +1,110 @@
+[
+  {
+    "key": "brushes",
+    "category": "tools",
+    "label": "Кисти малярные",
+    "price": 4.19
+  },
+  {
+    "key": "rollers",
+    "category": "tools",
+    "label": "Валики малярные",
+    "price": 13.59
+  },
+  {
+    "key": "tape",
+    "category": "tools",
+    "label": "Малярная лента",
+    "price": 3.99
+  },
+  {
+    "key": "covers",
+    "category": "tools",
+    "label": "Защитная плёнка",
+    "price": 3.19
+  },
+  {
+    "key": "sprayGun",
+    "category": "equipment",
+    "label": "Краскопульт с компрессором",
+    "price": 15.0
+  },
+  {
+    "key": "ledLights",
+    "category": "equipment",
+    "label": "LED-прожекторы",
+    "price": 10.0
+  },
+  {
+    "key": "sander",
+    "category": "equipment",
+    "label": "Шлифмашина с пылесосом",
+    "price": 12.0
+  },
+  {
+    "key": "laser",
+    "category": "equipment",
+    "label": "Лазерный нивелир",
+    "price": 8.0
+  },
+  {
+    "key": "extraTape",
+    "category": "extras",
+    "label": "Дополнительная лента и плёнка",
+    "price": 5.0
+  },
+  {
+    "key": "extraTools",
+    "category": "extras",
+    "label": "Дополнительные валики и кисти",
+    "price": 6.0
+  },
+  {
+    "key": "safety",
+    "category": "extras",
+    "label": "Средства защиты и расходники",
+    "price": 4.0
+  },
+  {
+    "key": "wpKnife",
+    "category": "tools",
+    "label": "Обойный нож",
+    "price": 3.0
+  },
+  {
+    "key": "wpSpatula",
+    "category": "tools",
+    "label": "Шпатель для обоев",
+    "price": 4.0
+  },
+  {
+    "key": "wpRoller",
+    "category": "tools",
+    "label": "Валик для обоев",
+    "price": 5.0
+  },
+  {
+    "key": "wpBucket",
+    "category": "tools",
+    "label": "Ведро для клея",
+    "price": 2.0
+  },
+  {
+    "key": "wpExtraGlue",
+    "category": "extras",
+    "label": "Дополнительный клей",
+    "price": 5.0
+  },
+  {
+    "key": "wpExtraTools",
+    "category": "extras",
+    "label": "Дополнительные инструменты",
+    "price": 6.0
+  },
+  {
+    "key": "wpSafety",
+    "category": "extras",
+    "label": "Средства защиты",
+    "price": 3.0
+  }
+]
