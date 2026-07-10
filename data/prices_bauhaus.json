@@ -1,0 +1,74 @@
+{
+  "alpina": [
+    {
+      "name": "Caparol Indeko-Plus weiß",
+      "size": 2.5,
+      "price": 18.99,
+      "coverage": 6,
+      "coats": 2,
+      "store": "Bauhaus",
+      "url": "https://www.bauhaus.info/",
+      "lastUpdated": "2026-07-09"
+    },
+    {
+      "name": "Caparol Indeko-Plus weiß",
+      "size": 5,
+      "price": 29.95,
+      "coverage": 6,
+      "coats": 2,
+      "store": "Bauhaus",
+      "url": "https://www.bauhaus.info/",
+      "lastUpdated": "2026-07-09"
+    },
+    {
+      "name": "Caparol CapaMaXX weiß",
+      "size": 12.5,
+      "price": 49.95,
+      "coverage": 8,
+      "coats": 2,
+      "store": "Bauhaus",
+      "url": "https://www.bauhaus.info/",
+      "lastUpdated": "2026-07-09"
+    }
+  ],
+
+  "wallpaper": {
+    "name": "Erfurt Rauhfaser-Tapete Classico",
+    "rollWidth": 0.53,
+    "rollLength": 20,
+    "rollArea": 10.6,
+    "rollPrice": 8.79,
+    "glueName": "Tapetenkleister Spezial",
+    "glueWeight": 0.2,
+    "glueCoverage": 22.5,
+    "gluePrice": 4.99,
+    "store": "Bauhaus",
+    "url": "https://www.bauhaus.info/",
+    "lastUpdated": "2026-07-09"
+  },
+
+  "ecoMaterials": {
+    "brushes": 4.19,
+    "rollers": 13.59,
+    "tape": 3.99,
+    "covers": 3.19
+  },
+
+  "workRatePerM2": {
+    "painting": { "econom": 6, "standard": 12, "premium": 20 },
+    "wallpaper": { "econom": 8, "standard": 14, "premium": 22 },
+    "flooring": { "econom": 10, "standard": 18, "premium": 28 }
+  },
+
+  "materialRatePerM2": {
+    "painting": { "econom": 4, "standard": 6, "premium": 8 },
+    "wallpaper": { "econom": 5, "standard": 7, "premium": 9 },
+    "flooring": { "econom": 6, "standard": 8, "premium": 10 }
+  },
+
+  "equipmentTotal": {
+    "painting": { "econom": 0, "standard": 20, "premium": 40 },
+    "wallpaper": { "econom": 0, "standard": 10, "premium": 25 },
+    "flooring": { "econom": 0, "standard": 30, "premium": 60 }
+  }
+}

@@ -125,6 +125,29 @@
                 </label>
             </div>
 
+            <div class="input-block" style="margin-bottom:12px;">
+                <h4 style="margin:0 0 6px;"><span data-i18n="storeSelect">Выбор магазина</span></h4>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <label class="store-btn" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px;border-radius:6px;border:2px solid transparent;opacity:0.6;transition:all .2s;" title="По умолчанию">
+                        <input type="radio" name="store" value="default" checked hidden>
+                        <span style="font-size:14px;font-weight:600;color:#666;">A</span>
+                        <span style="font-size:10px;color:#999;">по умолч.</span>
+                    </label>
+                    <label class="store-btn" data-store="obi" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px;border-radius:6px;border:2px solid transparent;opacity:0.6;transition:all .2s;" title="OBI">
+                        <input type="radio" name="store" value="obi" hidden>
+                        <img src="pics/logo_obi.png" alt="OBI" class="store-img">
+                    </label>
+                    <label class="store-btn" data-store="hornbach" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px;border-radius:6px;border:2px solid transparent;opacity:0.6;transition:all .2s;" title="Hornbach">
+                        <input type="radio" name="store" value="hornbach" hidden>
+                        <img src="pics/logo_hornbach.png" alt="Hornbach" class="store-img">
+                    </label>
+                    <label class="store-btn" data-store="bauhaus" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px;border-radius:6px;border:2px solid transparent;opacity:0.6;transition:all .2s;" title="Bauhaus">
+                        <input type="radio" name="store" value="bauhaus" hidden>
+                        <img src="pics/logo_bauhaus.png" alt="Bauhaus" class="store-img">
+                    </label>
+                </div>
+            </div>
+
             <h3><span data-i18n="results">Результаты</span>
                 <button id="resetWorkBlocksBtn"
                 data-i18n-title="resetWorkBlocks"

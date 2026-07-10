@@ -103,10 +103,8 @@ window.addEventListener("load", () => {
         if (wall) wall.classList.add("selected");
     });
 
-    // Загружаем цены, затем чек
-    loadPricing().then(() => {
-        loadReceipt(currentJob);
-    });
+    // Кнопки выбора магазина
+    initStoreButtons();
 
     // Привязка радиокнопок
     initJobTypeRadios();
@@ -150,20 +148,67 @@ let currentClass = "econom";
 
 // Объект с ценами из pricing.json
 let pricing = null;
+let selectedStore = "default"; // default | obi | hornbach | bauhaus
+
+// Файлы цен по магазинам
+const storeFiles = {
+    "default": "data/pricing.json",
+    "obi": "data/prices_obi.json",
+    "hornbach": "data/prices_hornbach.json",
+    "bauhaus": "data/prices_bauhaus.json"
+};
 
 /* =========================================================
-   ЗАГРУЗКА ЦЕН (pricing.json)
+   ЗАГРУЗКА ЦЕН (pricing.json или prices_*.json)
    ========================================================= */
 
-async function loadPricing() {
+async function loadPricing(store) {
+    const storeKey = store || selectedStore;
+    const url = storeFiles[storeKey] || storeFiles["default"];
     try {
-        const response = await fetch("data/pricing.json");
+        const response = await fetch(url);
         if (!response.ok) throw new Error("HTTP " + response.status);
         pricing = await response.json();
     } catch (err) {
-        console.error("Ошибка загрузки pricing.json:", err);
+        console.error("Ошибка загрузки " + url + ":", err);
         pricing = null;
     }
+}
+
+function switchStore(store) {
+    selectedStore = store;
+    document.querySelectorAll('.store-btn').forEach(el => {
+        const input = el.querySelector('input');
+        if (input && input.value === store) {
+            el.style.borderColor = '#4CAF50';
+            el.style.opacity = '1';
+        } else {
+            el.style.borderColor = 'transparent';
+            el.style.opacity = '0.6';
+        }
+    });
+    // Highlight default store button on page init
+    loadPricing(store).then(() => {
+        if (typeof loadReceipt === 'function') {
+            loadReceipt(currentJob);
+        }
+    });
+}
+
+function initStoreButtons() {
+    document.querySelectorAll('.store-btn').forEach(el => {
+        el.addEventListener('click', function(e) {
+            const input = this.querySelector('input');
+            if (input) {
+                input.checked = true;
+                switchStore(input.value);
+            }
+        });
+    });
+    // Highlight default
+    const defaultBtn = document.querySelector('.store-btn input[value="default"]');
+    if (defaultBtn) defaultBtn.checked = true;
+    switchStore('default');
 }
 
 /* =========================================================

@@ -112,7 +112,10 @@ async function generateEcoPDF(totals, jobType) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    let yPos = 20;
+    const MARGIN_LEFT = 25;
+    const MARGIN_RIGHT = 185;
+
+    let yPos = MARGIN_LEFT;
 
     // Robust language detection — checks all common global variable names
     const currentLang = (
@@ -235,31 +238,31 @@ async function generateEcoPDF(totals, jobType) {
 
         ru: {
             title:           'RemontExpert 3D Pro',
-            subtitle:        'Raschet materialov - ECONOM',
-            object:          'Obekt:',
-            wallArea:        'Ploshchad sten',
-            workType:        'Tip rabot',
-            painting:        'Pokraska',
-            wallpaper:       'Pokleka oboev',
-            repairClass:     'Klass remonta',
-            matDetails:      'Materialy',
-            wpDetails:       'Detali oboev',
-            subtotal:        'Summa',
-            grandTotal:      'ITOGO',
-            materialsTotal:  'Materialy vsego',
-            tools:           'Instrumenty',
-            equipment:       'Arenda oborudovaniya',
-            extras:          'Dop. materialy',
-            note:            '* ECONOM klass: tolko materialy i instrumenty. Klient rabotaet samostoyatelno.',
-            page:            'Stranitsa',
-            of:              'iz',
-            legal:           'YURIDICHESKAYA INFORMATSIYA',
+            subtitle:        'Расчёт материалов — ECONOM',
+            object:          'Объект:',
+            wallArea:        'Площадь стен',
+            workType:        'Тип работ',
+            painting:        'Покраска',
+            wallpaper:       'Поклейка обоев',
+            repairClass:     'Класс ремонта',
+            matDetails:      'Детали материалов',
+            wpDetails:       'Детали обоев',
+            subtotal:        'Сумма',
+            grandTotal:      'ИТОГО',
+            materialsTotal:  'Материалы всего',
+            tools:           'Инструменты',
+            equipment:       'Аренда оборудования',
+            extras:          'Доп. материалы',
+            note:            '* ECONOM класс: только материалы и инструменты. Клиент работает самостоятельно.',
+            page:            'Страница',
+            of:              'из',
+            legal:           'ЮРИДИЧЕСКАЯ ИНФОРМАЦИЯ',
             /* --- category keys --- */
-            primerRequired:  'Gruntovka',
-            paintTwoCoats:   'Kraska (2 sloya)',
-            tools_cat:       'Instrumenty',
-            equipment_cat:   'Arenda oborudovaniya',
-            extras_cat:      'Dop. materialy'
+            primerRequired:  'Грунтовка',
+            paintTwoCoats:   'Краска (2 слоя)',
+            tools_cat:       'Инструменты',
+            equipment_cat:   'Аренда оборудования',
+            extras_cat:      'Доп. материалы'
         }
 
     };
@@ -356,30 +359,30 @@ async function generateEcoPDF(totals, jobType) {
         },
 
         ru: {
-            brushes:      'Kisti malyarnye',
-            rollers:      'Valiki malyarnye',
-            tape:         'Malyarnaya lenta',
-            covers:       'Zashchitnaya plenka',
-            sprayGun:     'Kraskopult',
-            ledLights:    'LED prozhektory',
-            sander:       'Shlifmashina',
-            laser:        'Lazernyy uroven',
-            extraTape:    'Dop. plenka i lenta',
-            extraTools:   'Dop. instrumenty',
-            safety:       'Sredstva zashchity',
-            wpBrush:      'Shchetka oboynaya',
-            wpRoller:     'Prizhimnyy valik',
-            wpSmoother:   'Gladilka',
-            wpSpatula:    'Shpatel',
-            wpKnife:      'Oboinyy nozh',
-            wpTape:       'Malyarnaya lenta',
-            wpBucket:     'Vedro dlya kleya',
-            wpSteamer:    'Parogenerator',
-            wpTable:      'Oboinyy stol',
-            wpLaser:      'Lazernyy uroven',
-            wpExtraGlue:  'Dop. kley',
-            wpExtraTools: 'Dop. instrumenty',
-            wpSafety:     'Sredstva zashchity'
+            brushes:      'Кисти малярные',
+            rollers:      'Валики малярные',
+            tape:         'Малярная лента',
+            covers:       'Защитная плёнка',
+            sprayGun:     'Краскопульт',
+            ledLights:    'LED прожекторы',
+            sander:       'Шлифмашина',
+            laser:        'Лазерный уровень',
+            extraTape:    'Доп. плёнка и лента',
+            extraTools:   'Доп. инструменты',
+            safety:       'Средства защиты',
+            wpBrush:      'Щётка обойная',
+            wpRoller:     'Прижимной валик',
+            wpSmoother:   'Гладилка',
+            wpSpatula:    'Шпатель',
+            wpKnife:      'Обоиный нож',
+            wpTape:       'Малярная лента',
+            wpBucket:     'Ведро для клея',
+            wpSteamer:    'Парогенератор',
+            wpTable:      'Обоиный стол',
+            wpLaser:      'Лазерный уровень',
+            wpExtraGlue:  'Доп. клей',
+            wpExtraTools: 'Доп. инструменты',
+            wpSafety:     'Средства защиты'
         }
 
     };
@@ -486,7 +489,7 @@ async function generateEcoPDF(totals, jobType) {
     doc.setFontSize(10);
 
     setFont('bold');
-    doc.text(renderText(lbl.object), 20, yPos);
+    doc.text(renderText(lbl.object), MARGIN_LEFT, yPos);
 
     yPos += 8;
 
@@ -494,7 +497,7 @@ async function generateEcoPDF(totals, jobType) {
 
     doc.text(
         renderText(`${lbl.wallArea}: ${totals.area.toFixed(2)} m\u00B2`),
-        20,
+        MARGIN_LEFT,
         yPos
     );
 
@@ -508,7 +511,7 @@ async function generateEcoPDF(totals, jobType) {
                     : lbl.wallpaper
             }`
         ),
-        20,
+        MARGIN_LEFT,
         yPos
     );
 
@@ -516,13 +519,13 @@ async function generateEcoPDF(totals, jobType) {
 
     doc.text(
         renderText(`${lbl.repairClass}: ECONOM`),
-        20,
+        MARGIN_LEFT,
         yPos
     );
 
     yPos += 10;
 
-    doc.line(20, yPos, 190, yPos);
+    doc.line(MARGIN_LEFT, yPos, MARGIN_RIGHT, yPos);
 
     yPos += 10;
 
@@ -533,14 +536,14 @@ async function generateEcoPDF(totals, jobType) {
     if (jobType === 'painting' && totals.paintData) {
 
         setFont('bold');
-        doc.text(renderText(lbl.matDetails), 20, yPos);
+        doc.text(renderText(lbl.matDetails), MARGIN_LEFT, yPos);
         yPos += 8;
 
         /* Primer */
         if (totals.primerData && totals.primerData.cans) {
 
             setFont('bold');
-            doc.text(renderText(lbl.primerRequired), 22, yPos);
+            doc.text(renderText(lbl.primerRequired), MARGIN_LEFT + 2, yPos);
             yPos += 6;
 
             setFont('normal');
@@ -549,11 +552,11 @@ async function generateEcoPDF(totals, jobType) {
 
                 const label = renderText(`${can.name || ''} ${can.size || ''}L`);
 
-                doc.text(label, 25, yPos);
+                doc.text(label, MARGIN_LEFT + 5, yPos);
 
                 doc.text(
                     `${(can.price || 0).toFixed(2)} EUR`,
-                    170,
+                    MARGIN_RIGHT,
                     yPos,
                     { align: 'right' }
                 );
@@ -569,7 +572,7 @@ async function generateEcoPDF(totals, jobType) {
         if (totals.paintData && totals.paintData.buckets) {
 
             setFont('bold');
-            doc.text(renderText(lbl.paintTwoCoats), 22, yPos);
+            doc.text(renderText(lbl.paintTwoCoats), MARGIN_LEFT + 2, yPos);
             yPos += 6;
 
             setFont('normal');
@@ -578,11 +581,11 @@ async function generateEcoPDF(totals, jobType) {
 
                 const label = renderText(`${bucket.name || ''} ${bucket.size || ''}L`);
 
-                doc.text(label, 25, yPos);
+                doc.text(label, MARGIN_LEFT + 5, yPos);
 
                 doc.text(
                     `${(bucket.price || 0).toFixed(2)} EUR`,
-                    170,
+                    MARGIN_RIGHT,
                     yPos,
                     { align: 'right' }
                 );
@@ -606,7 +609,7 @@ async function generateEcoPDF(totals, jobType) {
 
                 doc.text(
                     `${(totals.materialsTotal || 0).toFixed(2)} EUR`,
-                    170,
+                    MARGIN_RIGHT,
                     yPos,
                     { align: 'right' }
                 );
@@ -636,7 +639,7 @@ async function generateEcoPDF(totals, jobType) {
 
             const categoryLabel = resolveCategoryLabel(group.category);
 
-            doc.text(categoryLabel, 20, yPos);
+            doc.text(categoryLabel, MARGIN_LEFT, yPos);
 
             yPos += 7;
 
@@ -654,7 +657,7 @@ async function generateEcoPDF(totals, jobType) {
 
                 doc.text(
                     `${(line.price || 0).toFixed(2)} EUR`,
-                    170,
+                    MARGIN_RIGHT,
                     yPos,
                     { align: 'right' }
                 );
@@ -677,7 +680,7 @@ async function generateEcoPDF(totals, jobType) {
 
                 doc.text(
                     `${group.subtotal.toFixed(2)} EUR`,
-                    170,
+                    MARGIN_RIGHT,
                     yPos,
                     { align: 'right' }
                 );
@@ -695,30 +698,30 @@ async function generateEcoPDF(totals, jobType) {
        TOTALS SECTION
        ========================================================= */
 
-    doc.line(20, yPos, 190, yPos);
+    doc.line(MARGIN_LEFT, yPos, MARGIN_RIGHT, yPos);
     yPos += 10;
 
     setFont('normal');
     doc.setFontSize(10);
 
-    doc.text(renderText(`${lbl.tools}:`), 20, yPos);
+    doc.text(renderText(`${lbl.tools}:`), MARGIN_LEFT, yPos);
     doc.text(
         `${(totals.toolsTotal || 0).toFixed(2)} EUR`,
-        170, yPos, { align: 'right' }
+        MARGIN_RIGHT, yPos, { align: 'right' }
     );
     yPos += 6;
 
-    doc.text(renderText(`${lbl.equipment}:`), 20, yPos);
+    doc.text(renderText(`${lbl.equipment}:`), MARGIN_LEFT, yPos);
     doc.text(
         `${(totals.equipmentTotal || 0).toFixed(2)} EUR`,
-        170, yPos, { align: 'right' }
+        MARGIN_RIGHT, yPos, { align: 'right' }
     );
     yPos += 6;
 
-    doc.text(renderText(`${lbl.extras}:`), 20, yPos);
+    doc.text(renderText(`${lbl.extras}:`), MARGIN_LEFT, yPos);
     doc.text(
         `${(totals.extrasTotal || 0).toFixed(2)} EUR`,
-        170, yPos, { align: 'right' }
+        MARGIN_RIGHT, yPos, { align: 'right' }
     );
     yPos += 10;
 
@@ -726,17 +729,17 @@ async function generateEcoPDF(totals, jobType) {
     setFont('bold');
     doc.setFontSize(14);
 
-    doc.text(renderText(`${lbl.grandTotal}:`), 20, yPos);
+    doc.text(renderText(`${lbl.grandTotal}:`), MARGIN_LEFT, yPos);
     doc.text(
         `${(totals.grandTotal || 0).toFixed(2)} EUR`,
-        170, yPos, { align: 'right' }
+        MARGIN_RIGHT, yPos, { align: 'right' }
     );
     yPos += 12;
 
     /* Note */
-    setFont('italic');
+    setFont('normal');
     doc.setFontSize(8);
-    doc.text(renderText(lbl.note), 20, yPos);
+    doc.text(renderText(lbl.note), MARGIN_LEFT, yPos);
 
     /* =========================================================
        FOOTER — PAGE 1
@@ -763,7 +766,7 @@ async function generateEcoPDF(totals, jobType) {
     yPos += 20;
 
     setFont('normal');
-    doc.setFontSize(10);
+    doc.setFontSize(8);
 
     const disclaimer = window.PdfDisclaimers?.[currentLang] ?? window.PdfDisclaimers?.de;
     const lines = [];
@@ -799,16 +802,18 @@ async function generateEcoPDF(totals, jobType) {
 
     lines.forEach(line => {
         if (!line) {
-            yPos += 4;
+            yPos += 3;
         } else {
-            doc.text(renderText(line), 20, yPos);
-            yPos += 6;
+            const maxWidth = MARGIN_RIGHT - MARGIN_LEFT;
+            const wrapped = doc.splitTextToSize(renderText(line), maxWidth);
+            doc.text(wrapped, MARGIN_LEFT, yPos);
+            yPos += wrapped.length * 5;
         }
         checkPageBreak();
     });
 
     /* Footer — page 2 */
-    setFont('italic');
+    setFont('normal');
     doc.setFontSize(9);
     doc.text(
         renderText(`RemontExpert 3D Pro - ${lbl.page} 2 ${lbl.of} 2`),

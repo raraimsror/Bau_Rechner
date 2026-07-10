@@ -5,6 +5,7 @@ const translations = {
         title: "RemontExpert 3D Pro - Русская версия",
         filters: "Фильтры",
         jobTypes: "Тип работ",
+        storeSelect: "Выбор магазина",
         painting: "Покраска",
         wallpaper: "Поклейка обоев",
         selectAll: "Выбрать всё",
@@ -33,6 +34,7 @@ const translations = {
         title: "RemontExpert 3D Pro - English Version",
         filters: "Filters",
         jobTypes: "Job Types",
+        storeSelect: "Store Selection",
         painting: "Painting",
         wallpaper: "Wallpaper",
         selectAll: "Select All",
@@ -61,6 +63,7 @@ const translations = {
         title: "RemontExpert 3D Pro - Deutsche Version",
         filters: "Filter",
         jobTypes: "Arbeitstypen",
+        storeSelect: "Marktauswahl",
         painting: "Malen",
         wallpaper: "Tapezieren",
         selectAll: "Alles auswählen",
@@ -116,6 +119,7 @@ async function loadResultsTranslations(lang) {
 function setLanguage(lang) {
     if (translations[lang]) {
         currentLang = lang;
+        window.currentLang = lang;
         localStorage.setItem('language', lang);
         document.documentElement.lang = lang;
         document.title = t('title');
