@@ -369,4 +369,40 @@ inventory.json:
 
 ---
 
-**Last Updated:** 2026-05-16 23:55
+**Last Updated:** 2026-07-30 23:10
+
+---
+
+## 📅 Phase 11: Openings Module + Bug Fixes (2026-07-30)
+
+### Openings CRUD Module
+**Commits:** 227d4dd, 142bd5d, bafbc76, 195e0d5, 0032e65
+
+**Added:**
+- ✅ `scripts/openings.js` — CRUD loga/durvju atvērumiem ar localStorage
+- ✅ Modāls dialogs — pievienot/dzēst/rediģēt atvērumus katrai sienai
+- ✅ 3D vizuālā atvērumu renderēšana (room3d.js)
+- ✅ Izmēru validācija pret sienas izmēriem
+- ✅ Atvērumi > 2 m² pilnībā atskaita no sienu laukuma
+
+**Fixed:**
+- ✅ Checkbox nenostājas, klikšķinot "+" (e.preventDefault())
+- ✅ Durvju noklusējuma izmēri 90×200 cm
+- ✅ Header teksts neaug ar katru klikšķi (data-original-side)
+- ✅ fromFloor atiestatās uz 90, pārslēdzot no Door uz Window
+- ✅ Mobile .panel margin: 10px 0 (neizplešas aiz ekrāna)
+
+**UI:**
+- ✅ Rediģēšanas poga ✏️ pie katra atvēruma (simbols, bez teksta)
+- ✅ X/Y/Z bildes klikšķis atiestata 3D skatu (kā F5)
+- ✅ window loga krāsa gaiši zila (#a7e5fe)
+- ✅ cursor: pointer uz xyz_img
+
+**Files changed:**
+- `scripts/openings.js` — jauns (375 rindas)
+- `scripts/room3d.js` — 3D atvērumu renderēšana, xyz_img klikšķis
+- `scripts/script.js` — initOpenings(), izmēru atskaitīšana
+- `style.css` — modāls, 3D atvērumi, rediģēšanas poga, mobile fikss
+- `locales/*/common.json` — piezīmes par >2m² atskaitīšanu
+- `locales/pdf-disclaimer.js` — 6. punkts par logu/durvju atskaitīšanu
+- `index.html` — openings.js scripts pieslēgšana
