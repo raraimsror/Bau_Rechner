@@ -94,7 +94,7 @@ function showOpeningsDialog(side) {
     overlay.innerHTML = `
         <div class="openings-modal receipt-dialog">
             <div class="openings-modal-header">
-                <span>${txt.title} <strong>${sideLabel}</strong></span>
+                <span>${txt.title} <strong data-original-side="${sideLabel}">${sideLabel}</strong></span>
                 <span class="openings-modal-close">&times;</span>
             </div>
             <div class="openings-modal-body">
@@ -181,7 +181,7 @@ function showOpeningForm(side, type, overlay, txt, editId) {
     const fromLeftInp = form.querySelector('#op-fromLeft');
 
     const header = overlay.querySelector('.openings-modal-header strong');
-    const sideName = header.textContent;
+    const sideName = header.dataset.originalSide || header.textContent;
 
     if (editId) {
         const existing = (openings[side] || []).find(op => op.id === editId);
@@ -205,6 +205,7 @@ function showOpeningForm(side, type, overlay, txt, editId) {
             hInp.value = 200;
         } else {
             fromFloorInp.disabled = false;
+            fromFloorInp.value = 90;
             wInp.value = 100;
             hInp.value = 120;
         }
