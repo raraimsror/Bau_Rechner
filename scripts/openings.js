@@ -137,8 +137,8 @@ function showOpeningsDialog(side) {
     overlay.querySelector('.openings-modal-close').addEventListener('click', () => overlay.remove());
     overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
 
-    // delete buttons (existing openings)
-    bindDeleteButtons(overlay, side, txt);
+    // edit/delete buttons (existing openings)
+    bindOpeningActions(overlay, side, txt);
 
     // add buttons
     overlay.querySelectorAll('.btn-add-opening').forEach(btn => {
@@ -149,7 +149,7 @@ function showOpeningsDialog(side) {
     });
 }
 
-function bindDeleteButtons(overlay, side, txt) {
+function bindOpeningActions(overlay, side, txt) {
     overlay.querySelectorAll('.btn-delete-opening').forEach(delBtn => {
         delBtn.addEventListener('click', () => {
             const id = parseInt(delBtn.dataset.id);
@@ -158,34 +158,60 @@ function bindDeleteButtons(overlay, side, txt) {
             showOpeningsDialog(side);
         });
     });
+    overlay.querySelectorAll('.btn-edit-opening').forEach(editBtn => {
+        editBtn.addEventListener('click', () => {
+            const id = parseInt(editBtn.dataset.id);
+            const existing = (openings[side] || []).find(op => op.id === id);
+            if (!existing) return;
+            showOpeningForm(side, existing.type, overlay, txt, id);
+        });
+    });
 }
 
-function showOpeningForm(side, type, overlay, txt) {
+function showOpeningForm(side, type, overlay, txt, editId) {
     const form = overlay.querySelector('#openings-form');
     form.style.display = 'block';
     form.dataset.side = side;
     form.dataset.type = type;
+    form.dataset.editId = editId || '';
 
     const fromFloorInp = form.querySelector('#op-fromFloor');
     const wInp = form.querySelector('#op-w');
     const hInp = form.querySelector('#op-h');
-    if (type === 'door') {
-        fromFloorInp.value = 0;
-        fromFloorInp.disabled = true;
-        wInp.value = 90;
-        hInp.value = 200;
-    } else {
-        fromFloorInp.disabled = false;
-        wInp.value = 100;
-        hInp.value = 120;
-    }
+    const fromLeftInp = form.querySelector('#op-fromLeft');
 
     const header = overlay.querySelector('.openings-modal-header strong');
     const sideName = header.textContent;
-    const typeLabel = type === 'window' ? txt.newWindow : txt.newDoor;
-    document.querySelector('.openings-modal-header strong').textContent = `${sideName} — ${typeLabel}`;
 
-    // save
+    if (editId) {
+        const existing = (openings[side] || []).find(op => op.id === editId);
+        if (existing) {
+            wInp.value = existing.w;
+            hInp.value = existing.h;
+            fromLeftInp.value = existing.fromLeft;
+            fromFloorInp.value = existing.fromFloor;
+            form.dataset.type = existing.type;
+            fromFloorInp.disabled = existing.type === 'door';
+        }
+        const editLabel = existing?.type === 'window'
+            ? '\u270E ' + txt.window_
+            : '\u270E ' + txt.door;
+        header.textContent = sideName + ' — ' + editLabel;
+    } else {
+        if (type === 'door') {
+            fromFloorInp.value = 0;
+            fromFloorInp.disabled = true;
+            wInp.value = 90;
+            hInp.value = 200;
+        } else {
+            fromFloorInp.disabled = false;
+            wInp.value = 100;
+            hInp.value = 120;
+        }
+        const typeLabel = type === 'window' ? txt.newWindow : txt.newDoor;
+        header.textContent = sideName + ' — ' + typeLabel;
+    }
+
     const saveBtn = form.querySelector('#op-save');
     const cancelBtn = form.querySelector('#op-cancel');
 
@@ -194,6 +220,7 @@ function showOpeningForm(side, type, overlay, txt) {
         const h = parseFloat(form.querySelector('#op-h').value) || 120;
         const fl = parseFloat(form.querySelector('#op-fromLeft').value) || 50;
         const ff = parseFloat(form.querySelector('#op-fromFloor').value) || 0;
+        const actualType = form.dataset.type;
 
         const maxW = (side === 'front' || side === 'back') ? (parseFloat(document.getElementById('xInp')?.value) || 400) : (parseFloat(document.getElementById('yInp')?.value) || 300);
         const maxH = parseFloat(document.getElementById('zInp')?.value) || 250;
@@ -203,12 +230,14 @@ function showOpeningForm(side, type, overlay, txt) {
         if (fl + w > maxW) { alert(txt.fromLeft + ' + ' + txt.width + ' > ' + maxW); return; }
         if (ff + h > maxH) { alert(txt.fromFloor + ' + ' + txt.height + ' > ' + maxH); return; }
 
-        addOpening(side, { type, w, h, fromLeft: fl, fromFloor: ff });
+        const editIdVal = form.dataset.editId;
+        if (editIdVal) {
+            updateOpeningById(side, parseInt(editIdVal), { type: actualType, w, h, fromLeft: fl, fromFloor: ff });
+        } else {
+            addOpening(side, { type: actualType, w, h, fromLeft: fl, fromFloor: ff });
+        }
+
         form.style.display = 'none';
-        // refresh list
-        const list = overlay.querySelector('.openings-list');
-        list.innerHTML = renderOpeningsListHTML(side, txt);
-        bindDeleteButtons(overlay, side, txt);
         overlay.remove();
     };
 
@@ -236,7 +265,10 @@ function renderOpeningsListHTML(side, txt) {
                     <span>${op.w}\u00D7${op.h} \u0441\u043C</span>
                     <span class="opening-row-detail">${txt.fromLeft}: ${op.fromLeft}, ${txt.fromFloor}: ${op.fromFloor}</span>
                 </div>
-                <button class="btn-delete-opening" data-id="${op.id}">${txt.delete}</button>
+                <div class="opening-row-actions">
+                    <button class="btn-edit-opening" data-id="${op.id}" title="✎">&#9998;</button>
+                    <button class="btn-delete-opening" data-id="${op.id}">${txt.delete}</button>
+                </div>
             </div>
         `;
     }).join('');
@@ -258,6 +290,16 @@ function addOpening(side, data) {
 function deleteOpeningById(side, id) {
     if (!openings[side]) return;
     openings[side] = openings[side].filter(op => op.id !== id);
+    saveOpeningsToStorage();
+    updateOpenings3D();
+    if (typeof loadReceipt === 'function') loadReceipt(window.currentJob || 'painting');
+}
+
+function updateOpeningById(side, id, data) {
+    if (!openings[side]) return;
+    const idx = openings[side].findIndex(op => op.id === id);
+    if (idx === -1) return;
+    openings[side][idx] = { ...openings[side][idx], ...data };
     saveOpeningsToStorage();
     updateOpenings3D();
     if (typeof loadReceipt === 'function') loadReceipt(window.currentJob || 'painting');
@@ -328,5 +370,6 @@ function loadOpeningsFromStorage() {
 window.openings = openings;
 window.initOpenings = initOpenings;
 window.resetOpenings = resetOpenings;
+window.updateOpeningById = updateOpeningById;
 window.getAllOpeningsArea = getAllOpeningsArea;
 window.getOpeningsAreaForSide = getOpeningsAreaForSide;

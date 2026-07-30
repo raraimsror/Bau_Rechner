@@ -470,6 +470,29 @@ header {
     color: #fff;
 }
 
+.btn-edit-opening {
+    background: none;
+    border: 1px solid #3498db;
+    color: #3498db;
+    border-radius: 4px;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: monospace;
+    transition: all .2s;
+    line-height: 1;
+}
+.btn-edit-opening:hover {
+    background: #3498db;
+    color: #fff;
+}
+
+.opening-row-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
 .openings-add-row {
     display: flex;
     gap: 8px;
@@ -561,7 +584,7 @@ header {
     pointer-events: none;
 }
 .opening.window {
-    background: #b3b3b3;
+    background:  #a7e5fe;
     border: 2px solid #333;
 }
 .opening.door {
