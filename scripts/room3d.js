@@ -39,11 +39,8 @@ function init3D() {
 
     // Atjauno 3D skatu, klikšķinot uz X/Y/Z attēla
     document.querySelector('.xyz_img')?.addEventListener('click', () => {
-        rx = -15;
-        ry = 35;
-        zoomLevel = 1;
-        room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-        zoomScene.style.transform = `scale(${zoomLevel})`;
+        room.style.transform = '';
+        zoomScene.style.transform = '';
         updateRoom();
     });
 }
