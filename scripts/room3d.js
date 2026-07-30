@@ -36,12 +36,6 @@ function init3D() {
     adjustMobileScale();
     window.addEventListener('resize', adjustMobileScale);
     window.addEventListener('orientationchange', adjustMobileScale);
-
-    // klikšķis uz X/Y/Z attēla — atjauno 3D skatu
-    const xyzImg = document.querySelector('.xyz_img');
-    if (xyzImg) {
-        xyzImg.addEventListener('click', updateRoom);
-    }
 }
 
 /* =========================================================
