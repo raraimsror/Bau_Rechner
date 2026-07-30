@@ -1,6 +1,6 @@
 // scripts/lang.js
 // Translations for UI elements
-const translations = {
+const translations = window.translations = {
     ru: {
         title: "RemontExpert 3D Pro - Русская версия",
         filters: "Фильтры",
@@ -28,6 +28,22 @@ const translations = {
         partners: "Партнеры",
         mission: "Миссия",
         contacts: "Контакты",
+        addOpening: "Добавить проём",
+        addOpeningTitle: "Проёмы на стене:",
+        addWindow: "Окно",
+        addDoor: "Дверь",
+        openingWidth: "Ширина",
+        openingHeight: "Высота",
+        fromLeftEdge: "От левого края",
+        fromFloor: "От пола",
+        save: "Сохранить",
+        delete: "Удалить",
+        cancel: "Отмена",
+        noOpenings: "Нет проёмов",
+        windowType: "Окно",
+        doorType: "Дверь",
+        newWindow: "Новое окно",
+        newDoor: "Новая дверь",
         copyright: "© 2026 RemontExpert — Все права защищены"
     },
     en: {
@@ -57,6 +73,22 @@ const translations = {
         partners: "Partners",
         mission: "Mission",
         contacts: "Contacts",
+        addOpening: "Add Opening",
+        addOpeningTitle: "Openings on wall:",
+        addWindow: "Window",
+        addDoor: "Door",
+        openingWidth: "Width",
+        openingHeight: "Height",
+        fromLeftEdge: "From left edge",
+        fromFloor: "From floor",
+        save: "Save",
+        delete: "Delete",
+        cancel: "Cancel",
+        noOpenings: "No openings",
+        windowType: "Window",
+        doorType: "Door",
+        newWindow: "New Window",
+        newDoor: "New Door",
         copyright: "© 2026 RemontExpert — All Rights Reserved"
     },
     de: {
@@ -86,6 +118,22 @@ const translations = {
         partners: "Partner",
         mission: "Mission",
         contacts: "Kontakte",
+        addOpening: "Öffnung hinzufügen",
+        addOpeningTitle: "Öffnungen an Wand:",
+        addWindow: "Fenster",
+        addDoor: "Tür",
+        openingWidth: "Breite",
+        openingHeight: "Höhe",
+        fromLeftEdge: "Von linker Kante",
+        fromFloor: "Vom Boden",
+        save: "Speichern",
+        delete: "Löschen",
+        cancel: "Abbrechen",
+        noOpenings: "Keine Öffnungen",
+        windowType: "Fenster",
+        doorType: "Tür",
+        newWindow: "Neues Fenster",
+        newDoor: "Neue Tür",
         copyright: "© 2026 RemontExpert — Alle Rechte vorbehalten"
     }
 };

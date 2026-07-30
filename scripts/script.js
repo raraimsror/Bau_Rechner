@@ -106,6 +106,9 @@ window.addEventListener("load", () => {
     // Кнопки выбора магазина
     initStoreButtons();
 
+    // Проёмы (окна/двери)
+    if (typeof initOpenings === 'function') initOpenings();
+
     // Привязка радиокнопок
     initJobTypeRadios();
     initRepairClassRadios();
@@ -252,6 +255,14 @@ function getWallsAreaM2() {
                 break;
         }
     });
+
+    // Вычитаем площадь проёмов (окон/дверей), если > 2 м²
+    if (typeof getAllOpeningsArea === 'function') {
+        const openingsArea = getAllOpeningsArea();
+        if (openingsArea > 2) {
+            totalArea = Math.max(0, totalArea - openingsArea);
+        }
+    }
 
     return totalArea;
 }
@@ -842,6 +853,11 @@ function initResetFiltersButton() {
 
         // Сброс "Выбрать всё"
         document.getElementById("selectAll").checked = false;
+
+        // Сброс проёмов
+        if (typeof resetOpenings === 'function') {
+            resetOpenings();
+        }
 
         // Перерисовываем чек с новым типом работ
         loadReceipt(currentJob);

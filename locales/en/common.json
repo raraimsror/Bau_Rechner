@@ -26,7 +26,7 @@
     "totalPrimer": "Total primer",
     "totalPaint": "Total paint",
     "rollSize": "Roll size",
-    "note": "* Economy: materials + tools only. Standard/Premium: work + materials + equipment.",
+    "note": "* Economy: materials + tools only. Standard/Premium: work + materials + equipment. If total window/door area > 2 m², it is deducted from the wall area.",
     "subtotal": "Subtotal"
   }
 }

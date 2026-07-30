@@ -239,9 +239,71 @@ function setupInputListeners() {
     });
 }
 
+/* =========================================================
+   PROJOMI 3D — OKNA UN DURVIS
+   ========================================================= */
+
+function updateOpenings3D() {
+    // Udālijem starie elementi
+    document.querySelectorAll('.opening').forEach(el => el.remove());
+
+    if (!window.openings) return;
+
+    const x = +xInp.value || 0, y = +yInp.value || 0, z = +zInp.value || 0;
+    if (x <= 0 || y <= 0 || z <= 0) return;
+
+    const maxDim = Math.max(x, y, z);
+    const scale = 400 / maxDim;
+
+    Object.entries(window.openings).forEach(([side, list]) => {
+        if (!list || !list.length) return;
+
+        const wallEl = document.querySelector(`.wall.${side}`);
+        if (!wallEl) return;
+
+        const roomW = (side === 'front' || side === 'back') ? x : y;
+
+        list.forEach(op => {
+            const el = document.createElement('div');
+            el.className = `opening ${op.type}`;
+
+            const wPx = op.w * scale;
+            const hPx = op.h * scale;
+
+            let leftPx, bottomPx;
+
+            if (side === 'front') {
+                leftPx = op.fromLeft * scale;
+            } else {
+                // Mirror for back, left, right (rotateY → left/right flipped)
+                leftPx = scale * (roomW - op.fromLeft - op.w);
+            }
+            bottomPx = op.fromFloor * scale;
+
+            el.style.cssText = `
+                position: absolute;
+                left: ${leftPx}px;
+                bottom: ${bottomPx}px;
+                width: ${wPx}px;
+                height: ${hPx}px;
+            `;
+
+            wallEl.appendChild(el);
+        });
+    });
+}
+
+// Pievienojam 3D atjaunošanu pēc sienu mēru maiņas
+const _origUpdateRoom = updateRoom;
+updateRoom = function() {
+    _origUpdateRoom();
+    updateOpenings3D();
+};
+
 // Eksportējam funkcijas un elementus, kas vajadzīgas ārpusē
 window.init3D = init3D;
 window.updateRoom3D = updateRoom;
+window.updateOpenings3D = updateOpenings3D;
 
 // Eksportējam input elementus priekš getWallsAreaM2() funkcijas
 window.xInp = null;

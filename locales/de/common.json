@@ -26,7 +26,7 @@
     "totalPrimer": "Grundierung gesamt",
     "totalPaint": "Farbe gesamt",
     "rollSize": "Rollengröße",
-    "note": "* Economy: nur Materialien + Werkzeuge. Standard/Premium: Arbeit + Materialien + Ausrüstung.",
+    "note": "* Economy: nur Materialien + Werkzeuge. Standard/Premium: Arbeit + Materialien + Ausrüstung. Wenn die gesamte Fenster-/Türfläche > 2 m² beträgt, wird sie von der Wandfläche abgezogen.",
     "subtotal": "Zwischensumme"
   }
 }
