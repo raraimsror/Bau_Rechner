@@ -24,72 +24,136 @@
 
 <body>
     <header>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
-                <img src="pics/Logo.png" alt="RemontExpert Logo" style="height: 40px;">
-                <span>RemontExpert 3D</span>
-            </a>
+        <a href="index.html" class="brand">
+            <img src="pics/Logo.png" alt="RemontExpert Logo" class="brand-logo">
+            <span class="brand-name">RemontExpert <span class="accent">3D</span></span>
+        </a>
+        <div class="header-actions">
+            <a href="#" class="login-btn" data-i18n="loginRegister">Вход / Регистрация</a>
+            <div class="segmented lang-segmented" id="langSegmented" title="Language">
+                <span class="segmented-slider" aria-hidden="true"></span>
+                <label class="segmented-option">
+                    <input type="radio" name="lang" value="ru">
+                    <span>Рус</span>
+                </label>
+                <label class="segmented-option">
+                    <input type="radio" name="lang" value="en">
+                    <span>Eng</span>
+                </label>
+                <label class="segmented-option">
+                    <input type="radio" name="lang" value="de">
+                    <span>Deu</span>
+                </label>
+            </div>
         </div>
-        <a href="#" class="login-btn" data-i18n="loginRegister">Вход / Регистрация</a>
-        <select id="langSelect" class="ico-btn">
-            <option value="ru">Рус</option>
-            <option value="en">Eng</option>
-            <option value="de">Deu</option>
-        </select>
     </header>
 
     <div class="layout">
 
+        <!-- ================= ЛЕВАЯ КОЛОНКА: ФИЛЬТРЫ ================= -->
         <div class="panel left-panel">
-            <h3><span data-i18n="filters">Фильтры</span>
+            <h3>
+                <span><span class="panel-title-icon">▣</span> <span data-i18n="filters">Фильтры</span></span>
                 <button id="resetFiltersBtn"
                 data-i18n-title="resetFilters"
                 title="Сбросить фильтры"
-                class="ico-btn">🔃</button>
+                class="reset-btn rotate-on-hover">⟳</button>
             </h3>
 
             <div class="input-block">
                 <h4><span data-i18n="jobTypes">Тип работ</span></h4>
-
-                <label class="radio-option">
-                    <input type="radio" name="jobType" value="painting" checked>
-                    <span data-i18n="painting">Покраска</span>
-                </label>
-
-                <label class="radio-option">
-                    <input type="radio" name="jobType" value="wallpaper">
-                    <span data-i18n="wallpaper">Поклейка обоев</span>
-                </label>
-            </div>
-
-            <div class="input-block">
-                <label><input type="checkbox" id="selectAll"> <span data-i18n="selectAll">Выбрать всё</span></label>
-                <label><input type="checkbox" class="plane-toggle" data-side="front" checked> <span data-i18n="frontWall">Передняя стена</span></label>
-                <label><input type="checkbox" class="plane-toggle" data-side="back" checked> <span data-i18n="backWall">Задняя стена</span></label>
-                <label><input type="checkbox" class="plane-toggle" data-side="left" checked> <span data-i18n="leftWall">Левая стена</span></label>
-                <label><input type="checkbox" class="plane-toggle" data-side="right" checked> <span data-i18n="rightWall">Правая стена</span></label>
-                <label><input type="checkbox" class="plane-toggle" data-side="floor"> <span data-i18n="floor">Пол</span></label>
-                <label><input type="checkbox" class="plane-toggle" data-side="ceiling" checked> <span data-i18n="ceiling">Потолок</span></label>
-            </div>
-
-        </div>
-
-        <div class="center-panel">
-
-            <div class="input-block xyz_value_inputs">
-                <img class="xyz_img" src="pics/Bildschirmfoto_27-12-2025_185527_static.vecteezy.com.jpeg" alt="">
-                <div>
-                    <h4><span data-i18n="roomSize">Размеры комнаты (см)</span> <button id="roomInfoBtn" class="ico-btn" title="info">ℹ️</button></h4>
-                    <div>
-                        <input id="xInp" type="number" value="400" placeholder="X (см)" min="1" max="10000">
-                        <input id="yInp" type="number" value="300" placeholder="Y (см)" min="1" max="10000">
-                        <input id="zInp" type="number" value="250" placeholder="Z (см)" min="1" max="10000">
-                    </div>
+                <div class="segmented job-type-segmented">
+                    <span class="segmented-slider" aria-hidden="true"></span>
+                    <label class="segmented-option">
+                        <input type="radio" name="jobType" value="painting" checked>
+                        <span data-i18n="painting">Покраска</span>
+                    </label>
+                    <label class="segmented-option">
+                        <input type="radio" name="jobType" value="wallpaper">
+                        <span data-i18n="wallpaper">Поклейка обоев</span>
+                    </label>
                 </div>
             </div>
 
+            <div class="input-block xyz_value_inputs">
+                <h4><span data-i18n="roomSize">Размеры комнаты (см)</span> <button id="roomInfoBtn" class="info-btn" title="info">ℹ️</button></h4>
+                <div class="xyz-inputs">
+                    <label class="xyz-field">
+                        <span>X</span>
+                        <input id="xInp" type="number" value="400" placeholder="X" min="1" max="10000">
+                    </label>
+                    <label class="xyz-field">
+                        <span>Y</span>
+                        <input id="yInp" type="number" value="300" placeholder="Y" min="1" max="10000">
+                    </label>
+                    <label class="xyz-field">
+                        <span>Z</span>
+                        <input id="zInp" type="number" value="250" placeholder="Z" min="1" max="10000">
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-block">
+                <label class="switch-row">
+                    <span class="switch-label" data-i18n="selectAll">Выбрать всё</span>
+                    <span class="switch">
+                        <input type="checkbox" id="selectAll">
+                        <span class="slider"></span>
+                    </span>
+                </label>
+                <label class="switch-row">
+                    <span class="switch-label" data-i18n="frontWall">Передняя стена</span>
+                    <span class="switch">
+                        <input type="checkbox" class="plane-toggle" data-side="front" checked>
+                        <span class="slider"></span>
+                    </span>
+                </label>
+                <label class="switch-row">
+                    <span class="switch-label" data-i18n="backWall">Задняя стена</span>
+                    <span class="switch">
+                        <input type="checkbox" class="plane-toggle" data-side="back" checked>
+                        <span class="slider"></span>
+                    </span>
+                </label>
+                <label class="switch-row">
+                    <span class="switch-label" data-i18n="leftWall">Левая стена</span>
+                    <span class="switch">
+                        <input type="checkbox" class="plane-toggle" data-side="left" checked>
+                        <span class="slider"></span>
+                    </span>
+                </label>
+                <label class="switch-row">
+                    <span class="switch-label" data-i18n="rightWall">Правая стена</span>
+                    <span class="switch">
+                        <input type="checkbox" class="plane-toggle" data-side="right" checked>
+                        <span class="slider"></span>
+                    </span>
+                </label>
+                <label class="switch-row">
+                    <span class="switch-label" data-i18n="floor">Пол</span>
+                    <span class="switch">
+                        <input type="checkbox" class="plane-toggle" data-side="floor">
+                        <span class="slider"></span>
+                    </span>
+                </label>
+                <label class="switch-row">
+                    <span class="switch-label" data-i18n="ceiling">Потолок</span>
+                    <span class="switch">
+                        <input type="checkbox" class="plane-toggle" data-side="ceiling" checked>
+                        <span class="slider"></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <!-- ================= ЦЕНТРАЛЬНАЯ КОЛОНКА: 3D ================= -->
+        <div class="center-panel">
 
             <div class="viewport" id="vPort">
+                <div class="viewport-reset" data-i18n-title="resetView" title="Сбросить вид (как F5)">
+                    <img class="xyz_img" src="pics/Bildschirmfoto_27-12-2025_185527_static.vecteezy.com.jpeg" alt="reset">
+                </div>
+
                 <div class="scene three-d" id="zoomScene">
                     <div class="room three-d" id="room">
                         <div class="wall front" data-side="front"></div>
@@ -102,58 +166,75 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="viewport-hint" data-i18n="viewportHint">⟲ drag · rotate</div>
             </div>
 
         </div>
 
+        <!-- ================= ПРАВАЯ КОЛОНКА: КЛАСС + МАГАЗИН + РЕЗУЛЬТАТЫ ================= -->
         <div class="panel right-panel">
-            <div class="repair-class-block">
+            <div class="input-block">
                 <h4><span data-i18n="repairClass">Класс ремонта</span></h4>
-
-                <label class="radio-option" data-i18n-title="econom" title="Эконом - только материалы, клиент работает сам">
-                    <input type="radio" name="repairClass" value="econom" checked>
-                    ECO
-                </label>
-
-                <label class="radio-option" data-i18n-title="standard" title="Стандарт - выбор работ + связь с мастерами">
-                    <input type="radio" name="repairClass" value="standard">
-                    NORM
-                </label>
-
-                <label class="radio-option" data-i18n-title="premium" title="Премиум - полный сервис под ключ">
-                    <input type="radio" name="repairClass" value="premium">
-                    PRO
-                </label>
+                <div class="class-cards">
+                    <label class="class-card" data-i18n-title="econom" title="Эконом - только материалы, клиент работает сам">
+                        <input type="radio" name="repairClass" value="econom" checked>
+                        <span class="class-badge econom">ECO</span>
+                        <span class="class-info">
+                            <span class="class-title">ECO</span>
+                            <span class="class-desc" data-i18n="economyDesc">материалы + инструменты</span>
+                        </span>
+                        <span class="class-check"></span>
+                    </label>
+                    <label class="class-card" data-i18n-title="standard" title="Стандарт - выбор работ + связь с мастерами">
+                        <input type="radio" name="repairClass" value="standard">
+                        <span class="class-badge standard">NORM</span>
+                        <span class="class-info">
+                            <span class="class-title">NORM</span>
+                            <span class="class-desc" data-i18n="standardDesc">работы + материалы</span>
+                        </span>
+                        <span class="class-check"></span>
+                    </label>
+                    <label class="class-card" data-i18n-title="premium" title="Премиум - полный сервис под ключ">
+                        <input type="radio" name="repairClass" value="premium">
+                        <span class="class-badge premium">PRO</span>
+                        <span class="class-info">
+                            <span class="class-title">PRO</span>
+                            <span class="class-desc" data-i18n="premiumDesc">полный сервис под ключ</span>
+                        </span>
+                        <span class="class-check"></span>
+                    </label>
+                </div>
             </div>
 
-            <div class="input-block" style="margin-bottom:12px;">
-                <h4 style="margin:0 0 6px;"><span data-i18n="storeSelect">Выбор магазина</span></h4>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                    <label class="store-btn" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px;border-radius:6px;border:2px solid transparent;opacity:0.6;transition:all .2s;" title="По умолчанию">
-                        <input type="radio" name="store" value="default" checked hidden>
-                        <span style="font-size:14px;font-weight:600;color:#666;">A</span>
-                        <span style="font-size:10px;color:#999;">по умолч.</span>
+            <div class="input-block">
+                <h4><span data-i18n="storeSelect">Выбор магазина</span></h4>
+                <div class="store-grid">
+                    <label class="store-btn" data-store="default" title="По умолчанию">
+                        <input type="radio" name="store" value="default" checked>
+                        <span class="store-name">A</span>
                     </label>
-                    <label class="store-btn" data-store="obi" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px;border-radius:6px;border:2px solid transparent;opacity:0.6;transition:all .2s;" title="OBI">
-                        <input type="radio" name="store" value="obi" hidden>
+                    <label class="store-btn" data-store="obi" title="OBI">
+                        <input type="radio" name="store" value="obi">
                         <img src="pics/logo_obi.png" alt="OBI" class="store-img">
                     </label>
-                    <label class="store-btn" data-store="hornbach" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px;border-radius:6px;border:2px solid transparent;opacity:0.6;transition:all .2s;" title="Hornbach">
-                        <input type="radio" name="store" value="hornbach" hidden>
+                    <label class="store-btn" data-store="hornbach" title="Hornbach">
+                        <input type="radio" name="store" value="hornbach">
                         <img src="pics/logo_hornbach.png" alt="Hornbach" class="store-img">
                     </label>
-                    <label class="store-btn" data-store="bauhaus" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px;border-radius:6px;border:2px solid transparent;opacity:0.6;transition:all .2s;" title="Bauhaus">
-                        <input type="radio" name="store" value="bauhaus" hidden>
+                    <label class="store-btn" data-store="bauhaus" title="Bauhaus">
+                        <input type="radio" name="store" value="bauhaus">
                         <img src="pics/logo_bauhaus.png" alt="Bauhaus" class="store-img">
                     </label>
                 </div>
             </div>
 
-            <h3><span data-i18n="results">Результаты</span>
+            <h3>
+                <span><span class="panel-title-icon">▤</span> <span data-i18n="results">Результаты</span></span>
                 <button id="resetWorkBlocksBtn"
                 data-i18n-title="resetWorkBlocks"
                 title="Сбросить выбор работ"
-                class="ico-btn">🔃</button>
+                class="reset-btn rotate-on-hover">⟳</button>
             </h3>
             <div id="resultsBox"></div>
         </div>
@@ -180,4 +261,3 @@
 </body>
 
 </html>
-

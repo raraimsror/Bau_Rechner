@@ -37,10 +37,13 @@ function init3D() {
     window.addEventListener('resize', adjustMobileScale);
     window.addEventListener('orientationchange', adjustMobileScale);
 
-    // Atjauno 3D skatu, klikšķinot uz X/Y/Z attēla
+    // Atjauno 3D skatu, klikšķinot uz X/Y/Z attēla (kā F5 — pilns restart)
     document.querySelector('.xyz_img')?.addEventListener('click', () => {
-        room.style.transform = '';
-        zoomScene.style.transform = '';
+        rx = -15;
+        ry = 35;
+        zoomLevel = 1;
+        room.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+        adjustMobileScale();
         updateRoom();
     });
 }

@@ -86,6 +86,57 @@ function getTranslatedLineName(lineId, fallbackName, repairClass, jobType) {
     return fallbackName;
 }
 
+/* =========================================================
+   СКОЛЬЗЯЩИЙ ИНДИКАТОР SEGMENTED CONTROL
+   ========================================================= */
+// Универсальная инициализация: двигает белый «слайдер» под активной
+// радиокнопкой внутри контейнера .segmented (тип работ, язык и т.д.)
+function initSlidingSegment(container) {
+    if (!container) return;
+
+    // Позиция слайдера под выбранным пунктом
+    function positionSlider() {
+        const slider = container.querySelector('.segmented-slider');
+        const active = container.querySelector('input[type="radio"]:checked');
+        if (!slider || !active) return;
+
+        // offsetLeft/offsetWidth считаются от .segmented (position: relative)
+        const option = active.closest('.segmented-option');
+        if (!option) return;
+
+        // Первый кадр без анимации, дальше — скольжение
+        if (!slider._init) {
+            slider._init = true;
+            const prev = slider.style.transition;
+            slider.style.transition = 'none';
+            slider.style.left = option.offsetLeft + 'px';
+            slider.style.width = option.offsetWidth + 'px';
+            // принудительный reflow, затем возвращаем transition
+            void slider.offsetWidth;
+            slider.style.transition = prev;
+        }
+
+        slider.style.left = option.offsetLeft + 'px';
+        slider.style.width = option.offsetWidth + 'px';
+    }
+
+    // Слушаем выбор радиокнопки (событие change всплывает)
+    container.addEventListener('change', positionSlider);
+
+    // Пересчёт при изменении размера окна и смене языка (ширины текстов)
+    window.addEventListener('resize', positionSlider);
+    document.addEventListener('i18n-updated', positionSlider);
+
+    // Начальная позиция (без анимации — сразу на нужном месте)
+    sliderStartPositions.add(positionSlider);
+}
+
+// Коллекция стартовых позиций, вызываемых после полной отрисовки
+const sliderStartPositions = new Set();
+function positionAllSliders() {
+    sliderStartPositions.forEach(fn => fn());
+}
+
 window.addEventListener("load", () => {
     // Инициализируем 3D визуализацию (из room3d.js)
     if (typeof init3D === 'function') {
@@ -137,6 +188,10 @@ window.addEventListener("load", () => {
             }
         });
     });
+
+    // Стартовая позиция слайдеров segmented control
+    document.querySelectorAll('.segmented').forEach(initSlidingSegment);
+    positionAllSliders();
 });
 
 /* =========================================================
@@ -183,11 +238,9 @@ function switchStore(store) {
     document.querySelectorAll('.store-btn').forEach(el => {
         const input = el.querySelector('input');
         if (input && input.value === store) {
-            el.style.borderColor = '#4CAF50';
-            el.style.opacity = '1';
+            el.classList.add('store-btn--active');
         } else {
-            el.style.borderColor = 'transparent';
-            el.style.opacity = '0.6';
+            el.classList.remove('store-btn--active');
         }
     });
     // Highlight default store button on page init
@@ -627,19 +680,7 @@ function renderReceipt(model) {
             </div>
 
             ${currentClass === "econom" ? `
-                <button id="downloadPdfBtn" style="
-                    width: 100%;
-                    padding: 12px;
-                    margin-top: 15px;
-                    background: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: background 0.3s;
-                ">
+                <button id="downloadPdfBtn" class="pdf-btn">
                     ${tr('common', 'receipt.downloadPdf')}
                 </button>
             ` : ''}
@@ -676,14 +717,6 @@ function renderReceipt(model) {
                     console.warn('[PDF] Генерация PDF не загружена');
                     alert('Ошибка: функция генерации PDF не загружена');
                 }
-            });
-
-            // Hover эффект
-            pdfBtn.addEventListener("mouseenter", () => {
-                pdfBtn.style.background = "#45a049";
-            });
-            pdfBtn.addEventListener("mouseleave", () => {
-                pdfBtn.style.background = "#4CAF50";
             });
         }
     }

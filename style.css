@@ -1,43 +1,146 @@
 /* =========================================================
-   Глобальные стили и сброс
+   RemontExpert 3D Pro — Apple White Theme
    ========================================================= */
+
+/* ---------- Fonts (PT Sans, локально) ---------- */
+@font-face {
+    font-family: 'PTSans';
+    src: url('fonts/PTSans-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'PTSans';
+    src: url('fonts/PTSans-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* ---------- Design tokens ---------- */
+:root {
+    --accent: #0071e3;
+    --accent-hover: #0077ed;
+    --accent-soft: #e8f1fd;
+    --accent-border: #86b9f0;
+    --green: #34c759;
+    --red: #ff3b30;
+    --text: #1d1d1f;
+    --muted: #6e6e73;
+    --border: rgba(0, 0, 0, 0.08);
+    --card: rgba(255, 255, 255, 0.72);
+    --card-solid: #ffffff;
+    --radius: 18px;
+    --radius-sm: 12px;
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+    --font: 'PTSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+/* ---------- Reset ---------- */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background: #f0f2f5;
+    font-family: var(--font);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-}
-
-header {
-    flex-shrink: 0;
+    background:
+        radial-gradient(1200px 600px at 100% -10%, rgba(0, 113, 227, 0.10), transparent 60%),
+        radial-gradient(900px 500px at -10% 110%, rgba(52, 199, 89, 0.08), transparent 60%),
+        linear-gradient(160deg, #f6f8fb 0%, #eef2f7 55%, #e9eef5 100%);
+    background-attachment: fixed;
 }
 
 /* =========================================================
-   Шапка сайта
+   Шапка сайта (glass)
    ========================================================= */
 header {
-    padding: 15px;
-    background: #fff;
-    width: 100%;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
-    border-bottom: 1px solid #ccc;
+    gap: 12px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.brand-logo {
+    height: 38px;
+    width: auto;
+}
+
+.brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    background: linear-gradient(135deg, #1d1d1f, #3a3a3c);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.brand-name .accent {
+    -webkit-text-fill-color: var(--accent);
+    background: none;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
 .login-btn {
-    font-weight: 400;
+    font-weight: 500;
     font-size: 14px;
     text-decoration: none;
-    color: #007bff;
+    color: var(--accent);
+    padding: 8px 14px;
+    border-radius: 980px;
+    border: 1px solid var(--accent-border);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.login-btn:hover {
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+}
+
+/* ---------- Языковой сегмент в шапке ---------- */
+.lang-segmented {
+    width: auto;
+    padding: 3px;
+}
+
+.lang-segmented .segmented-option span {
+    padding: 5px 10px;
+    font-size: 12px;
+    white-space: nowrap;
 }
 
 /* =========================================================
@@ -47,72 +150,75 @@ header {
     flex: 1;
     display: flex;
     width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 20px;
+    align-items: flex-start;
 }
 
-/* Общий стиль для левой и правой колонок */
+/* Общий стиль панелей (glassmorphism) */
 .panel {
+    background: var(--card);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+}
+
+.left-panel {
     width: 22%;
-    min-width: 200px;
-    background: #ffffff;
-    padding: 15px;
-    margin: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    min-width: 230px;
+    flex-shrink: 0;
 }
 
-.left-panel h3,
-.right-panel h3 {
-    margin-bottom: 10px;
+.right-panel {
+    width: 30%;
+    min-width: 260px;
+    flex-shrink: 0;
 }
 
-/* =========================================================
-   Блок выбора класса ремонта
-   ========================================================= */
-.repair-class-block {
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.repair-class-block h4 {
-    margin-bottom: 10px;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.radio-option {
+.panel h3 {
+    margin-bottom: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 8px 0;
-    cursor: pointer;
-    font-size: 15px;
+    justify-content: space-between;
+    gap: 8px;
 }
 
-.radio-option input[type="radio"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
+.panel-title-icon {
+    color: var(--accent);
 }
 
 /* =========================================================
-   Блоки ввода (размеры комнаты, чекбоксы)
+   Блоки ввода
    ========================================================= */
 .input-block {
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin-bottom: 12px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .input-block h4 {
     margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .input-block label {
@@ -123,54 +229,326 @@ header {
     cursor: pointer;
 }
 
-.input-block input[type="number"] {
-    width: 70px;
-    padding: 6px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    text-align: center;
+/* ---------- Segmented control (iOS-стиль, скользящий) ---------- */
+.segmented {
+    position: relative;
+    display: flex;
+    background: rgba(120, 120, 128, 0.12);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 3px;
 }
 
-.xyz_img {
-    width: 35px;
-    height: 30px;
+/* Скользящий индикатор */
+.segmented-slider {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    background: var(--card-solid);
+    border-radius: 7px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    transition:
+        left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.segmented-option {
+    flex: 1;
+    position: relative;
+    text-align: center;
+    z-index: 1;
+}
+
+.segmented-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.segmented-option span {
+    display: block;
+    padding: 7px 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    user-select: none;
+}
+
+.segmented-option input[type="radio"]:checked + span {
+    color: var(--text);
+}
+
+.segmented-option input[type="radio"]:not(:checked) + span {
+    color: var(--muted);
+}
+
+.segmented-option input[type="radio"]:not(:checked) + span:hover {
+    color: var(--text);
+}
+
+.segmented-option input[type="radio"]:focus-visible + span {
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
+}
+
+/* ---------- iOS-переключатели для стен ---------- */
+.switch-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
     cursor: pointer;
 }
 
-/* =========================================================
-   Центральная колонка
-   ========================================================= */
-.center-panel {
+.switch-row .switch-label {
     flex: 1;
-    padding: 15px;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.switch-row .switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 28px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.switch-row .add-opening-btn {
+    margin-left: 6px !important;
+    flex-shrink: 0;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #e9e9eb;
+    border-radius: 34px;
+    transition: background 0.25s ease;
+}
+
+.switch .slider::before {
+    content: "";
+    position: absolute;
+    height: 24px;
+    width: 24px;
+    left: 2px;
+    bottom: 2px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform 0.25s ease;
+}
+
+.switch input:checked + .slider {
+    background: var(--green);
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(18px);
+}
+
+.switch input:focus-visible + .slider {
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
+}
+
+/* ---------- X/Y/Z компактные вводы ---------- */
+.xyz-inputs {
     display: flex;
-    flex-direction: column;
+    gap: 8px;
+}
+
+.xyz-inputs .xyz-field {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
+    padding: 6px 8px;
+    background: var(--accent-soft);
+    border: 1.5px solid var(--accent-border);
+    border-radius: 10px;
+    cursor: text;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.xyz-field span {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.xyz-field input[type="number"] {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    padding: 4px 6px;
+    border: 1px solid rgba(0, 113, 227, 0.25);
+    border-radius: 6px;
+    background: #ffffff;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.xyz-field:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+.xyz-field input[type="number"]:focus {
+    border-color: var(--accent);
+}
+
+/* Скрытые стрелки number */
+.xyz-field input[type="number"]::-webkit-outer-spin-button,
+.xyz-field input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.xyz-field input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* ---------- Кнопки иконок ---------- */
+.reset-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--accent);
+    padding: 4px;
+    border-radius: 8px;
+    transition: transform 0.2s ease, background 0.2s ease;
+    line-height: 1;
+}
+
+.reset-btn.rotate-on-hover:hover {
+    transform: rotate(-25deg) scale(1.15);
+    background: var(--accent-soft);
+}
+
+.info-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--accent);
+    padding: 2px 4px;
+    border-radius: 6px;
+    transition: transform 0.2s ease, background 0.2s ease;
+    line-height: 1;
+    margin-left: auto;
+}
+
+.info-btn:hover {
+    transform: scale(1.2);
+    background: var(--accent-soft);
 }
 
 /* =========================================================
-   3D окно просмотра
+   Центральная колонка (3D)
    ========================================================= */
+.center-panel {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
 .noselect {
     user-select: none;
     -webkit-user-select: none;
 }
 
 .viewport {
+    position: relative;
     width: 100%;
-    max-width: 700px;
-    height: 450px;
-    background: linear-gradient(to bottom, #e0e0e0, #555555);
+    height: 520px;
+    background:
+        radial-gradient(circle at 50% 120%, rgba(0, 113, 227, 0.14), transparent 55%),
+        linear-gradient(180deg, #dce6f0 0%, #c9d6e4 60%, #aabdd4 100%);
     perspective: 1200px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: grab;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: var(--radius);
     overflow: hidden;
     touch-action: none;
+    box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.viewport::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+.viewport:active {
+    cursor: grabbing;
+}
+
+/* Сброс вида (xyz_img как кнопка на 3D) */
+.viewport-reset {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 5;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.85);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.viewport-reset:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.xyz_img {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    object-fit: contain;
+    border-radius: 4px;
 }
 
 .three-d {
@@ -185,17 +563,17 @@ header {
     left: 50%;
     top: 50%;
     transform-origin: center;
-    background: #e0e0e0;
-    border: 1px solid #999;
+    background: #e8ecf1;
+    border: 1px solid rgba(120, 130, 145, 0.6);
     opacity: 0.95;
 }
 
 .floor {
-    background: #18191a;
+    background: #1b1e24;
 }
 
 .ceiling {
-    background: #e8ecf0;
+    background: #eef2f6;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -205,216 +583,372 @@ header {
 .lamp {
     width: 30px;
     height: 30px;
-    background: radial-gradient(circle, #fffaa0, #f4d03f, #b7950b);
+    background: radial-gradient(circle, #fffbe0, #ffe9a0, #f0c040);
     border-radius: 50%;
-    box-shadow: 0 0 20px 20px rgba(255, 230, 100, 0.99);
+    box-shadow: 0 0 24px 24px rgba(255, 235, 130, 0.9);
 }
 
 /* Выделенная стена */
 .wall.selected {
-    outline: 5px solid #007bff;
-    border: 5px solid #007bff;
+    outline: 4px solid var(--accent);
+    outline-offset: -1px;
+    border-color: var(--accent);
 }
 
-/* =========================================================
-   ЧЕК (РЕЗУЛЬТАТЫ)
-   ========================================================= */
-.receipt {
-    font-family: monospace;
-    font-size: 13px;
-    background: #fff;
-    border: 1px dashed #ccc;
-    padding: 10px;
-    border-radius: 6px;
+/* 3D — проёмы на стенах */
+.opening {
+    position: absolute;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+.opening.window {
+    background: #a7e5fe;
+    border: 2px solid #2c5f7c;
+}
+.opening.door {
+    background: #cfc4b8;
+    border: 2px solid #4a3f35;
 }
 
-.receipt__title {
-    text-align: center;
-    font-weight: 700;
-    margin-bottom: 4px;
-}
-
-.receipt__group-title {
-    margin-top: 8px;
-    margin-bottom: 4px;
-    font-weight: 600;
-    border-top: 1px dashed #ccc;
-    padding-top: 4px;
-}
-
-.receipt__line {
-    display: flex;
-    justify-content: space-between;
-    margin: 1px 0;
-}
-
-.receipt__total {
-    border-top: 1px solid #000;
-    margin-top: 8px;
-    padding-top: 4px;
-    font-weight: 700;
-}
-
-.receipt__muted {
-    color: #777;
+/* Бейдж-подсказка на 3D */
+.viewport-hint {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
     font-size: 12px;
+    color: rgba(29, 29, 31, 0.6);
+    background: rgba(255, 255, 255, 0.7);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    padding: 5px 14px;
+    border-radius: 980px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+    white-space: nowrap;
 }
 
 /* =========================================================
-   Footer
+   Кнопки выбора магазина (карточки)
    ========================================================= */
-.footer {
-    width: 100%;
-    background: #ffffff;
-    border-top: 1px solid #ccc;
-    padding: 12px 0;
+.store-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.store-btn {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    flex-shrink: 0;
-    margin-top: auto;
-}
-
-.footer-content {
-    font-size: 14px;
-    color: #555;
-    text-align: center;
-}
-
-.footer-links {
-    display: flex;
     justify-content: center;
-    gap: 40px;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.footer-links a {
-    color: #000000;
-    text-decoration: none;
-}
-
-/* =========================================================
-   Кнопка информации (ℹ️)
-   ========================================================= */
-.ico-btn {
-    background: none;
-    border: none;
+    gap: 4px;
+    padding: 10px 6px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
     cursor: pointer;
-    font-size: 18px;
-    margin-left: 8px;
-    padding: 0;
-    transition: transform 0.2s ease;
+    opacity: 0.65;
+    transition: all 0.2s ease;
 }
 
-.room-info-btn:hover {
-    transform: scale(1.2);
-}
-
-.room-info-btn:active {
-    transform: scale(0.95);
-}
-
-/* =========================================================
-   Мобильная версия
-   ========================================================= */
-@media (max-width: 768px) {
-
-    body {
-        overflow-y: auto;
-    }
-
-    .layout {
-        flex-direction: column;
-    }
-
-    .panel {
-        width: 100%;
-        min-width: unset;
-        border: none;
-        padding: 10px;
-        margin: 10px 0;
-    }
-
-    .center-panel {
-        width: 100%;
-        padding: 10px;
-    }
-
-    .viewport {
-        width: 100%;
-        height: 300px;
-        max-width: none;
-    }
-
-    .xyz_value_inputs {
-        order: -1;
-        width: 100%;
-    }
-}
-
-/* =========================================================
-   Кнопки выбора магазина
-   ========================================================= */
 .store-btn:hover {
-    background: #f5f5f5;
-    border-radius: 6px;
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+
+.store-btn--active {
+    opacity: 1;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.14), 0 4px 14px rgba(0, 113, 227, 0.15);
+}
+
 .store-img {
     width: 60px;
     height: 30px;
     object-fit: contain;
 }
 
+.store-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+.store-btn--active .store-name {
+    color: var(--accent);
+}
+
 /* =========================================================
-   МОДАЛЬНОЕ ОКНО ПРОЁМОВ
+   Класс ремонта (карточки-сегменты)
+   ========================================================= */
+.class-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.class-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.class-card:hover {
+    border-color: var(--accent-border);
+    transform: translateX(2px);
+}
+
+.class-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.class-card .class-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.class-badge.econom { background: linear-gradient(135deg, #34c759, #28a745); }
+.class-badge.standard { background: linear-gradient(135deg, #0071e3, #0a6bcf); }
+.class-badge.premium { background: linear-gradient(135deg, #af52de, #9500c7); }
+
+.class-card .class-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.class-card .class-title {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.class-card .class-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.3;
+}
+
+.class-card .class-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.class-card input[type="radio"]:checked ~ .class-check {
+    border-color: var(--accent);
+    background: var(--accent) center/12px url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='20 6 9 17 4 12'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.class-card:has(input[type="radio"]:checked) {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+    background: var(--accent-soft);
+}
+
+/* =========================================================
+   Результаты (чек) — современная карточка
+   ========================================================= */
+.receipt {
+    font-family: var(--font);
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.receipt__title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--border);
+}
+
+.receipt__group-title {
+    margin-top: 10px;
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-top: 1px dashed var(--border);
+    padding-top: 8px;
+}
+
+.receipt__line {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 3px 0;
+    align-items: center;
+}
+
+.receipt__line > span:first-child {
+    flex: 1;
+    line-height: 1.35;
+}
+
+.receipt__line > span:last-child {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.receipt__total {
+    border-top: 2px solid var(--text);
+    margin-top: 10px;
+    padding-top: 8px;
+    font-weight: 700;
+}
+
+.receipt__total .receipt__line:last-child {
+    color: var(--accent);
+    font-size: 16px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+    margin-top: 6px;
+}
+
+.receipt__muted {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.receipt__muted > span:last-child {
+    font-weight: 400;
+}
+
+.receipt__line label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex: 1;
+    gap: 8px;
+}
+
+.receipt__line input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+}
+
+/* PDF кнопка */
+.pdf-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: white;
+    border: none;
+    border-radius: 980px;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 16px rgba(0, 113, 227, 0.35);
+}
+
+.pdf-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(0, 113, 227, 0.45);
+}
+
+.pdf-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+}
+
+/* =========================================================
+   Модальные окна (info + проёмы)
    ========================================================= */
 .openings-modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.45);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;
 }
 
 .openings-modal {
     background: #fff;
-    border-radius: 8px;
+    border-radius: 18px;
     min-width: 420px;
     max-width: 520px;
+    width: 100%;
     max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    font-family: monospace;
+    box-shadow: var(--shadow-lg);
+    font-family: var(--font);
     font-size: 13px;
+    animation: modalIn 0.25s ease;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: none; }
 }
 
 .openings-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
-    border-bottom: 1px dashed #ccc;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
     font-weight: 700;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .openings-modal-close {
-    font-size: 22px;
+    font-size: 24px;
+    line-height: 1;
     cursor: pointer;
-    opacity: 0.5;
-    transition: opacity .2s;
+    color: var(--muted);
+    transition: color 0.2s;
 }
-.openings-modal-close:hover { opacity: 1; }
+.openings-modal-close:hover { color: var(--text); }
 
 .openings-modal-body {
-    padding: 12px 16px;
+    padding: 16px 20px;
 }
 
 .openings-empty {
-    color: #999;
+    color: var(--muted);
     font-style: italic;
     padding: 8px 0;
     text-align: center;
@@ -424,68 +958,70 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 0;
-    border-bottom: 1px solid #eee;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 10px;
 }
 
 .opening-row-info {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-width: 0;
 }
 
 .opening-type-badge {
     display: inline-block;
     font-size: 11px;
     font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 3px;
+    padding: 2px 8px;
+    border-radius: 980px;
     width: fit-content;
 }
 .opening-type-badge.window {
-    background: #c7e6f7;
+    background: #e1f3fd;
     color: #0a4b6e;
 }
 .opening-type-badge.door {
-    background: #edd4b7;
+    background: #f6e7d3;
     color: #6e3d0a;
 }
 
 .opening-row-detail {
     font-size: 11px;
-    color: #888;
+    color: var(--muted);
 }
 
 .btn-delete-opening {
     background: none;
-    border: 1px solid #e74c3c;
-    color: #e74c3c;
-    border-radius: 4px;
-    padding: 3px 10px;
+    border: 1px solid var(--red);
+    color: var(--red);
+    border-radius: 8px;
+    padding: 5px 12px;
     cursor: pointer;
-    font-size: 11px;
-    font-family: monospace;
-    transition: all .2s;
+    font-family: var(--font);
+    font-size: 12px;
+    transition: all 0.2s;
 }
 .btn-delete-opening:hover {
-    background: #e74c3c;
+    background: var(--red);
     color: #fff;
 }
 
 .btn-edit-opening {
     background: none;
-    border: 1px solid #3498db;
-    color: #3498db;
-    border-radius: 4px;
-    padding: 3px 8px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 8px;
+    padding: 5px 10px;
     cursor: pointer;
+    font-family: var(--font);
     font-size: 14px;
-    font-family: monospace;
-    transition: all .2s;
+    transition: all 0.2s;
     line-height: 1;
 }
 .btn-edit-opening:hover {
-    background: #3498db;
+    background: var(--accent);
     color: #fff;
 }
 
@@ -493,38 +1029,41 @@ header {
     display: flex;
     gap: 6px;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .openings-add-row {
     display: flex;
     gap: 8px;
-    padding: 10px 0;
-    border-top: 1px dashed #ccc;
-    margin-top: 8px;
+    padding: 12px 0 4px;
+    border-top: 1px dashed var(--border);
+    margin-top: 10px;
 }
 
 .btn-add-opening {
-    background: #f5f5f5;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    padding: 6px 14px;
+    flex: 1;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    border-radius: 10px;
+    padding: 8px 12px;
     cursor: pointer;
-    font-family: monospace;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all .2s;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.2s;
 }
 .btn-add-opening:hover {
-    background: #e0e0e0;
-    border-color: #666;
+    background: var(--accent);
+    color: #fff;
 }
 
 .openings-form {
-    border: 1px dashed #ccc;
-    border-radius: 6px;
-    padding: 10px;
-    margin-top: 6px;
-    background: #fafafa;
+    border: 1px dashed var(--accent-border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 8px;
+    background: #f7fafd;
 }
 
 .opening-form-row {
@@ -535,74 +1074,197 @@ header {
 .opening-form-row label {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    font-size: 11px;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
     flex: 1;
 }
 .opening-form-row input {
-    padding: 4px 6px;
-    border: 1px solid #aaa;
-    border-radius: 3px;
-    font-family: monospace;
-    font-size: 12px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font);
+    font-size: 14px;
     width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.opening-form-row input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
 }
 
 .opening-form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
-    margin-top: 4px;
+    margin-top: 6px;
 }
 
 .btn-form-cancel {
-    background: #fff;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    padding: 5px 14px;
+    background: #f2f2f7;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
     cursor: pointer;
-    font-family: monospace;
-    font-size: 12px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s;
 }
+.btn-form-cancel:hover { background: #e5e5ea; }
+
 .btn-form-save {
-    background: #4CAF50;
+    background: var(--accent);
     color: #fff;
     border: none;
-    border-radius: 4px;
-    padding: 5px 14px;
+    border-radius: 10px;
+    padding: 8px 16px;
     cursor: pointer;
-    font-family: monospace;
-    font-size: 12px;
-    font-weight: 600;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 0.2s, transform 0.2s;
 }
-.btn-form-save:hover { background: #45a049; }
+.btn-form-save:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+/* + кнопка добавления проёма у стен */
+.add-opening-btn {
+    margin-left: auto;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.5;
+    transition: opacity 0.2s, transform 0.2s;
+    user-select: none;
+    color: var(--accent);
+    padding: 2px 4px;
+}
+.add-opening-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
 
 /* =========================================================
-   3D — ПРОЁМЫ НА СТЕНАХ
+   Footer
    ========================================================= */
-.opening {
-    position: absolute;
-    box-sizing: border-box;
-    pointer-events: none;
+.footer {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    padding: 18px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin-top: auto;
 }
-.opening.window {
-    background:  #a7e5fe;
-    border: 2px solid #333;
+
+.footer-content {
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
 }
-.opening.door {
-    background: #b3b3b3;
-    border: 2px solid #333;
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--accent);
+}
+
+/* =========================================================
+   Входная анимация
+   ========================================================= */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+}
+
+.panel, .viewport {
+    animation: fadeUp 0.45s ease both;
+}
+
+.left-panel { animation-delay: 0.05s; }
+.center-panel .viewport { animation-delay: 0.12s; }
+.right-panel { animation-delay: 0.19s; }
+
+/* =========================================================
+   Мобильная версия
+   ========================================================= */
+@media (max-width: 1100px) {
+    .layout {
+        flex-wrap: wrap;
+    }
+    .left-panel, .right-panel {
+        width: 100%;
+        min-width: 0;
+    }
+    .center-panel {
+        order: -1;
+        width: 100%;
+    }
+    .store-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+    }
+
+    header {
+        padding: 10px 14px;
+        flex-wrap: wrap;
+    }
+
+    .brand-name {
+        font-size: 17px;
+    }
+
+    .layout {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .panel {
+        border-radius: var(--radius-sm);
+        padding: 14px;
+    }
+
+    .viewport {
+        height: 320px;
+        border-radius: var(--radius-sm);
+    }
+
+    .viewport-hint {
+        font-size: 11px;
+        padding: 4px 12px;
+    }
+
     .openings-modal {
         min-width: unset;
         max-width: 95vw;
-        margin: 0 10px;
     }
     .opening-form-row {
         flex-direction: column;
         gap: 6px;
     }
 }
-

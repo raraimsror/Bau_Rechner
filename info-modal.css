@@ -1,5 +1,5 @@
 /* =========================================================
-   МОДАЛЬНЫЙ ОКНО КОНТЕЙНЕР
+   МОДАЛЬНОЕ ОКНО ИНФОРМАЦИИ (Apple White)
    ========================================================= */
 
 /* Скрыто по умолчанию */
@@ -7,7 +7,9 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(20, 20, 25, 0.45);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     z-index: 9999;
     justify-content: center;
     align-items: center;
@@ -17,22 +19,47 @@
 
 .info-modal-content {
     background: #fff;
-    padding: 20px;
+    padding: 24px;
     max-width: 600px;
     width: 100%;
-    border-radius: 8px;
+    border-radius: 18px;
     position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    font-family: Arial, sans-serif;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    font-family: 'PTSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    animation: infoModalIn 0.25s ease;
+}
+
+@keyframes infoModalIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: none; }
 }
 
 .info-modal-close {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 24px;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    font-size: 22px;
+    line-height: 1;
     cursor: pointer;
-    color: #333;
+    color: #6e6e73;
+    background: #f2f2f7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
 }
 
-.info-modal-body {max-height: 70vh;overflow:auto;}
+.info-modal-close:hover {
+    background: #e5e5ea;
+    color: #1d1d1f;
+}
+
+.info-modal-body {
+    max-height: 70vh;
+    overflow: auto;
+    color: #1d1d1f;
+    line-height: 1.6;
+}

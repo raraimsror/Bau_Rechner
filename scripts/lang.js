@@ -20,9 +20,14 @@ const translations = window.translations = {
         econom: "Эконом - только материалы, клиент работает сам",
         standard: "Стандарт - выбор работ + связь с мастерами",
         premium: "Премиум - полный сервис под ключ",
+        economyDesc: "материалы + инструменты",
+        standardDesc: "работы + материалы",
+        premiumDesc: "полный сервис под ключ",
         results: "Результаты",
         resetFilters: "Сбросить фильтры",
         resetWorkBlocks: "Сбросить выбор работ",
+        viewportHint: "⟲ вращать · колесо = масштаб",
+        resetView: "Сбросить вид (как F5)",
         loginRegister: "Вход / Регистрация",
         aboutUs: "О нас",
         partners: "Партнеры",
@@ -65,9 +70,14 @@ const translations = window.translations = {
         econom: "Economy - materials only, DIY work",
         standard: "Standard - work selection + contractor connection",
         premium: "Premium - full turnkey service",
+        economyDesc: "materials + tools",
+        standardDesc: "work + materials",
+        premiumDesc: "full turnkey service",
         results: "Results",
         resetFilters: "Reset Filters",
         resetWorkBlocks: "Reset Work Blocks",
+        viewportHint: "⟲ drag · wheel = zoom",
+        resetView: "Reset view (like F5)",
         loginRegister: "Login / Register",
         aboutUs: "About Us",
         partners: "Partners",
@@ -110,9 +120,14 @@ const translations = window.translations = {
         econom: "Economy - nur Materialien, Eigenarbeit",
         standard: "Standard - Arbeitsauswahl + Handwerkervermittlung",
         premium: "Premium - kompletter Rundum-Service",
+        economyDesc: "Materialien + Werkzeuge",
+        standardDesc: "Arbeiten + Materialien",
+        premiumDesc: "kompletter Rundum-Service",
         results: "Ergebnisse",
         resetFilters: "Filter zurücksetzen",
         resetWorkBlocks: "Arbeitsblöcke zurücksetzen",
+        viewportHint: "⟲ ziehen · Mausrad = Zoom",
+        resetView: "Ansicht zurücksetzen (wie F5)",
         loginRegister: "Anmelden / Registrieren",
         aboutUs: "Über uns",
         partners: "Partner",
@@ -208,6 +223,12 @@ function tr(category, key) {
     return key;
 }
 
+function syncLangRadios() {
+    document.querySelectorAll('input[name="lang"]').forEach(radio => {
+        radio.checked = (radio.value === currentLang);
+    });
+}
+
 function localize() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -219,6 +240,9 @@ function localize() {
         const key = el.getAttribute('data-i18n-title');
         el.title = t(key);
     });
+
+    // Событие для обновления позиций скользящих индикаторов
+    document.dispatchEvent(new CustomEvent('i18n-updated'));
 }
 
 // Initialize on DOM load
@@ -234,12 +258,13 @@ document.addEventListener('DOMContentLoaded', () => {
         else setLanguage('ru');
     }
 
-    // Language selector event
-    const langSelect = document.getElementById('langSelect');
-    if (langSelect) {
-        langSelect.value = currentLang;
-        langSelect.addEventListener('change', (e) => {
-            setLanguage(e.target.value);
+    // Language selector (segmented radio)
+    document.querySelectorAll('input[name="lang"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (radio.checked) {
+                setLanguage(radio.value);
+            }
         });
-    }
+    });
+    syncLangRadios();
 });
