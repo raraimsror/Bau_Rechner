@@ -1,525 +1,221 @@
 # RemontExpert 3D Pro - Development Plan
 
-**Updated:** 2026-05-16 21:19  
-**Status:** PRODUCTION READY → React Migration Phase
+**Updated:** 2026-08-19  
+**Status:** LAUNCH PREPARATION — Vācijas tirgus (DE noklusējuma valoda)  
+**Kontrolpunkts:** LAUNCH → pēc tā React migrācija
 
 ---
 
 ## ✅ COMPLETED PHASES
 
-### Phase 1-9: Core Development (COMPLETE)
+### Phase 1-13: Core Development (COMPLETE)
 - ✅ Critical bug fixes and validation
 - ✅ 3D visualization with mobile support
-- ✅ Paint calculation with bucket optimization
+- ✅ Paint calculation with bucket optimization (Alpina/Caparol)
 - ✅ Wallpaper calculation (rolls + glue)
 - ✅ Modular ECO/NORM/PRO classes
-- ✅ PDF export with logo
+- ✅ PDF export with Cyrillic support (PT Sans fonts)
 - ✅ Legal compliance pages (7 pages)
 - ✅ Mobile responsive design
 - ✅ Mobile 3D scaling (Strategy 6)
 - ✅ Debounce recalculation (1.5s)
 - ✅ Full localization (RU/EN/DE)
+- ✅ Store selection (OBI/Hornbach/Bauhaus)
+- ✅ Openings module (windows/doors with area deduction)
+- ✅ Apple White UI redesign
 
-**Result:** Fully functional MVP ready for production
-
----
-
-## 🎯 CURRENT PRIORITY: React Migration
-
-### Why React?
-Current Vanilla JS implementation works perfectly, but React migration will provide:
-- Better state management and component reusability
-- Easier maintenance and scalability
-- Modern development workflow with hot reload
-- Better TypeScript integration potential (future)
-- Improved testing capabilities
-- Cleaner separation of concerns
-
-### Migration Strategy
-**Approach:** Create new React project alongside existing one
-- Keep original as reference and fallback
-- Gradual migration with feature parity verification
-- No feature loss - maintain all existing functionality
+**Result:** Functional MVP ready for pre-launch improvements
 
 ---
 
-## 📋 Phase 11: React Migration (CURRENT)
+## 🎯 CURRENT PHASE: Pre-Launch Improvements (Phase 14)
 
-### 11.1 Project Setup & Architecture
-**Time:** 4-6h
+**Mērķis:** sagatavot projektu laišanai Vācijas tirgū — saites-kalkulators, ko var izmantot jebkur Vācijā pirms remonta sākšanas. **DE ir noklusējuma valoda.**
 
-**Tasks:**
-- [ ] Create Bau_Rechner_React/ folder alongside existing project
-- [ ] Initialize Vite + React project
-- [ ] Install dependencies (react-router-dom, i18next, jspdf)
-- [ ] Set up folder structure (components/, services/, hooks/, context/)
-- [ ] Configure Vite for absolute imports
-- [ ] Copy static assets (data/, locales/, pics/, libs/)
-
-**Deliverables:**
-- Working React dev server
-- Folder structure ready
-- All static assets accessible
-
----
-
-### 11.2 State Management & Context
+### 14.1 Datu / cenu sinhronizācijas process
 **Time:** 3-4h
 
-**Tasks:**
-- [ ] Create AppContext with useReducer
-- [ ] Define all state variables (dimensions, selections, pricing)
-- [ ] Implement all reducer actions
-- [ ] Create custom hooks (useAppContext, useDebounce)
-- [ ] Set up i18next configuration
-- [ ] Create LanguageProvider
+**Problēma:** Cenas `data/prices_*.json` tiek atjauninātas manuāli; pēdējā atjaunināšana 2026-07-09. Nav pārskatāmības, cik svaigas ir cenas.
 
-**Deliverables:**
-- Global state management working
-- Language switching functional
-- Custom hooks ready
+**Uzdevumi:**
+- [ ] Izveidot dokumentētu cenu atjaunināšanas procesu (solis pa solim)
+- [ ] UI rādīt "lastUpdated" datumu (data/prices_*.json → `lastUpdated`)
+- [ ] Versiju/atjaunināšanas žurnāls vai fails
+- [ ] (Opcionāli) cenu iegūšanas skripts (web scraping / API) — atsevišķā posmā
 
----
+**Rezultāts:** Lietotājs redz, cik svaigas ir cenas; process dokumentēts.
 
-### 11.3 Layout Components
-**Time:** 2-3h
-
-**Tasks:**
-- [ ] Create Header component (logo, language selector)
-- [ ] Create Footer component (links, copyright)
-- [ ] Create MainLayout (3-column responsive grid)
-- [ ] Apply CSS Modules for styling
-- [ ] Test responsive behavior
-
-**Deliverables:**
-- Basic layout structure
-- Responsive design working
-- Header and footer functional
-
----
-
-### 11.4 Filters Panel (Left Column)
-**Time:** 2-3h
-
-**Tasks:**
-- [ ] Create JobTypeSelector component (radio buttons)
-- [ ] Create WallSelector component (6 checkboxes)
-- [ ] Create ResetFiltersButton component
-- [ ] Connect to AppContext
-- [ ] Apply translations
-
-**Deliverables:**
-- Left panel fully functional
-- State updates working
-- Translations applied
-
----
-
-### 11.5 3D Viewer (Center Column)
-**Time:** 4-5h
-
-**Tasks:**
-- [ ] Create RoomInputs component (X, Y, Z inputs)
-- [ ] Create Room3D component (port room3d.js logic)
-- [ ] Implement mouse/touch controls
-- [ ] Implement mobile scaling (Strategy 6)
-- [ ] Create InfoModal component
-- [ ] Test 3D interactions
-
-**Deliverables:**
-- 3D visualization working
-- Mobile scaling functional
-- Touch controls working
-- Info modal functional
-
----
-
-### 11.6 Results Panel (Right Column)
-**Time:** 3-4h
-
-**Tasks:**
-- [ ] Create RepairClassSelector component
-- [ ] Create Receipt component
-- [ ] Create ReceiptLine component (with checkboxes)
-- [ ] Create ResetWorkBlocksButton component
-- [ ] Implement dynamic rendering based on repair class
-
-**Deliverables:**
-- Right panel fully functional
-- Receipt rendering correctly
-- Checkboxes working
-
----
-
-### 11.7 Calculation Services
-**Time:** 4-5h
-
-**Tasks:**
-- [ ] Port ECO.js to services/calculations/eco.js
-- [ ] Port NORM.js to services/calculations/norm.js
-- [ ] Port PRO.js to services/calculations/pro.js
-- [ ] Port paint.js to services/calculations/paint.js
-- [ ] Port wallpaper.js to services/calculations/wallpaper.js
-- [ ] Port tech-card.js to services/calculations/techCard.js
-- [ ] Create useCalculations hook
-- [ ] Implement debounced recalculation (1.5s)
-
-**Deliverables:**
-- All calculation logic working
-- Pure functions (no global state)
-- Debounce working correctly
-
----
-
-### 11.8 PDF Export
-**Time:** 2-3h
-
-**Tasks:**
-- [ ] Port pdf-export.js to services/pdfExport.js
-- [ ] Integrate jsPDF npm package
-- [ ] Create PDFExportButton component
-- [ ] Test PDF generation with all data
-- [ ] Verify logo appears correctly
-
-**Deliverables:**
-- PDF export working
-- All data included
-- Formatting matches original
-
----
-
-### 11.9 Testing & Verification
+### 14.2 Tehnoloģisko karšu paplašināšana
 **Time:** 4-6h
 
-**Tasks:**
-- [ ] Test all 3 repair classes (ECO/NORM/PRO)
-- [ ] Test both job types (painting/wallpaper)
-- [ ] Test all 3 languages (RU/EN/DE)
-- [ ] Test mobile responsiveness (320px - 1920px)
-- [ ] Test 3D viewer on mobile devices
-- [ ] Test PDF export
-- [ ] Test all checkbox interactions
-- [ ] Test reset buttons
-- [ ] Verify calculations match original
-- [ ] Fix any bugs found
+**Problēma:** `tech-card.js` pašlaik aptver tikai primer + paint ECO klasē.
 
-**Deliverables:**
-- All features working
-- Feature parity with original
-- No critical bugs
+**Uzdevumi:**
+- [ ] Tehnoloģiskās kartes visiem job tipiem (painting/wallpaper; flooring — pēc React)
+- [ ] Visām klasēm (ECO/NORM/PRO)
+- [ ] Soli-pa-solim instrukcijas daudzvalodu (DE/RU/EN)
+- [ ] Iekļaušana info-modālī (libs/infos/) un/vai PDF
 
----
+**Rezultāts:** Katram darba veidam/klasei ir pilna instrukciju karte.
 
-### 11.10 Build & Documentation
-**Time:** 1-2h
+### 14.3 3D scriptu pilnveide
+**Time:** 3-5h
 
-**Tasks:**
-- [ ] Run production build
-- [ ] Test production bundle
-- [ ] Update README.md with React instructions
-- [ ] Document component structure
-- [ ] Document state management
-- [ ] Create migration notes
+**Uzdevumi:**
+- [ ] Atvērumu (logu/durvju) uzlabota vizualizācija
+- [ ] Izmēru etiķetes (mērījumu rādīšana uz sienām)
+- [ ] Atvērumu mērogošana — pārbaudīt, ka X/Y/Z izmaiņas korekti ietekmē atvērumus
+- [ ] Mobile performance pārbaude
 
-**Deliverables:**
-- Production build ready
-- Documentation updated
-- Migration complete
+**Rezultāts:** 3D skats ir vizuāli pārliecinošs un informatīvs.
 
----
+### 14.4 PDF noformējumi + checklists
+**Time:** 4-6h
 
-## 📊 Phase 11 Progress Tracker
+**Problēma:** PDF eksports pieejams tikai ECO klasei.
 
-```
-11.1 Project Setup         ⏳ 0%
-11.2 State Management      ⏳ 0%
-11.3 Layout Components     ⏳ 0%
-11.4 Filters Panel         ⏳ 0%
-11.5 3D Viewer             ⏳ 0%
-11.6 Results Panel         ⏳ 0%
-11.7 Calculation Services  ⏳ 0%
-11.8 PDF Export            ⏳ 0%
-11.9 Testing               ⏳ 0%
-11.10 Build & Docs         ⏳ 0%
-─────────────────────────────────
-Overall Progress           ⏳ 0%
-```
+**Uzdevumi:**
+- [ ] PDF eksports visām klasēm (NORM/PRO)
+- [ ] Checklisti (darbu saraksts ar atzīmēšanu)
+- [ ] Veikala + cenu atjaunināšanas datuma informācija PDF
+- [ ] Tehnoloģiskās kartes iekļaušana PDF (pēc 14.2)
+- [ ] Juri diska disclaimeri (PdfDisclaimers) visās valodās
 
-**Estimated Time:** 28-38 hours  
-**Target Completion:** 2026-05-25
+**Rezultāts:** Pilnvērtīgs PDF katram lietotājam — tāme + checklists.
 
----
+### 14.5 Saites-kalkulators (URL-encoded state)
+**Time:** 3-4h
 
-## 🔮 FUTURE ENHANCEMENTS (After React Migration)
+**Problēma:** Aprēķina stāvokli nevar dalīties — katrs atver no nulles.
 
-### Phase 10: UI/UX Design Improvements (POSTPONED)
-*Will be implemented in React after migration*
+**Uzdevumi:**
+- [ ] Stāvokļa iekodēšana URL parametros: izmēri, sienas, darba veids, klase, veikals, valoda, atvērumi
+- [ ] Stāvokļa atjaunošana no URL (share → precīzi tas pats skats)
+- [ ] "Kopīgot saiti" poga (kopēšana)
+- [ ] (Opcionāli) QR kods PDF
 
-**Planned improvements:**
-- Color scheme and branding
-- Typography system
-- Layout and spacing improvements
-- Interactive elements styling
-- 3D viewer UI enhancements
-- Receipt section redesign
-- Legal pages styling
+**Rezultāts:** Saites-kalkulators — var dalīties un izmantot jebkur Vācijā pirms remonta.
 
-**Reason for postponement:** React migration takes priority. UI/UX improvements will be easier to implement with React components and CSS Modules.
+### 14.6 Testēšana + fināla pārbaude
+**Time:** 4-6h
+
+**Uzdevumi:**
+- [ ] Visas 3 klases (ECO/NORM/PRO) × abi job tipi
+- [ ] Visas 3 valodas (DE pirmā)
+- [ ] Mobile (320px - 1920px) + 3D uz mobīlajiem
+- [ ] Visi checkboxi, reset pogas, veikalu pārslēgšana
+- [ ] Aprēķinu atbilstība oriģinālam
+- [ ] PDF eksports visām klasēm
+
+**Rezultāts:** Bez kritiskiem bugiem, gatavs laišanai.
 
 ---
 
-## 🔮 FUTURE ENHANCEMENTS (After React Migration)
+## 🚀 Phase 15: LAUNCH (KONTROLPUNKTS)
 
-### Short-term (1-2 months)
-- [ ] UI/UX design improvements (Phase 10)
-- [ ] User testing and feedback collection
-- [ ] Performance optimization
-- [ ] SEO optimization (meta tags, structured data)
-- [ ] Analytics integration (Google Analytics / Plausible)
-- [ ] A/B testing setup
+**Time:** 1 diena (izvietošana)
 
-### Mid-term (3-6 months)
-- [ ] TypeScript migration
-- [ ] Unit tests (Jest + React Testing Library)
-- [ ] E2E tests (Playwright)
-- [ ] Store API integration (automatic price updates)
-- [ ] Extended material database (more brands)
-- [ ] User accounts and saved projects
-- [ ] Email notifications
-- [ ] Comparison tool (multiple variants)
+- [ ] Hostings/Vācijas domēns
+- [ ] SSL, SEO (meta, structured data)
+- [ ] Analytics (GA / Plausible)
+- [ ] DE kā noklusējuma valoda + validācija
+- [ ] Juri diska lapu pārbaude (impressum/datenschutz)
 
-### Long-term (6-12 months)
-- [ ] AI assistant for material selection
-- [ ] Extended 3D geometry (roofs, facades, terraces)
+**Rezultāts:** Tiešsaistē pieejams saites-kalkulators Vācijas tirgum.
+
+---
+
+## ⚛️ Phase 16: React Migration (PĒC LAUNCH)
+
+**Kad:** tūlīt pēc Phase 15 laišanas.
+
+**Pieeja:** jauns projekts līdzās esošajam; oriģināls paliek par atsauci/fallback; funkcionalitātes paritāte bez zaudējumiem.
+
+### 16.1 Projekta setup (4-6h)
+- [ ] Bau_Rechner_React/ mapē (Vite + React 18)
+- [ ] Dependencies: react-router-dom, i18next, jspdf
+- [ ] Mape: components/, services/, hooks/, context/
+- [ ] Statisko aktīvu kopēšana (data/, locales/, pics/, fonts/)
+
+### 16.2 State management (3-4h)
+- [ ] AppContext ar useReducer (izmēri, sienas, darba veids, klase, veikals, valoda, atvērumi)
+- [ ] useDebounce, useLocalStorage, useCalculations hooki
+- [ ] i18next konfigurācija (esošie locales/ JSON)
+
+### 16.3 Komponenti (6-10h)
+- [ ] Layout (Header, Footer, MainLayout)
+- [ ] Filters (JobTypeSelector, WallSelector, StoreSelector)
+- [ ] RoomViewer (Room3D port, RoomInputs, InfoModal)
+- [ ] Results (RepairClassSelector, Receipt, ReceiptLine, PDFExportButton)
+
+### 16.4 Aprēķinu servisi (4-5h)
+- [ ] eco.js / norm.js / pro.js / paint.js / wallpaper.js / techCard.js (tīras funkcijas)
+- [ ] PDF eksports (jspdf npm)
+
+### 16.5 Testēšana (4-6h)
+- [ ] Funkcionālā paritāte ar oriģinālu
+- [ ] Mobile testēšana
+- [ ] Produkcijas build
+
+**Kopā:** ~28-38h
+
+---
+
+## 🔮 FUTURE (b) — pēc React migrācijas
+
+### Tuvākā nākotne (1-2 mēneši)
+- [ ] UI/UX uzlabojumi React vidē
+- [ ] Lietotāju testēšana un atsauksmes
+- [ ] Veikalu cenu automātiska sinhronizācija (API/scraping)
+- [ ] Cenu svaiguma indikators (pēc 14.1)
+
+### Vidējs termiņš (3-6 mēneši)
+- [ ] TypeScript migrācija
+- [ ] Unit tests (Jest + React Testing Library) / E2E (Playwright)
+- [ ] Veikalu API integrācija (automātiska cenu atjaunināšana)
+- [ ] Paplašināta materiālu datubāze (vairāk zīmolu)
+- [ ] Lietotāju konti un saglabāti projekti
+- [ ] Salīdzināšanas rīks (vairāki varianti)
+- [ ] LV valodas pievienošana
+
+### Ilgtermiņš (6-12 mēneši)
+- [ ] AI asistents materiālu izvēlei
+- [ ] Paplašināta 3D ģeometrija (jumti, fasādes, terases)
 - [ ] Mobile app (React Native)
-- [ ] Professional profiles (contractors, architects)
-- [ ] Marketplace integration
-- [ ] Work time calculator
-- [ ] Calendar integration
-- [ ] Chat with contractors
+- [ ] Profesionāļu profili (uzņēmēji, arhitekti)
+- [ ] Marketplace integrācija
+- [ ] Darba laika kalkulators, kalendāra integrācija
+- [ ] Sarakste ar uzņēmējiem
 
 ---
 
-## 📝 React Migration Technical Details
-
-### Technology Stack
-
-**Core:**
-- React 18 (hooks, concurrent features)
-- Vite 5 (fast dev server, optimized builds)
-- React Router 6 (future multi-page support)
-
-**State Management:**
-- Context API + useReducer (recommended for this project size)
-- Alternative: Zustand (if more complex state needed)
-
-**Styling:**
-- CSS Modules (recommended - easy migration from existing CSS)
-- Alternative: Styled Components (if dynamic styling needed)
-
-**Localization:**
-- i18next + react-i18next (industry standard)
-- Keep existing JSON structure in locales/
-
-**PDF Export:**
-- jsPDF (npm package, same as current)
-
-**Development:**
-- ESLint + Prettier (code quality)
-- Vite dev server with HMR
-
-### Folder Structure
+## 📊 Progress Tracker
 
 ```
-Bau_Rechner_React/
-├── public/
-│   ├── data/              # Copy from original
-│   ├── locales/           # Copy from original
-│   ├── pics/              # Copy from original
-│   └── libs/              # Copy from original
-├── src/
-│   ├── components/
-│   │   ├── Layout/
-│   │   │   ├── Header.jsx
-│   │   │   ├── Header.module.css
-│   │   │   ├── Footer.jsx
-│   │   │   ├── Footer.module.css
-│   │   │   ├── MainLayout.jsx
-│   │   │   └── MainLayout.module.css
-│   │   ├── Filters/
-│   │   │   ├── JobTypeSelector.jsx
-│   │   │   ├── WallSelector.jsx
-│   │   │   └── ResetFiltersButton.jsx
-│   │   ├── RoomViewer/
-│   │   │   ├── Room3D.jsx
-│   │   │   ├── Room3D.module.css
-│   │   │   ├── RoomInputs.jsx
-│   │   │   ├── InfoModal.jsx
-│   │   │   └── InfoModal.module.css
-│   │   ├── Results/
-│   │   │   ├── RepairClassSelector.jsx
-│   │   │   ├── Receipt.jsx
-│   │   │   ├── Receipt.module.css
-│   │   │   ├── ReceiptLine.jsx
-│   │   │   ├── PDFExportButton.jsx
-│   │   │   └── ResetWorkBlocksButton.jsx
-│   │   └── UI/
-│   │       ├── Button.jsx
-│   │       ├── Checkbox.jsx
-│   │       └── RadioButton.jsx
-│   ├── hooks/
-│   │   ├── useCalculations.js
-│   │   ├── useDebounce.js
-│   │   ├── useLocalStorage.js
-│   │   └── useAppContext.js
-│   ├── services/
-│   │   ├── calculations/
-│   │   │   ├── eco.js
-│   │   │   ├── norm.js
-│   │   │   ├── pro.js
-│   │   │   ├── paint.js
-│   │   │   ├── wallpaper.js
-│   │   │   └── techCard.js
-│   │   ├── pdfExport.js
-│   │   └── dataLoader.js
-│   ├── context/
-│   │   ├── AppContext.jsx
-│   │   └── LanguageContext.jsx
-│   ├── i18n/
-│   │   └── config.js
-│   ├── styles/
-│   │   ├── global.css
-│   │   └── variables.css
-│   ├── App.jsx
-│   └── main.jsx
-├── package.json
-├── vite.config.js
-├── .eslintrc.js
-└── README.md
+14.1 Price sync           ⏳ 0%
+14.2 Tech cards           ⏳ 0%
+14.3 3D improvements      ⏳ 0%
+14.4 PDF + checklists     ⏳ 0%
+14.5 Link-calculator      ⏳ 0%
+14.6 Testing              ⏳ 0%
+─────────────────────────────────
+Phase 14 (Pre-launch)     ⏳ 0%
+Phase 15 (LAUNCH)         ⏳ 0%
+Phase 16 (React)          ⏳ 0%
 ```
 
-### Key Implementation Patterns
-
-**1. Global State (AppContext.jsx):**
-```javascript
-const initialState = {
-  dimensions: { x: 400, y: 300, z: 250 },
-  selectedWalls: { front: true, back: true, left: true, right: true, floor: false, ceiling: true },
-  currentJob: 'painting',
-  currentClass: 'econom',
-  pricing: null,
-  selectedEcoTools: { /* ... */ },
-  selectedNormWorks: { /* ... */ }
-};
-
-function appReducer(state, action) {
-  switch (action.type) {
-    case 'SET_DIMENSIONS': return { ...state, dimensions: action.payload };
-    case 'TOGGLE_WALL': return { ...state, selectedWalls: { ...state.selectedWalls, [action.payload]: !state.selectedWalls[action.payload] }};
-    // ... more actions
-  }
-}
-```
-
-**2. Calculations Hook (useCalculations.js):**
-```javascript
-export function useCalculations() {
-  const { state } = useAppContext();
-  const [totals, setTotals] = useState(null);
-  const debouncedDimensions = useDebounce(state.dimensions, 1500);
-  
-  useEffect(() => {
-    const area = calculateArea(debouncedDimensions, state.selectedWalls);
-    const result = state.currentClass === 'econom' 
-      ? calculateEco(state.currentJob, area, state.pricing, state.selectedEcoTools)
-      : state.currentClass === 'standard'
-      ? calculateNorm(state.currentJob, area, state.pricing, state.selectedNormWorks)
-      : calculatePro(state.currentJob, area, state.pricing);
-    setTotals(result);
-  }, [debouncedDimensions, state.selectedWalls, state.currentJob, state.currentClass, state.pricing]);
-  
-  return totals;
-}
-```
-
-**3. Component Example (Receipt.jsx):**
-```javascript
-export function Receipt() {
-  const { state } = useAppContext();
-  const { t } = useTranslation();
-  const totals = useCalculations();
-  
-  if (!totals) return <div>Loading...</div>;
-  
-  return (
-    <div className={styles.receipt}>
-      <h3>{t('results')}</h3>
-      {totals.items.map(group => (
-        <ReceiptGroup key={group.category} group={group} />
-      ))}
-      <ReceiptTotal totals={totals} />
-    </div>
-  );
-}
-```
-
-### Migration Checklist
-
-**Before starting:**
-- [ ] Backup current project
-- [ ] Create git branch or new folder
-- [ ] Review detailed plan in `.claude/plans/pure-spinning-pebble.md`
-
-**During migration:**
-- [ ] Keep original project running for comparison
-- [ ] Test each component as you build it
-- [ ] Verify calculations match original exactly
-- [ ] Test on mobile devices regularly
-
-**After migration:**
-- [ ] Full feature comparison test
-- [ ] Performance comparison
-- [ ] Bundle size analysis
-- [ ] Update documentation
-
----
-
-## 🎯 Next Steps
-
-**Immediate (This Week):**
-1. Review React migration plan
-2. Decide on technical choices (state management, styling)
-3. Start Phase 11.1: Project Setup
-
-**This Month:**
-- Complete React migration (Phase 11)
-- Full testing and verification
-- Deploy React version
-
-**Next Month:**
-- UI/UX improvements (Phase 10 in React)
-- User testing
-- Performance optimization
+**Estimated Time (Phase 14):** 21-31h  
+**Target LAUNCH:** pēc Phase 14 pabeigšanas
 
 ---
 
 ## 📚 Resources
 
-**React Migration Plan:**
-- Detailed plan: `.claude/plans/pure-spinning-pebble.md`
-- Estimated time: 28-38 hours
-- Approach: New project alongside original
-
-**Documentation:**
-- Current architecture: HISTORY.md
-- Original plan: PLAN.md (this file)
-- Component structure: Will be documented during migration
-
-**Testing:**
-- Manual testing checklist in migration plan
-- Automated tests: After migration complete
+- **Architecture:** HISTORY.md, AGENTS.md
+- **Roadmap:** šī faila Phase 14-16
+- **Testing:** manuālais checklists Phase 14.6
 
 ---
 
-**Last Updated:** 2026-05-16 21:22  
-**Next Review:** After Phase 11.1 completion
+**Last Updated:** 2026-08-19  
+**Next Review:** pēc katra Phase 14 apakšposma pabeigšanas

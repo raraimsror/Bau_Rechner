@@ -1,21 +1,21 @@
 # Bau_Rechner
 
-RemontExpert 3D Pro — renovation calculator with CSS 3D room view, PDF export, i18n (RU/EN/DE).
+RemontExpert 3D Pro — renovation calculator with CSS 3D room view, PDF export, i18n (RU/EN/DE). Target: German market, **DE is the default language**.
 
 ## Language notes
 
 - **Agent ↔ user**: Latvian (LV)
 - **Code comments**: Russian (— `script.js`, `room3d.js` etc. all have Russian comments)
-- **UI strings**: RU/EN/DE via i18n
+- **UI strings**: RU/EN/DE via i18n; **DE default**
 - **Data file keys**: English (`data/*.json`)
 
 ## Architecture
 
-- **Vanilla JS** (11 modules loaded via `<script>` tags in `index.html` — no bundler, no npm)
+- **Vanilla JS** (12 modules loaded via `<script>` tags in `index.html` — no bundler, no npm)
 - **CSS 3D room** (no Three.js — `room3d.js` rotates a CSS `div` cube via JS transforms)
-- **jsPDF** vendored as `libs/jspdf.umd.min.js`
+- **jsPDF** vendored as `libs/jspdf.umd.min.js`; PT Sans TTF fonts in `fonts/` for Cyrillic
 - **i18n**: `lang.js` has UI translations inline; result texts live in `locales/*/{common,tasks,inventory,categories}.json`
-- **Data**: `data/pricing.json` (Alpina paints, Erfurt wallpaper), `data/{painting,wallpaper}_pro.json` (work models)
+- **Data**: `data/pricing.json` (default prices), `data/prices_{obi,hornbach,bauhaus}.json` (per-store prices), `data/{painting,wallpaper}_pro.json` (work models)
 - All modules expose controllers on `window.*` — no ES module imports
 
 ## Quick start
@@ -30,23 +30,25 @@ Then open `http://localhost:8000`.
 
 | File | Role |
 |---|---|
-| `script.js` (805L) | Main — loads pricing, orchestrates recalculation, renders receipt |
-| `room3d.js` (255L) | CSS-3D cube, mouse/touch drag, dimension inputs, mobile scaling |
+| `script.js` (778L) | Main — loads pricing, store selector (`switchStore`), orchestrates recalculation, renders receipt |
+| `room3d.js` (258L) | CSS-3D cube, mouse/touch drag, dimension inputs, mobile scaling, openings rendering |
+| `openings.js` (329L) | CRUD windows/doors per wall (localStorage), area deduction, modal dialog |
 | `ECO.js` / `NORM.js` / `PRO.js` | Per-class calculation logic (window globals) |
-| `paint.js` / `wallpaper.js` / `tech-card.js` | Material-specific calculations (Alpina bucket optimization, roll/glue) |
-| `pdf-export.js` (845L) | jsPDF receipt generation, transliterates Cyrillic → Latin |
-| `lang.js` (193L) | Language switch, `tr(category, key)` helper |
+| `paint.js` / `wallpaper.js` / `tech-card.js` | Material-specific calculations (bucket optimization, roll/glue, primer/paint card) |
+| `pdf-export.js` (670L) | jsPDF receipt generation, loads PT Sans TTF (Cyrillic), transliteration fallback |
+| `lang.js` (257L) | Language switch, `tr(category, key)` helper, `detectLanguage` → DE default |
 | `info-modal.js` | Loads `libs/infos/room-measurement-{lang}.html` in a modal |
 
 ## Calculations
 
-- **Paint**: `(area / 5.5) × 2 × 1.1` → greedy bucket optimization (2.5L/5L/25L Alpina)
+- **Paint**: `(area / coverage) × coats × 1.1` → greedy bucket optimization (2.5L/5L/25L). `coverage`/`coats` come from product data (default 6 m²/L, 2 coats), reserve 10%
 - **Wallpaper**: `(area / 10.6) × 1.1` rolls; `Math.ceil(area / 22.5)` glue packages
+- **Openings**: windows/doors > 2 m² fully deducted from wall area
 - **Mobile 3D scale**: `(min(viewport_w, viewport_h) × 0.75) / max(x, y, z)`
 
 ## Recalculation flow
 
-1. User changes dimensions/walls/job/class → triggers `loadReceipt(jobType)`
+1. User changes dimensions/walls/job/class/store → triggers `loadReceipt(jobType)`
 2. `loadReceipt` fetches `data/{painting|wallpaper}_pro.json` → calls `renderReceipt(model)`
 3. `renderReceipt` calls `calculateTotals(model)` which dispatches to ECO/NORM/PRO module
 4. DOM is fully replaced (`box.innerHTML = ...`)
@@ -59,14 +61,20 @@ Recalculation is debounced at 1.5s in `room3d.js`. 3D updates immediately, recei
 - `t('key')` — UI strings from inline `translations` object in `lang.js`
 - `tr(category, key)` — result strings from `locales/{lang}/*.json` (loaded asynchronously on language change)
 - `getTranslatedLineName()` maps line IDs to translation keys with prefix-stripping logic (`paintInspection` → `tasks/painting.inspection`)
-- Language persisted in `localStorage('language')`; auto-detected from `navigator.language`
+- Language persisted in `localStorage('language')`; auto-detected from `navigator.language` with **DE fallback**
 
 ## Service levels
 
 - **ECO** — materials + optional tool checkboxes
 - **NORM** — materials + work checkboxes (user selects)
 - **PRO** — materials + all work (no checkboxes)
-- PDF export button **only shown for ECO** class
+- PDF export button **only shown for ECO** class (planned: all classes)
+
+## Store selection
+
+- Buttons `.store-btn` (OBI/Hornbach/Bauhaus) → `switchStore(store)` in `script.js:236`
+- Loads `data/prices_{store}.json`, replaces `pricing`, recalculates receipt + PDF
+- Default store: `default` → `data/pricing.json`
 
 ## Reset buttons
 
@@ -77,14 +85,15 @@ Recalculation is debounced at 1.5s in `room3d.js`. 3D updates immediately, recei
 
 - Called from `window.generateEcoPDF(totals, currentJob)` (ECO only)
 - Uses `locales/pdf-disclaimer.js` (`window.PdfDisclaimers`) for legal texts
-- Transliterates Russian text because jsPDF standard font doesn't support Cyrillic
-- Fonts in `fonts/` (PT Sans) are not currently used by pdf-export.js
+- Loads PT Sans TTF from `fonts/` (cached in `window._pdfFontCache`); transliterates Cyrillic → Latin as fallback
+- Includes selected store prices
 
 ## State (all global on `window`)
 
 - `currentJob` — `'painting'` | `'wallpaper'`
 - `currentClass` — `'econom'` | `'standard'` | `'premium'`
-- `pricing` — loaded from `data/pricing.json`
+- `selectedStore` — `'default'` | `'obi'` | `'hornbach'` | `'bauhaus'`
+- `pricing` — loaded from `data/pricing.json` or `data/prices_{store}.json`
 - `selectedEcoTools` / `selectedNormWorks` — checkbox state objects
 
 ## No tests / no build / no linter
@@ -98,3 +107,8 @@ Pure static HTML/CSS/JS. No package.json, no build step, no CI.
    b) Deeper level uses Roman numerals (i, ii, iii...)
 2. Answers follow the same numbering — **every reply must use numbered points matching the questions**
 3. Code changes only after confirmation
+
+## Documentation
+
+- **HISTORY.md** — completed phases (1-13), updated 2026-08-19
+- **PLAN.md** — launch roadmap: Phase 14 pre-launch → 15 LAUNCH → 16 React

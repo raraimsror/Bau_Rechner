@@ -69,32 +69,40 @@ The project is designed so that the site can serve as a technological guide for 
 
 ## 🛠️ Current Status
 
-**Version:** 1.0 (Production Ready)  
-**Status:** ✅ Fully functional MVP  
-**Last Updated:** 2026-05-06
+**Version:** 1.1 (Pre-Launch)  
+**Status:** ✅ Production ready → pre-launch improvements (DE market)  
+**Last Updated:** 2026-08-19  
+**Default language:** DE (German market)
 
 ### ✅ Working Features:
 
 **Core Functionality:**
-- 3D room visualization (rotation, zoom, touch support)
+- 3D room visualization (rotation, zoom, touch support) — pure CSS 3D
 - Input validation with visual feedback
-- Wall selection (checkboxes)
+- Wall selection (checkboxes / switches)
 - 2 work types: Painting + Wallpaper
 - 3 service levels: ECO / NORM / PRO
 - Detailed receipt with subtotals
-- PDF export with logo
+- PDF export with logo and Cyrillic support
+- Openings (windows/doors) with area deduction (>2 m² fully deducted)
 
 **Calculations:**
-- Paint calculation with bucket optimization (Alpina 2.5L/5L/25L)
+- Paint calculation with bucket optimization (Alpina / Caparol)
 - Wallpaper calculation (Erfurt Rauhfaser 20m rolls)
 - Glue calculation based on area
 - Real product data with accurate pricing
+
+**Store Selection:**
+- Choose store: OBI / Hornbach / Bauhaus
+- Per-store prices loaded from data/prices_{store}.json
+- Receipt and PDF recalculate with the selected store's prices
 
 **Technical:**
 - Mobile responsive design
 - Mobile 3D scaling (Strategy 6)
 - Debounce recalculation (1.5s)
-- Modular architecture (9 JS modules)
+- Modular architecture (12 JS modules)
+- i18n RU/EN/DE (UI + all calculation results)
 - Legal compliance pages (7 pages)
 
 ---
@@ -106,15 +114,18 @@ Bau_Rechner/
 ├── index.html              # Main page
 ├── style.css               # Styles
 ├── /scripts/               # JavaScript modules
-│   ├── room3d.js          # 3D visualization
+│   ├── room3d.js          # 3D visualization (CSS 3D)
+│   ├── openings.js        # Windows/doors CRUD (localStorage)
 │   ├── paint.js           # Paint calculation
 │   ├── wallpaper.js       # Wallpaper calculation
-│   ├── tech-card.js       # Technical card
+│   ├── tech-card.js       # Technical cards (primer + paint)
 │   ├── ECO.js             # ECO service level
 │   ├── NORM.js            # NORM service level
 │   ├── PRO.js             # PRO service level
-│   ├── script.js          # Main controller
-│   └── pdf-export.js      # PDF generation
+│   ├── script.js          # Main controller + store selector
+│   ├── pdf-export.js      # PDF generation (PT Sans fonts)
+│   ├── lang.js            # i18n (UI + results)
+│   └── info-modal.js      # Measurement instructions modal
 ├── /pages/                 # Legal/info pages
 │   ├── impressum.html     # Company info (DE)
 │   ├── datenschutz.html   # Privacy policy (DE)
@@ -123,11 +134,19 @@ Bau_Rechner/
 │   ├── partners.html      # Partners (RU)
 │   ├── mission.html       # Mission (RU)
 │   └── contacts.html      # Contacts (RU)
-├── /pics/                  # Images and assets
-├── /libs/                  # External libraries
 ├── /data/                  # JSON data files
+│   ├── pricing.json       # Default prices (TOOM)
+│   ├── prices_obi.json    # OBI prices
+│   ├── prices_hornbach.json # Hornbach prices
+│   ├── prices_bauhaus.json # Bauhaus prices
+│   ├── painting_pro.json  # Painting work model
+│   ├── wallpaper_pro.json # Wallpaper work model
+├── /locales/               # RU/EN/DE result translations
+├── /pics/                  # Images and assets
+├── /fonts/                 # PT Sans fonts (PDF)
+├── /libs/                  # External libraries (jsPDF)
 ├── HISTORY.md             # Development history
-├── PLAN.md                # Development plan
+├── PLAN.md                # Development plan (launch roadmap)
 └── README.md              # This file
 ```
 
@@ -162,9 +181,9 @@ python -m http.server 8000
 
 ### Technologies:
 - **Frontend:** HTML5, CSS3, Vanilla JavaScript
-- **3D:** Three.js
-- **PDF:** jsPDF
-- **Architecture:** Modular ES6 modules
+- **3D:** Pure CSS 3D (CSS transforms, no Three.js)
+- **PDF:** jsPDF + PT Sans TTF fonts (Cyrillic support)
+- **Architecture:** Modular scripts (window globals, no ES module imports)
 
 ### Browser Support:
 - Chrome 90+
@@ -219,8 +238,8 @@ python -m http.server 8000
 ### Paint Calculation:
 ```javascript
 liters = (area / coverage) × coats × 1.1
-// coverage = 5.5 m²/L (Alpina)
-// coats = 2
+// coverage = from product data (default 6 m²/L)
+// coats = 2 (from product data)
 // reserve = 10%
 ```
 
@@ -243,23 +262,30 @@ scale = (viewport_min_dimension * 0.75) / actual_room_size
 
 ## 🔮 Future Development
 
-### Short-term (1-2 months):
-- UI/UX design improvements
-- User testing and feedback
-- Performance optimization
-- SEO optimization
-- Analytics integration
+### Current: Pre-Launch Improvements (DE market)
+- Data/price synchronization process + freshness indicator
+- Tech cards expansion (all classes/job types)
+- 3D script improvements
+- PDF for all classes + checklists
+- Shareable link-calculator (URL-encoded state)
+- Launch (control point) → React migration after
 
-### Mid-term (3-6 months):
+See **[PLAN.md](PLAN.md)** for the detailed roadmap.
+
+### After Launch (React migration)
+- Vite + React 18 rewrite (feature parity with original)
+- State management via Context/useReducer, i18next, jsPDF
+
+### Mid-term (3-6 months)
 - Store API integration (automatic price updates)
 - Extended material database
 - User accounts and saved projects
-- Multi-language support (LV/RU/DE)
+- LV language support
 
-### Long-term (6-12 months):
+### Long-term (6-12 months)
 - AI assistant for material selection
 - Extended 3D geometry (roofs, facades)
-- Mobile app
+- Mobile app (React Native)
 - Professional profiles (contractors, architects)
 - Marketplace integration
 
@@ -304,8 +330,8 @@ This project is proprietary software. All rights reserved.
 - Erfurt Rauhfaser (wallpaper calculations)
 
 **Libraries:**
-- Three.js (3D visualization)
 - jsPDF (PDF generation)
+- PT Sans fonts (ParaType, Cyrillic support)
 
 ---
 
@@ -313,6 +339,6 @@ This project is proprietary software. All rights reserved.
 
 ---
 
-**Last Updated:** 2026-05-06  
-**Version:** 1.0.0  
-**Status:** Production Ready ✓
+**Last Updated:** 2026-08-19  
+**Version:** 1.1.0  
+**Status:** Pre-Launch (DE market)

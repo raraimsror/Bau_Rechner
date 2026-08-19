@@ -2,8 +2,8 @@
 # RemontExpert 3D Pro - Development History
 
 **Project:** Renovation calculator with 3D visualization  
-**Period:** 2026-04-30 — 2026-05-06  
-**Status:** PRODUCTION READY ✓
+**Period:** 2026-04-30 — 2026-08-18  
+**Status:** PRODUCTION READY → PRE-LAUNCH IMPROVEMENT (DE market)
 
 ---
 
@@ -406,3 +406,117 @@ inventory.json:
 - `locales/*/common.json` — piezīmes par >2m² atskaitīšanu
 - `locales/pdf-disclaimer.js` — 6. punkts par logu/durvju atskaitīšanu
 - `index.html` — openings.js scripts pieslēgšana
+
+---
+
+**Last Updated:** 2026-08-19
+
+---
+
+## 📅 Phase 12: PDF Cyrillic + Store Selection (2026-06-02 - 2026-07-10)
+
+### 12.1 Cyrillic PDF Support
+**Commit:** 2a767c0  
+**Date:** 2026-06-02
+
+**Problem:** jsPDF standarta fonts neattēloja kirilicas tekstu.
+
+**Solution:**
+- ✅ PT Sans TTF fontu ielāde (fonts/PTSans-*.ttf) PDF eksportam
+- ✅ Kirilicas → latīņas transliterācija kā fallback
+- ✅ PDF disclaimers pārvietoti uz locales/pdf-disclaimer.js (window.PdfDisclaimers)
+- ✅ ECO.js kategorijas pārvērstas uz ID atslēgām ('tools', 'equipment', 'extras')
+- ✅ pricing.json tīrīšana — noņemta dublētā 'paint' sadaļa, atjauninātas ECO cenas
+- ✅ Dzēsti testa faili (test-mobile-scale.html, test-strategies.html)
+
+**Result:** PDF eksports korekti rāda RU/EN/DE tekstu.
+
+### 12.2 Store Selection (OBI/Hornbach/Bauhaus)
+**Commit:** 7ba09f7  
+**Date:** 2026-07-10
+
+**Added:**
+- ✅ Panelis "Выбор магазина" index.html — radioknopas ar veikalu logo
+- ✅ data/prices_obi.json, prices_hornbach.json, prices_bauhaus.json — cenas katram veikalam
+- ✅ switchStore() / initStoreButtons() script.js — cenu pārslēgšana un pārrēķins
+- ✅ storeSelect tulkojumi lang.js (RU/EN/DE)
+- ✅ .store-btn / .store-img stili style.css
+- ✅ AGENTS.md izveide (arhitektūras dokumentācija)
+- ✅ PDF eksports izmanto izvēlētā veikala cenas
+
+**Result:** Lietotājs izvēlas veikalu, un visi aprēķini (krāsas, tapetes, instrumenti) tiek pārrēķināti pēc tā cenām.
+
+---
+
+## 📅 Phase 13: Apple White UI (2026-08-18)
+
+**Commit:** 1207cc4  
+**Time:** ~1 diena
+
+**Changes:**
+- ✅ Segmented controls (slīdošs izcēlums) darba veidam un remonta klasei
+- ✅ Switch (slēdži) sienu izvēlei un citām iespējām
+- ✅ XYZ dimensiju inputi horizontāli + izcelti
+- ✅ Vizītkartes stila Apple White dizains
+- ✅ 6 faili, ~1240 rindu izmaiņu (index.html, style.css, lang.js, script.js, room3d.js, info-modal.css)
+
+**Files changed:**
+- index.html: 245 rindas
+- style.css: 1127 rindas
+- scripts/lang.js, scripts/room3d.js, scripts/script.js, info-modal.css
+
+---
+
+## 📊 Updated Statistics (2026-08-19)
+
+**Total Development Time:** ~30 hours  
+**Total Commits:** 72  
+**JS Modules:** 11 (script, room3d, ECO, NORM, PRO, paint, wallpaper, tech-card, pdf-export, lang, info-modal, openings)  
+**HTML Pages:** 8 (index + 7 legal/info)  
+**Data Files:** pricing.json + 3× prices_{store}.json + 2× {job}_pro.json
+
+**Architecture:**
+```
+/scripts/
+  - script.js (778 lines) - main controller + store selector
+  - room3d.js (258 lines) - 3D + mobile scaling + openings rendering
+  - openings.js (329 lines) - CRUD windows/doors with localStorage
+  - ECO.js / NORM.js / PRO.js - service class logic
+  - paint.js / wallpaper.js / tech-card.js - material calculations
+  - pdf-export.js (670 lines) - PDF + PT Sans fonts
+  - lang.js (257 lines) - i18n UI + result translations
+  - info-modal.js (102 lines) - measurement instructions modal
+
+/data/
+  - pricing.json (default) + prices_obi/hornbach/bauhaus.json
+  - painting_pro.json / wallpaper_pro.json
+
+/locales/ - ru|en|de × {common,tasks,inventory,categories}.json
+/pages/   - impressum, datenschutz, disclaimer, about, partners, mission, contacts
+```
+
+---
+
+## 🎯 Current Status (2026-08-19)
+
+**PRODUCTION READY → PRE-LAUNCH IMPROVEMENT**
+
+**Target:** Vācijas tirgus — saites-kalkulators, ko var izmantot pirms remonta sākšanas (DE noklusējuma valoda).
+
+**Working:**
+- All core features (3D, paint/wallpaper, ECO/NORM/PRO)
+- Store selector (OBI/Hornbach/Bauhaus)
+- Openings (windows/doors) with area deduction
+- PDF export with Cyrillic support
+- Apple White UI
+- i18n RU/EN/DE
+
+**Next Priority (Phase 14):**
+- Data/price synchronization process + UI freshness indicator
+- Tech cards expansion (all classes/job types)
+- 3D script improvements
+- PDF for all classes + checklists
+- Shareable link-calculator (URL-encoded state)
+- Testing & launch
+
+Detailed roadmap: see PLAN.md
