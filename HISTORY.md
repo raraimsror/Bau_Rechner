@@ -467,31 +467,55 @@ inventory.json:
 
 ---
 
-## 📊 Updated Statistics (2026-08-19)
+## 📅 Phase 13.1: Hardening & Cleanup Pass (2026-08-23)
 
-**Total Development Time:** ~30 hours  
-**Total Commits:** 72  
-**JS Modules:** 11 (script, room3d, ECO, NORM, PRO, paint, wallpaper, tech-card, pdf-export, lang, info-modal, openings)  
+**Commits:** 0633a6e, 36987f8, db3a0ec, d7b5a3a
+
+### Bug Fixes
+- ✅ Openings: each opening **> 2 m²** fully deducted from its wall's area; only on selected walls; ≤ 2 m² not deducted (slopes/recesses compensate). Notes updated in all locales
+- ✅ `currentJob`/`currentClass` declared with `var` → reachable as `window.currentJob` (openings.js reload used to force `painting`)
+- ✅ Info modal language detection: respects saved language + browser, DE fallback (en/de instruction files became reachable)
+- ✅ Default UI language fallback changed ru → **de** (DE market)
+- ✅ Race protection: sequence tokens in `loadReceipt`, `loadPricing` and translation loading
+- ✅ ECO tool/equipment/extras prices + primer prices from store JSON (`ecoEquipment`, `ecoExtras`, `ecoWallpaperTools`, `ecoWallpaperExtras`, `primer`)
+- ✅ Paint coverage/coats from smallest bucket — order-independent
+
+### Cleanup
+- ✅ Dead code removed (`getOpeningsAreaForSide`, `updateRoom3D`, dead exports, dead pricing keys: `materialRatePerM2`, `workRatePerM2.econom`, `flooring` blocks)
+- ✅ Shared `work-stages.js` module — single source for NORM/PRO work stage percents/IDs
+- ✅ tech-card.js reuses `optimizePaintBuckets`
+- ✅ Hardcoded RU error strings → `t()` keys in RU/EN/DE; translated receipt subtotal category
+- ✅ Neutral PRO materials category (was store-specific OBI/TOOM label)
+- ✅ `[PDF]` debug logs removed; repo hygiene (`.gitignore`, README case fix, `xyz-reset.jpg` rename)
+
+---
+
+## 📊 Updated Statistics (2026-08-23)
+
+**Total Development Time:** ~34 hours  
+**Total Commits:** 76  
+**JS Modules:** 13 (script, room3d, openings, ECO, NORM, PRO, paint, wallpaper, tech-card, work-stages, pdf-export, lang, info-modal)  
 **HTML Pages:** 8 (index + 7 legal/info)  
 **Data Files:** pricing.json + 3× prices_{store}.json + 2× {job}_pro.json
 
 **Architecture:**
 ```
 /scripts/
-  - script.js (778 lines) - main controller + store selector
-  - room3d.js (258 lines) - 3D + mobile scaling + openings rendering
-  - openings.js (329 lines) - CRUD windows/doors with localStorage
+  - script.js - main controller + store selector + race guards
+  - room3d.js - 3D + mobile scaling + openings rendering
+  - openings.js - CRUD windows/doors with localStorage
   - ECO.js / NORM.js / PRO.js - service class logic
   - paint.js / wallpaper.js / tech-card.js - material calculations
-  - pdf-export.js (670 lines) - PDF + PT Sans fonts
-  - lang.js (257 lines) - i18n UI + result translations
-  - info-modal.js (102 lines) - measurement instructions modal
+  - work-stages.js - shared NORM/PRO work stage table
+  - pdf-export.js - PDF (logo, PT Sans fonts, disclaimers)
+  - lang.js - i18n UI + result translations
+  - info-modal.js - measurement instructions modal
 
 /data/
   - pricing.json (default) + prices_obi/hornbach/bauhaus.json
   - painting_pro.json / wallpaper_pro.json
 
-/locales/ - ru|en|de × {common,tasks,inventory,categories}.json
+/locales/ - ru|en|de × {common,tasks,inventory,categories}.json + pdf-disclaimer.js
 /pages/   - impressum, datenschutz, disclaimer, about, partners, mission, contacts
 ```
 

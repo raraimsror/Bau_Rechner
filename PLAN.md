@@ -26,6 +26,14 @@
 
 **Result:** Functional MVP ready for pre-launch improvements
 
+### Phase 13.1: Hardening & Cleanup Pass (2026-08-23, COMPLETE)
+- ✅ Openings rule fixed: per-opening > 2 m² deduction on selected walls only
+- ✅ DE default language everywhere (UI fallback + info modal)
+- ✅ Race-condition guards (receipt/pricing/translations)
+- ✅ Store-driven ECO tool & primer prices
+- ✅ Dead code + dead pricing keys removed; shared `work-stages.js`
+- ✅ i18n error strings; PDF logo restored; repo hygiene
+
 ---
 
 ## 🎯 CURRENT PHASE: Pre-Launch Improvements (Phase 14)

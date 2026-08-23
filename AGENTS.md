@@ -30,20 +30,22 @@ Then open `http://localhost:8000`.
 
 | File | Role |
 |---|---|
-| `script.js` (778L) | Main — loads pricing, store selector (`switchStore`), orchestrates recalculation, renders receipt |
-| `room3d.js` (258L) | CSS-3D cube, mouse/touch drag, dimension inputs, mobile scaling, openings rendering |
-| `openings.js` (329L) | CRUD windows/doors per wall (localStorage), area deduction, modal dialog |
+| `script.js` | Main — loads pricing, store selector (`switchStore`), orchestrates recalculation, renders receipt |
+| `room3d.js` | CSS-3D cube, mouse/touch drag, dimension inputs, mobile scaling, openings rendering |
+| `openings.js` | CRUD windows/doors per wall (localStorage), area deduction (>2 m² rule), modal dialog |
 | `ECO.js` / `NORM.js` / `PRO.js` | Per-class calculation logic (window globals) |
 | `paint.js` / `wallpaper.js` / `tech-card.js` | Material-specific calculations (bucket optimization, roll/glue, primer/paint card) |
-| `pdf-export.js` (670L) | jsPDF receipt generation, loads PT Sans TTF (Cyrillic), transliteration fallback |
-| `lang.js` (257L) | Language switch, `tr(category, key)` helper, `detectLanguage` → DE default |
-| `info-modal.js` | Loads `libs/infos/room-measurement-{lang}.html` in a modal |
+| `work-stages.js` | Shared work-stage percent table + `makeStageId()` — single source for NORM/PRO work items |
+| `pdf-export.js` | jsPDF receipt generation with logo, loads PT Sans TTF (Cyrillic), transliteration fallback |
+| `lang.js` | Language switch, `t(key)` UI helper, `tr(category, key)` result helper, DE fallback |
+| `info-modal.js` | Loads `libs/infos/room-measurement-{lang}.html` in a modal; respects selected language |
 
 ## Calculations
 
-- **Paint**: `(area / coverage) × coats × 1.1` → greedy bucket optimization (2.5L/5L/25L). `coverage`/`coats` come from product data (default 6 m²/L, 2 coats), reserve 10%
+- **Paint**: `(area / coverage) × coats × 1.1` → greedy bucket optimization. `coverage`/`coats` taken from the smallest bucket (base wall paint; order-independent), reserve 10%
 - **Wallpaper**: `(area / 10.6) × 1.1` rolls; `Math.ceil(area / 22.5)` glue packages
-- **Openings**: windows/doors > 2 m² fully deducted from wall area
+- **Openings**: each opening **> 2 m²** fully deducted from its wall's area — only on walls whose toggle is checked; openings ≤ 2 m² are NOT deducted (slopes/recesses compensate)
+- **Primer/ECO tool prices**: from store data (`pricing.primer`, `pricing.ecoEquipment`, `pricing.ecoExtras`, `pricing.ecoWallpaperTools`, `pricing.ecoWallpaperExtras`)
 - **Mobile 3D scale**: `(min(viewport_w, viewport_h) × 0.75) / max(x, y, z)`
 
 ## Recalculation flow
@@ -55,6 +57,8 @@ Then open `http://localhost:8000`.
 5. Checkbox listeners re-attached
 
 Recalculation is debounced at 1.5s in `room3d.js`. 3D updates immediately, receipt waits.
+
+**Race protection**: `loadReceipt`, `loadPricing` and language switching use sequence counters — a stale response never overwrites a newer result (rapid clicks on store/lang/checkboxes are safe).
 
 ## i18n quirks
 
@@ -90,7 +94,7 @@ Recalculation is debounced at 1.5s in `room3d.js`. 3D updates immediately, recei
 
 ## State (all global on `window`)
 
-- `currentJob` — `'painting'` | `'wallpaper'`
+- `currentJob` — `'painting'` | `'wallpaper'` (**must stay reachable as `window.currentJob`** — declared with `var` in script.js; openings.js reads it)
 - `currentClass` — `'econom'` | `'standard'` | `'premium'`
 - `selectedStore` — `'default'` | `'obi'` | `'hornbach'` | `'bauhaus'`
 - `pricing` — loaded from `data/pricing.json` or `data/prices_{store}.json`

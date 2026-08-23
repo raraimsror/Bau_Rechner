@@ -84,7 +84,7 @@ The project is designed so that the site can serve as a technological guide for 
 - 3 service levels: ECO / NORM / PRO
 - Detailed receipt with subtotals
 - PDF export with logo and Cyrillic support
-- Openings (windows/doors) with area deduction (>2 m² fully deducted)
+- Openings (windows/doors): each opening > 2 m² fully deducted from selected walls only
 
 **Calculations:**
 - Paint calculation with bucket optimization (Alpina / Caparol)
@@ -119,6 +119,7 @@ Bau_Rechner/
 │   ├── paint.js           # Paint calculation
 │   ├── wallpaper.js       # Wallpaper calculation
 │   ├── tech-card.js       # Technical cards (primer + paint)
+│   ├── work-stages.js     # Shared work-stage percent table (NORM/PRO)
 │   ├── ECO.js             # ECO service level
 │   ├── NORM.js            # NORM service level
 │   ├── PRO.js             # PRO service level
