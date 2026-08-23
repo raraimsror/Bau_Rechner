@@ -245,7 +245,7 @@ function updateEcoToolSelection(toolId, checked) {
 
 /**
  * Главная функция расчёта для ECO класса
- * @param {string} jobType - тип работы (painting | wallpaper | flooring)
+ * @param {string} jobType - тип работы (painting | wallpaper)
  * @param {number} area - площадь в м²
  * @param {object} pricing - объект с ценами из pricing.json
  * @returns {object} - полный расчёт
@@ -272,7 +272,5 @@ function calculateEco(jobType, area, pricing) {
 
 // Экспортируем функции
 window.calculateEco = calculateEco;
-window.calculateEcoPainting = calculateEcoPainting;
-window.calculateEcoWallpaper = calculateEcoWallpaper;
 window.updateEcoToolSelection = updateEcoToolSelection;
 window.selectedEcoTools = selectedEcoTools;

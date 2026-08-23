@@ -245,7 +245,7 @@ function calculateProWallpaper(area, pricing) {
 
 /**
  * Главная функция расчёта для PRO класса
- * @param {string} jobType - тип работы (painting | wallpaper | flooring)
+ * @param {string} jobType - тип работы (painting | wallpaper)
  * @param {number} area - площадь в м²
  * @param {object} pricing - объект с ценами из pricing.json
  * @returns {object} - полный расчёт
@@ -270,5 +270,3 @@ function calculatePro(jobType, area, pricing) {
 
 // Экспортируем функции
 window.calculatePro = calculatePro;
-window.calculateProPainting = calculateProPainting;
-window.calculateProWallpaper = calculateProWallpaper;

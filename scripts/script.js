@@ -795,7 +795,7 @@ function initJobTypeRadios() {
 
     radios.forEach(radio => {
         radio.addEventListener("change", () => {
-            currentJob = radio.value; // painting | wallpaper | flooring
+            currentJob = radio.value; // painting | wallpaper
             loadReceipt(currentJob);
         });
     });

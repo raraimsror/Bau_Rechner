@@ -338,15 +338,6 @@ function getAllOpeningsArea() {
     return total;
 }
 
-function getOpeningsAreaForSide(side) {
-    const list = openings[side] || [];
-    let total = 0;
-    list.forEach(op => {
-        total += (op.w * op.h) / 10000;
-    });
-    return total;
-}
-
 /* =========================================================
    LOCAL STORAGE
    ========================================================= */
@@ -384,4 +375,3 @@ window.initOpenings = initOpenings;
 window.resetOpenings = resetOpenings;
 window.updateOpeningById = updateOpeningById;
 window.getAllOpeningsArea = getAllOpeningsArea;
-window.getOpeningsAreaForSide = getOpeningsAreaForSide;

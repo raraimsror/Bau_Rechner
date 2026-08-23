@@ -310,17 +310,11 @@ updateRoom = function() {
     updateOpenings3D();
 };
 
-// Eksportējam funkcijas un elementus, kas vajadzīgas ārpusē
+// Eksportējam funkcijas, kas vajadzīgas ārpusē
 window.init3D = init3D;
-window.updateRoom3D = updateRoom;
 window.updateOpenings3D = updateOpenings3D;
 
-// Eksportējam input elementus priekš getWallsAreaM2() funkcijas
-window.xInp = null;
-window.yInp = null;
-window.zInp = null;
-
-// Pēc init3D izsaukšanas, šie būs pieejami
+// Input elementi priekš getWallsAreaM2() funkcijas
 function getInputElements() {
     return { xInp, yInp, zInp };
 }

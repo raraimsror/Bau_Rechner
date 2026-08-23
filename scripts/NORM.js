@@ -221,7 +221,7 @@ function updateNormWorkSelection(workId, checked) {
 
 /**
  * Главная функция расчёта для NORM класса
- * @param {string} jobType - тип работы (painting | wallpaper | flooring)
+ * @param {string} jobType - тип работы (painting | wallpaper)
  * @param {number} area - площадь в м²
  * @param {object} pricing - объект с ценами из pricing.json
  * @returns {object} - полный расчёт
@@ -246,7 +246,5 @@ function calculateNorm(jobType, area, pricing) {
 
 // Экспортируем функции
 window.calculateNorm = calculateNorm;
-window.calculateNormPainting = calculateNormPainting;
-window.calculateNormWallpaper = calculateNormWallpaper;
 window.updateNormWorkSelection = updateNormWorkSelection;
 window.selectedNormWorks = selectedNormWorks;

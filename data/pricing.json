@@ -91,37 +91,12 @@
 
   "workRatePerM2": {
     "painting": {
-      "econom": 6,
       "standard": 12,
       "premium": 20
     },
     "wallpaper": {
-      "econom": 8,
       "standard": 14,
       "premium": 22
-    },
-    "flooring": {
-      "econom": 10,
-      "standard": 18,
-      "premium": 28
-    }
-  },
-
-  "materialRatePerM2": {
-    "painting": {
-      "econom": 4,
-      "standard": 6,
-      "premium": 8
-    },
-    "wallpaper": {
-      "econom": 5,
-      "standard": 7,
-      "premium": 9
-    },
-    "flooring": {
-      "econom": 6,
-      "standard": 8,
-      "premium": 10
     }
   },
 
@@ -135,11 +110,6 @@
       "econom": 0,
       "standard": 10,
       "premium": 25
-    },
-    "flooring": {
-      "econom": 0,
-      "standard": 30,
-      "premium": 60
     }
   }
 }
