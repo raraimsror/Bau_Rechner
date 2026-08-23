@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="de">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RemontExpert 3D Pro - Русская версия</title>
+    <title>RemontExpert 3D Pro</title>
     <link rel="stylesheet" href="style.css">
     <!-- jsPDF библиотека для PDF экспорта (локальная версия) -->
     <script src="libs/jspdf.umd.min.js"></script>
@@ -15,6 +15,7 @@
     <script src="scripts/paint.js" defer></script>
     <script src="scripts/wallpaper.js" defer></script>
     <script src="scripts/tech-card.js" defer></script>
+    <script src="scripts/work-stages.js" defer></script>
     <script src="scripts/ECO.js" defer></script>
     <script src="scripts/NORM.js" defer></script>
     <script src="scripts/PRO.js" defer></script>
@@ -30,7 +31,7 @@
         </a>
         <div class="header-actions">
             <a href="#" class="login-btn" data-i18n="loginRegister">Вход / Регистрация</a>
-            <div class="segmented lang-segmented" id="langSegmented" title="Language">
+            <div class="segmented lang-segmented" id="langSegmented" data-i18n-title="langSwitchTitle" title="Language">
                 <span class="segmented-slider" aria-hidden="true"></span>
                 <label class="segmented-option">
                     <input type="radio" name="lang" value="ru">
@@ -76,7 +77,7 @@
             </div>
 
             <div class="input-block xyz_value_inputs">
-                <h4><span data-i18n="roomSize">Размеры комнаты (см)</span> <button id="roomInfoBtn" class="info-btn" title="info">ℹ️</button></h4>
+                <h4><span data-i18n="roomSize">Размеры комнаты (см)</span> <button id="roomInfoBtn" class="info-btn" data-i18n-title="infoBtnTitle" title="Как измерить помещение">ℹ️</button></h4>
                 <div class="xyz-inputs">
                     <label class="xyz-field">
                         <span>X</span>

@@ -78,19 +78,11 @@ function calculateNormPainting(area, pricing) {
     const workRate = pricing.workRatePerM2?.painting?.standard || 0;
     const totalWorkCost = area * workRate;
 
-    // Работы для покраски (10 позиций)
-    const workItems = [
-        { id: 'paintInspection', percent: 0.10, checked: selectedNormWorks.paintInspection },
-        { id: 'paintPrep', percent: 0.15, checked: selectedNormWorks.paintPrep },
-        { id: 'paintPrimer', percent: 0.10, checked: selectedNormWorks.paintPrimer },
-        { id: 'paintProtection', percent: 0.05, checked: selectedNormWorks.paintProtection },
-        { id: 'paintCoat1', percent: 0.20, checked: selectedNormWorks.paintCoat1 },
-        { id: 'paintCoat2', percent: 0.20, checked: selectedNormWorks.paintCoat2 },
-        { id: 'paintHardSpots', percent: 0.05, checked: selectedNormWorks.paintHardSpots },
-        { id: 'paintQuality', percent: 0.05, checked: selectedNormWorks.paintQuality },
-        { id: 'paintCleanup', percent: 0.05, checked: selectedNormWorks.paintCleanup },
-        { id: 'paintTrash', percent: 0.05, checked: selectedNormWorks.paintTrash }
-    ];
+    // Работы для покраски — доли этапов из общей таблицы (work-stages.js)
+    const workItems = WORK_STAGE_PERCENTS.painting.map(({ stage, percent }) => {
+        const id = makeStageId('paint', stage);
+        return { id, percent, checked: !!selectedNormWorks[id] };
+    });
 
     // Рассчитываем цену каждой работы
     workItems.forEach(item => {
@@ -163,19 +155,11 @@ function calculateNormWallpaper(area, pricing) {
     const workRate = pricing.workRatePerM2?.wallpaper?.standard || 0;
     const totalWorkCost = area * workRate;
 
-    // Работы для обоев (10 позиций)
-    const workItems = [
-        { id: 'wpInspection', percent: 0.10, checked: selectedNormWorks.wpInspection },
-        { id: 'wpPrep', percent: 0.15, checked: selectedNormWorks.wpPrep },
-        { id: 'wpPrimer', percent: 0.10, checked: selectedNormWorks.wpPrimer },
-        { id: 'wpProtection', percent: 0.05, checked: selectedNormWorks.wpProtection },
-        { id: 'wpCutting', percent: 0.10, checked: selectedNormWorks.wpCutting },
-        { id: 'wpHanging', percent: 0.25, checked: selectedNormWorks.wpHanging },
-        { id: 'wpTrimming', percent: 0.10, checked: selectedNormWorks.wpTrimming },
-        { id: 'wpQuality', percent: 0.05, checked: selectedNormWorks.wpQuality },
-        { id: 'wpCleanup', percent: 0.05, checked: selectedNormWorks.wpCleanup },
-        { id: 'wpTrash', percent: 0.05, checked: selectedNormWorks.wpTrash }
-    ];
+    // Работы для обоев — доли этапов из общей таблицы (work-stages.js)
+    const workItems = WORK_STAGE_PERCENTS.wallpaper.map(({ stage, percent }) => {
+        const id = makeStageId('wp', stage);
+        return { id, percent, checked: !!selectedNormWorks[id] };
+    });
 
     // Рассчитываем цену каждой работы
     workItems.forEach(item => {

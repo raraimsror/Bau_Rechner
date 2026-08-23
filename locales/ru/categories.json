@@ -9,6 +9,5 @@
   "equipmentRental": "Аренда оборудования",
   "extras": "Дополнительно",
   "extraMaterials": "Дополнительные материалы",
-  "materialsObiPremium": "Материалы (OBI Premium)",
-  "materialsToomPremium": "Материалы (TOOM Premium)"
+  "materialsPremium": "Материалы (Премиум)"
 }

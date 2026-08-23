@@ -89,7 +89,6 @@ async function loadCyrillicFont(fontPath = 'fonts/PTSans-Regular.ttf') {
 
         const base64 = btoa(bin);
         window._pdfFontCache[fontPath] = base64;
-        console.log('[PDF] Font loaded and cached:', fontPath);
         return base64;
 
     } catch (err) {
@@ -135,10 +134,8 @@ async function generateEcoPDF(totals, jobType) {
        ========================================================= */
 
     let useCustomFont = false;
-    console.log('[PDF] CurrentLang:', currentLang);
 
     if (currentLang === 'ru') {
-        console.log('[PDF] Loading Cyrillic fonts...');
         const fontRegular = await loadCyrillicFont('fonts/PTSans-Regular.ttf');
         const fontBold = await loadCyrillicFont('fonts/PTSans-Bold.ttf');
 
@@ -148,7 +145,6 @@ async function generateEcoPDF(totals, jobType) {
             doc.addFileToVFS('PTSans-Bold.ttf', fontBold);
             doc.addFont('PTSans-Bold.ttf', 'PTSans', 'bold');
             useCustomFont = true;
-            console.log('[PDF] PTSans fonts (Regular + Bold) registered for Cyrillic rendering.');
         } else {
             console.warn('[PDF] Font loading failed, using transliteration fallback');
         }
@@ -466,15 +462,31 @@ async function generateEcoPDF(totals, jobType) {
     }
 
     /* =========================================================
+       LOGO (ждём загрузку изображения; ошибка не критична)
+       ========================================================= */
+
+    try {
+        const logoImg = await new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = 'pics/Logo-pdf.png';
+        });
+        doc.addImage(logoImg, 'PNG', MARGIN_LEFT, yPos - 5, 40, 20);
+    } catch (e) {
+        console.warn('[PDF] Logo failed to load:', e);
+    }
+
+    /* =========================================================
        HEADER
        ========================================================= */
 
     setFont('bold');
     doc.setFontSize(18);
 
-    doc.text(renderText(lbl.title), 105, yPos, { align: 'center' });
+    doc.text(renderText(lbl.title), 105, yPos + 5, { align: 'center' });
 
-    yPos += 10;
+    yPos += 15;
 
     doc.setFontSize(12);
 

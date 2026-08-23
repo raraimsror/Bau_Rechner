@@ -9,6 +9,5 @@
   "equipmentRental": "Ausrüstungsmiete",
   "extras": "Zusätzlich",
   "extraMaterials": "Zusätzliche Materialien",
-  "materialsObiPremium": "Materialien (OBI Premium)",
-  "materialsToomPremium": "Materialien (TOOM Premium)"
+  "materialsPremium": "Materialien (Premium)"
 }

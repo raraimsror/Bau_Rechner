@@ -9,8 +9,7 @@ function getCategoryKey(categoryName) {
         "Аренда оборудования": "equipmentRental",
         "Дополнительные материалы": "extraMaterials",
         "Работы (Премиум)": "workPremium",
-        "Материалы (OBI Premium)": "materialsObiPremium",
-        "Материалы (TOOM Premium)": "materialsToomPremium",
+        "Материалы (Премиум)": "materialsPremium",
         "Оборудование": "equipment",
         "Работы": "work",
         "Материалы": "materials"
@@ -362,7 +361,7 @@ async function loadReceipt(jobType) {
         if (seq !== receiptSeq) return; // устаревший запрос — ошибку не показываем
         const box = document.getElementById("resultsBox");
         if (box) {
-            box.innerHTML = "<div class='receipt'>Ошибка загрузки данных чека</div>";
+            box.innerHTML = `<div class='receipt'>${t('receiptLoadError')}</div>`;
         }
     }
 }
@@ -494,7 +493,7 @@ function renderReceipt(model) {
                 if (itemGroup.hasOwnProperty('subtotal')) {
                     htmlBlocks += `
                         <div class="receipt__line" style="border-top: 1px solid #ddd; margin-top: 4px; padding-top: 4px; font-weight: 600;">
-                            <span>${tr('common', 'receipt.subtotal')} ${itemGroup.category.toLowerCase()}</span>
+                            <span>${tr('common', 'receipt.subtotal')} · ${translatedCategory}</span>
                             <span>${itemGroup.subtotal.toFixed(2)} €</span>
                         </div>
                     `;
@@ -720,25 +719,18 @@ function renderReceipt(model) {
     // Привязываем обработчик к кнопке PDF (только для ECO)
     if (currentClass === "econom") {
         const pdfBtn = document.getElementById("downloadPdfBtn");
-        console.log('[PDF] Looking for button, found:', pdfBtn);
         if (pdfBtn) {
-            console.log('[PDF] Button element:', pdfBtn, 'disabled:', pdfBtn.disabled);
-            console.log('[PDF] Button styles - pointerEvents:', window.getComputedStyle(pdfBtn).pointerEvents);
-            console.log('[PDF] Button styles - display:', window.getComputedStyle(pdfBtn).display);
-            console.log('[PDF] Button styles - visibility:', window.getComputedStyle(pdfBtn).visibility);
             pdfBtn.addEventListener("click", () => {
-                console.log('[PDF] Button clicked');
                 if (typeof window.generateEcoPDF === 'function') {
                     try {
                         window.generateEcoPDF(totals, currentJob);
-                        console.log('[PDF] Generation started');
                     } catch (err) {
                         console.error('[PDF] Generation error:', err);
-                        alert('Ошибка: сбой при генерации PDF');
+                        alert(t('pdfGenError'));
                     }
                 } else {
                     console.warn('[PDF] Генерация PDF не загружена');
-                    alert('Ошибка: функция генерации PDF не загружена');
+                    alert(t('pdfNotLoaded'));
                 }
             });
         }

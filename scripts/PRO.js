@@ -61,19 +61,11 @@ function calculateProPainting(area, pricing) {
     // Формируем список позиций для чека
     const items = [];
 
-    // Блок работ (все работы включены)
-    const allWorkBlocks = [
-        { id: 'proInspection', cost: workTotal * 0.10 },
-        { id: 'proPrep', cost: workTotal * 0.15 },
-        { id: 'proPrimer', cost: workTotal * 0.10 },
-        { id: 'proProtection', cost: workTotal * 0.05 },
-        { id: 'proCoat1', cost: workTotal * 0.20 },
-        { id: 'proCoat2', cost: workTotal * 0.20 },
-        { id: 'proHardSpots', cost: workTotal * 0.05 },
-        { id: 'proQuality', cost: workTotal * 0.05 },
-        { id: 'proCleanup', cost: workTotal * 0.05 },
-        { id: 'proTrash', cost: workTotal * 0.05 }
-    ];
+    // Блок работ (все работы включены) — доли этапов из общей таблицы
+    const allWorkBlocks = WORK_STAGE_PERCENTS.painting.map(({ stage, percent }) => ({
+        id: makeStageId('pro', stage),
+        cost: workTotal * percent
+    }));
 
     items.push({
         category: "Работы (Премиум)",
@@ -82,7 +74,7 @@ function calculateProPainting(area, pricing) {
 
     // Блок материалов
     items.push({
-        category: "Материалы (OBI Premium)",
+        category: "Материалы (Премиум)",
         lines: [
             { id: 'paintPremium', cost: materialTotal },
             { id: 'primerPremium', cost: area * 0.5 },
@@ -177,19 +169,11 @@ function calculateProWallpaper(area, pricing) {
     // Формируем список позиций для чека
     const items = [];
 
-    // Блок работ (все работы включены)
-    const allWorkBlocks = [
-        { id: 'proWpInspection', cost: workTotal * 0.10 },
-        { id: 'proWpPrep', cost: workTotal * 0.15 },
-        { id: 'proWpPrimer', cost: workTotal * 0.10 },
-        { id: 'proWpProtection', cost: workTotal * 0.05 },
-        { id: 'proWpCutting', cost: workTotal * 0.10 },
-        { id: 'proWpHanging', cost: workTotal * 0.25 },
-        { id: 'proWpTrimming', cost: workTotal * 0.10 },
-        { id: 'proWpQuality', cost: workTotal * 0.05 },
-        { id: 'proWpCleanup', cost: workTotal * 0.05 },
-        { id: 'proWpTrash', cost: workTotal * 0.05 }
-    ];
+    // Блок работ (все работы включены) — доли этапов из общей таблицы
+    const allWorkBlocks = WORK_STAGE_PERCENTS.wallpaper.map(({ stage, percent }) => ({
+        id: makeStageId('proWp', stage),
+        cost: workTotal * percent
+    }));
 
     items.push({
         category: "Работы (Премиум)",
@@ -198,7 +182,7 @@ function calculateProWallpaper(area, pricing) {
 
     // Блок материалов
     items.push({
-        category: "Материалы (TOOM Premium)",
+        category: "Материалы (Премиум)",
         lines: [
             { id: 'wallpaperPremium', cost: wpData.rollCost },
             { id: 'gluePremium', cost: wpData.glueCost },

@@ -29,35 +29,16 @@ function calculatePrimer(area, pricing) {
             { size: 5, price: 8.00, name: "Alpina Tiefgrund" }
         ];
 
-    // Оптимизируем канистры
-    let remaining = litersNeeded;
-    let selectedCans = [];
-
-    for (let product of primerProducts) {
-        while (remaining > 0) {
-            if (remaining < product.size * 0.5 && product !== primerProducts[primerProducts.length - 1]) {
-                break;
-            }
-            selectedCans.push({ ...product });
-            remaining -= product.size;
-            if (remaining <= 0) break;
-        }
-        if (remaining <= 0) break;
-    }
-
-    // Если остаток, добавляем самую маленькую (копия, не ссылка на данные)
-    if (remaining > 0) {
-        selectedCans.push({ ...primerProducts[primerProducts.length - 1] });
-    }
-
-    const totalLiters = selectedCans.reduce((sum, can) => sum + can.size, 0);
-    const totalCost = selectedCans.reduce((sum, can) => sum + can.price, 0);
+    // Оптимизируем канистры общим жадным алгоритмом (paint.js)
+    const optimized = window.optimizePaintBuckets
+        ? window.optimizePaintBuckets(litersNeeded, primerProducts)
+        : { buckets: [], totalLiters: 0, totalCost: 0 };
 
     return {
         litersNeeded: parseFloat(litersNeeded.toFixed(2)),
-        cans: selectedCans,
-        totalLiters,
-        totalCost
+        cans: optimized.buckets,
+        totalLiters: optimized.totalLiters,
+        totalCost: optimized.totalCost
     };
 }
 

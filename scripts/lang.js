@@ -49,7 +49,14 @@ const translations = window.translations = {
         doorType: "Дверь",
         newWindow: "Новое окно",
         newDoor: "Новая дверь",
-        copyright: "© 2026 RemontExpert — Все права защищены"
+        copyright: "© 2026 RemontExpert — Все права защищены",
+        receiptLoadError: "Ошибка загрузки данных чека",
+        pdfGenError: "Ошибка: сбой при генерации PDF",
+        pdfNotLoaded: "Ошибка: функция генерации PDF не загружена",
+        infoLoadTitle: "Ошибка загрузки",
+        infoLoadText: "Не удалось загрузить информацию. Попробуйте позже.",
+        langSwitchTitle: "Язык интерфейса",
+        infoBtnTitle: "Как измерить помещение"
     },
     en: {
         title: "RemontExpert 3D Pro - English Version",
@@ -99,7 +106,14 @@ const translations = window.translations = {
         doorType: "Door",
         newWindow: "New Window",
         newDoor: "New Door",
-        copyright: "© 2026 RemontExpert — All Rights Reserved"
+        copyright: "© 2026 RemontExpert — All Rights Reserved",
+        receiptLoadError: "Failed to load receipt data",
+        pdfGenError: "Error: PDF generation failed",
+        pdfNotLoaded: "Error: PDF generation function not loaded",
+        infoLoadTitle: "Loading error",
+        infoLoadText: "Could not load the information. Please try again later.",
+        langSwitchTitle: "Interface language",
+        infoBtnTitle: "How to measure your room"
     },
     de: {
         title: "RemontExpert 3D Pro - Deutsche Version",
@@ -149,7 +163,14 @@ const translations = window.translations = {
         doorType: "Tür",
         newWindow: "Neues Fenster",
         newDoor: "Neue Tür",
-        copyright: "© 2026 RemontExpert — Alle Rechte vorbehalten"
+        copyright: "© 2026 RemontExpert — Alle Rechte vorbehalten",
+        receiptLoadError: "Fehler beim Laden der Aufstellungsdaten",
+        pdfGenError: "Fehler: PDF-Erzeugung fehlgeschlagen",
+        pdfNotLoaded: "Fehler: PDF-Funktion nicht geladen",
+        infoLoadTitle: "Fehler beim Laden",
+        infoLoadText: "Informationen konnten nicht geladen werden. Bitte später erneut versuchen.",
+        langSwitchTitle: "Sprache der Oberfläche",
+        infoBtnTitle: "So messen Sie den Raum aus"
     }
 };
 

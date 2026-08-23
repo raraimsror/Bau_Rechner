@@ -90,10 +90,14 @@ async function openInfoModal() {
 
     } catch (err) {
         console.error("Ошибка загрузки информации:", err);
+        // t() из lang.js доступен как глобальный (проверяем через typeof —
+        // скрипт мог не загрузиться)
+        const errTitle = (typeof t === 'function') ? t('infoLoadTitle') : 'Ошибка загрузки';
+        const errText = (typeof t === 'function') ? t('infoLoadText') : 'Не удалось загрузить информацию. Попробуйте позже.';
         modalBody.innerHTML = `
             <div class="info-tooltip">
-                <h4>Ошибка загрузки</h4>
-                <p>Не удалось загрузить информацию. Попробуйте позже.</p>
+                <h4>${errTitle}</h4>
+                <p>${errText}</p>
             </div>
         `;
         modal.style.display = "flex";
