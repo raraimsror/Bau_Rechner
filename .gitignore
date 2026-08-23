@@ -1,7 +1,7 @@
-index2.html
-index3.html
-index4.html
-part_of_3D
-text.md
-HISTORY.md
-PLAN.md
+# OS / editor junk
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+*.log
