@@ -10,20 +10,24 @@
 /**
  * Расчёт грунтовки для стен
  * @param {number} area - площадь в м²
+ * @param {object} [pricing] - объект с ценами из pricing.json
  * @returns {object} - { liters, cost, product }
  */
-function calculatePrimer(area) {
+function calculatePrimer(area, pricing) {
     // Грунтовка: расход ~100-150 мл/м² (берём 120 мл = 0.12 л/м²)
     // 1 слой грунтовки обязателен
-    const consumptionPerM2 = 0.12; // литров на м²
+    const primerData = (pricing && pricing.primer) || {};
+
+    const consumptionPerM2 = primerData.consumptionPerM2 || 0.12; // литров на м²
     const litersNeeded = area * consumptionPerM2 * 1.1; // +10% запас
 
-    // Грунтовка продаётся в канистрах: 5L, 10L
-    // Цена: ~8€ за 5L, ~15€ за 10L
-    const primerProducts = [
-        { size: 10, price: 15.00, name: "Alpina Tiefgrund" },
-        { size: 5, price: 8.00, name: "Alpina Tiefgrund" }
-    ];
+    // Канистры из данных магазина; fallback — базовые цены Alpina Tiefgrund
+    const primerProducts = (primerData.products && primerData.products.length)
+        ? primerData.products.map(p => ({ name: primerData.name || "Alpina Tiefgrund", ...p }))
+        : [
+            { size: 10, price: 15.00, name: "Alpina Tiefgrund" },
+            { size: 5, price: 8.00, name: "Alpina Tiefgrund" }
+        ];
 
     // Оптимизируем канистры
     let remaining = litersNeeded;
@@ -41,9 +45,9 @@ function calculatePrimer(area) {
         if (remaining <= 0) break;
     }
 
-    // Если остаток, добавляем самую маленькую
+    // Если остаток, добавляем самую маленькую (копия, не ссылка на данные)
     if (remaining > 0) {
-        selectedCans.push(primerProducts[primerProducts.length - 1]);
+        selectedCans.push({ ...primerProducts[primerProducts.length - 1] });
     }
 
     const totalLiters = selectedCans.reduce((sum, can) => sum + can.size, 0);
@@ -64,8 +68,8 @@ function calculatePrimer(area) {
  * @returns {object} - полный расчёт с грунтовкой и краской
  */
 function calculatePaintingTechCard(area, pricing) {
-    // 1. Грунтовка (обязательно)
-    const primer = calculatePrimer(area);
+    // 1. Грунтовка (обязательно) — цены из данных магазина
+    const primer = calculatePrimer(area, pricing);
 
     // 2. Краска (используем существующую функцию)
     const paint = window.calculatePaintQuantity

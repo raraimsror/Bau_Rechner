@@ -199,10 +199,12 @@ window.addEventListener("load", () => {
    ========================================================= */
 
 // Текущий тип работы и класс ремонта
-// job: painting | wallpaper | flooring
+// job: painting | wallpaper
 // class: econom | standard | premium
-let currentJob = "painting";
-let currentClass = "econom";
+// var (не let) — чтобы переменная стала свойством window и была видна
+// другим модулям через window.currentJob (openings.js)
+var currentJob = "painting";
+var currentClass = "econom";
 
 // Объект с ценами из pricing.json
 let pricing = null;
@@ -220,16 +222,28 @@ const storeFiles = {
    ЗАГРУЗКА ЦЕН (pricing.json или prices_*.json)
    ========================================================= */
 
+// Счётчик запросов цен — защита от гонок при быстром переключении магазинов:
+// устаревший ответ не перезаписывает pricing
+let pricingSeq = 0;
+
 async function loadPricing(store) {
     const storeKey = store || selectedStore;
     const url = storeFiles[storeKey] || storeFiles["default"];
+    const seq = ++pricingSeq;
     try {
         const response = await fetch(url);
+        if (seq !== pricingSeq) return false;
         if (!response.ok) throw new Error("HTTP " + response.status);
-        pricing = await response.json();
+        const data = await response.json();
+        if (seq !== pricingSeq) return false;
+        pricing = data;
+        return true;
     } catch (err) {
-        console.error("Ошибка загрузки " + url + ":", err);
-        pricing = null;
+        if (seq === pricingSeq) {
+            console.error("Ошибка загрузки " + url + ":", err);
+            pricing = null;
+        }
+        return false;
     }
 }
 
@@ -243,9 +257,10 @@ function switchStore(store) {
             el.classList.remove('store-btn--active');
         }
     });
-    // Highlight default store button on page init
-    loadPricing(store).then(() => {
-        if (typeof loadReceipt === 'function') {
+    // Загружаем цены выбранного магазина; loadPricing возвращает false,
+    // если запрос успел устареть (началось более новое переключение)
+    loadPricing(store).then((ok) => {
+        if (ok && typeof loadReceipt === 'function') {
             loadReceipt(currentJob);
         }
     });
@@ -309,12 +324,12 @@ function getWallsAreaM2() {
         }
     });
 
-    // Вычитаем площадь проёмов (окон/дверей), если > 2 м²
+    // Вычитаем площадь проёмов (окон/дверей) с выбранных стен.
+    // getAllOpeningsArea учитывает правило: только проёмы > 2 м²
+    // вычитаются полностью (меньшие компенсируются откосами/углублениями)
     if (typeof getAllOpeningsArea === 'function') {
         const openingsArea = getAllOpeningsArea();
-        if (openingsArea > 2) {
-            totalArea = Math.max(0, totalArea - openingsArea);
-        }
+        totalArea = Math.max(0, totalArea - openingsArea);
     }
 
     return totalArea;
@@ -324,7 +339,13 @@ function getWallsAreaM2() {
    ЗАГРУЗКА ЧЕКА ИЗ JSON (по типу работы)
    ========================================================= */
 
+// Счётчик запросов чека — защита от гонок: при быстрых изменениях
+// (размеры, чекбоксы, магазин, язык) устаревший ответ не должен
+// перезаписать свежий результат
+let receiptSeq = 0;
+
 async function loadReceipt(jobType) {
+    const seq = ++receiptSeq;
     try {
         const url = `data/${jobType}_pro.json`;
 
@@ -334,9 +355,11 @@ async function loadReceipt(jobType) {
         }
 
         const model = await response.json();
+        if (seq !== receiptSeq) return; // устаревший ответ — пропускаем
         renderReceipt(model);
     } catch (err) {
         console.error("Ошибка загрузки JSON:", err);
+        if (seq !== receiptSeq) return; // устаревший запрос — ошибку не показываем
         const box = document.getElementById("resultsBox");
         if (box) {
             box.innerHTML = "<div class='receipt'>Ошибка загрузки данных чека</div>";

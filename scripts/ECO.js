@@ -84,19 +84,21 @@ function calculateEcoPainting(area, pricing) {
         { id: 'covers',   name: 'covers',   price: ecoMat.covers || 6.0, checked: selectedEcoTools.covers }
     ];
 
-    // Аренда оборудования
+    // Аренда оборудования — цены из данных магазина (fallback — базовые)
+    const ecoEq = pricing.ecoEquipment || {};
     const equipmentItems = [
-        { id: 'sprayGun',  name: 'sprayGun',  price: 15.0, checked: selectedEcoTools.sprayGun },
-        { id: 'ledLights', name: 'ledLights', price: 10.0, checked: selectedEcoTools.ledLights },
-        { id: 'sander',    name: 'sander',    price: 12.0, checked: selectedEcoTools.sander },
-        { id: 'laser',     name: 'laser',     price: 8.0,  checked: selectedEcoTools.laser }
+        { id: 'sprayGun',  name: 'sprayGun',  price: ecoEq.sprayGun  || 15.0, checked: selectedEcoTools.sprayGun },
+        { id: 'ledLights', name: 'ledLights', price: ecoEq.ledLights || 10.0, checked: selectedEcoTools.ledLights },
+        { id: 'sander',    name: 'sander',    price: ecoEq.sander    || 12.0, checked: selectedEcoTools.sander },
+        { id: 'laser',     name: 'laser',     price: ecoEq.laser     || 8.0,  checked: selectedEcoTools.laser }
     ];
 
     // Дополнительные материалы
+    const ecoEx = pricing.ecoExtras || {};
     const extrasItems = [
-        { id: 'extraTape',  name: 'extraTape',  price: 5.0, checked: selectedEcoTools.extraTape },
-        { id: 'extraTools', name: 'extraTools', price: 6.0, checked: selectedEcoTools.extraTools },
-        { id: 'safety',     name: 'safety',     price: 4.0, checked: selectedEcoTools.safety }
+        { id: 'extraTape',  name: 'extraTape',  price: ecoEx.extraTape  || 5.0, checked: selectedEcoTools.extraTape },
+        { id: 'extraTools', name: 'extraTools', price: ecoEx.extraTools || 6.0, checked: selectedEcoTools.extraTools },
+        { id: 'safety',     name: 'safety',     price: ecoEx.safety     || 4.0, checked: selectedEcoTools.safety }
     ];
 
     // Расчёт сумм
@@ -181,19 +183,21 @@ function calculateEcoWallpaper(area, pricing) {
         };
     }
 
-    // Инструменты для обоев
+    // Инструменты для обоев — цены из данных магазина (fallback — базовые)
+    const ecoWp = pricing.ecoWallpaperTools || {};
     const toolsItems = [
-        { id: 'wpKnife',   name: 'wpKnife',   price: 3.0, checked: true },
-        { id: 'wpSpatula', name: 'wpSpatula', price: 4.0, checked: true },
-        { id: 'wpRoller',  name: 'wpRoller',  price: 5.0, checked: true },
-        { id: 'wpBucket',  name: 'wpBucket',  price: 2.0, checked: true }
+        { id: 'wpKnife',   name: 'wpKnife',   price: ecoWp.wpKnife   || 3.0, checked: true },
+        { id: 'wpSpatula', name: 'wpSpatula', price: ecoWp.wpSpatula || 4.0, checked: true },
+        { id: 'wpRoller',  name: 'wpRoller',  price: ecoWp.wpRoller  || 5.0, checked: true },
+        { id: 'wpBucket',  name: 'wpBucket',  price: ecoWp.wpBucket  || 2.0, checked: true }
     ];
 
     // Дополнительные материалы для обоев
+    const ecoWpEx = pricing.ecoWallpaperExtras || {};
     const extrasItems = [
-        { id: 'wpExtraGlue',  name: 'wpExtraGlue',  price: 5.0, checked: false },
-        { id: 'wpExtraTools', name: 'wpExtraTools', price: 6.0, checked: false },
-        { id: 'wpSafety',     name: 'wpSafety',     price: 3.0, checked: false }
+        { id: 'wpExtraGlue',  name: 'wpExtraGlue',  price: ecoWpEx.wpExtraGlue  || 5.0, checked: false },
+        { id: 'wpExtraTools', name: 'wpExtraTools', price: ecoWpEx.wpExtraTools || 6.0, checked: false },
+        { id: 'wpSafety',     name: 'wpSafety',     price: ecoWpEx.wpSafety     || 3.0, checked: false }
     ];
 
     const toolsTotal = toolsItems.reduce((sum, item) => sum + (item.checked ? item.price : 0), 0);

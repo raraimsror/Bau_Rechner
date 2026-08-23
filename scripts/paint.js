@@ -94,9 +94,11 @@ function calculatePaintQuantity(area, buckets) {
         };
     }
 
-    // Берём coverage из первого ведра (предполагаем одинаковое покрытие)
-    const coverage = buckets[0].coverage || 6; // м²/L на слой
-    const coats = buckets[0].coats || 2;
+    // Берём характеристики из самого маленького ведра — это базовая краска
+    // для стен; не зависим от порядка массива в JSON (у 25L покрытие другое)
+    const baseBucket = [...buckets].sort((a, b) => a.size - b.size)[0];
+    const coverage = baseBucket.coverage || 6; // м²/L на слой
+    const coats = baseBucket.coats || 2;
     const reserve = 1.1; // 10% резерв
 
     // Формула: (площадь / покрытие) * слои * резерв

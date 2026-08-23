@@ -111,14 +111,16 @@ function closeInfoModal() {
 
 // Определение языка интерфейса
 function detectLanguage() {
-    // Проверяем язык браузера или настройки
-    const userLang = navigator.language || navigator.userLanguage;
+    // 1. Сохранённый выбор пользователя (переключатель языков)
+    const saved = localStorage.getItem('language');
+    if (saved === 'ru' || saved === 'en' || saved === 'de') return saved;
 
-    // Если язык русский или украинский - показываем русский
-    if (userLang.startsWith("ru") || userLang.startsWith("uk")) {
-        return "ru";
-    }
+    // 2. Язык браузера
+    const userLang = navigator.language || navigator.userLanguage || '';
+    if (userLang.startsWith('ru') || userLang.startsWith('uk')) return 'ru';
+    if (userLang.startsWith('de')) return 'de';
+    if (userLang.startsWith('en')) return 'en';
 
-    // По умолчанию английский
-    return "ru";
+    // 3. Немецкий по умолчанию (целевой рынок — Германия)
+    return 'de';
 }

@@ -317,11 +317,22 @@ function resetOpenings() {
    AREA CALCULATION
    ========================================================= */
 
+// Порог вычитания проёма (м²): проёмы <= 2 м² НЕ вычитаются —
+// откосы и углубления неопределённой глубины компенсируют материал.
+// Вычитаются только проёмы СТРОГО БОЛЬШЕ 2 м², и только с выбранных стен.
+const OPENING_DEDUCT_THRESHOLD_M2 = 2;
+
 function getAllOpeningsArea() {
     let total = 0;
-    Object.values(openings).forEach(list => {
-        list.forEach(op => {
-            total += (op.w * op.h) / 10000; // cm² → m²
+    Object.keys(openings).forEach(side => {
+        // Учитываем только проёмы на отмеченных стенах
+        // (клиент может красить, например, только одну стену)
+        const toggle = document.querySelector(`.plane-toggle[data-side="${side}"]`);
+        if (!toggle || !toggle.checked) return;
+
+        openings[side].forEach(op => {
+            const area = (op.w * op.h) / 10000; // cm² → m²
+            if (area > OPENING_DEDUCT_THRESHOLD_M2) total += area;
         });
     });
     return total;

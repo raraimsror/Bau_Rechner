@@ -161,7 +161,9 @@ let resultsTranslations = {
     common: {}
 };
 
-// Load JSON translations for results
+// Load JSON translations for results.
+// Возвращает объект переводов или null; глобальную переменную не трогает —
+// присвоение делает setLanguage после проверки на гонки.
 async function loadResultsTranslations(lang) {
     try {
         const [categories, tasks, inventory, common] = await Promise.all([
@@ -170,14 +172,16 @@ async function loadResultsTranslations(lang) {
             fetch(`locales/${lang}/inventory.json`).then(r => r.json()),
             fetch(`locales/${lang}/common.json`).then(r => r.json())
         ]);
-
-        resultsTranslations = { categories, tasks, inventory, common };
-        return true;
+        return { categories, tasks, inventory, common };
     } catch (error) {
         console.error('Failed to load translations:', error);
-        return false;
+        return null;
     }
 }
+
+// Счётчик смены языка — защита от гонок при быстром переключении:
+// устаревший ответ Promise.all не перезаписывает результаты
+let translationsSeq = 0;
 
 function setLanguage(lang) {
     if (translations[lang]) {
@@ -188,7 +192,10 @@ function setLanguage(lang) {
         document.title = t('title');
 
         // Load results translations and then update UI
-        loadResultsTranslations(lang).then(() => {
+        const seq = ++translationsSeq;
+        loadResultsTranslations(lang).then((data) => {
+            if (!data || seq !== translationsSeq) return;
+            resultsTranslations = data;
             localize();
             // Trigger results recalculation if loadReceipt exists
             if (typeof loadReceipt === 'function' && typeof currentJob !== 'undefined') {
@@ -252,10 +259,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedLang) {
         setLanguage(savedLang);
     } else {
-        const userLang = navigator.language || navigator.userLanguage;
+        const userLang = navigator.language || navigator.userLanguage || '';
         if (userLang.startsWith('en')) setLanguage('en');
         else if (userLang.startsWith('de')) setLanguage('de');
-        else setLanguage('ru');
+        else if (userLang.startsWith('ru') || userLang.startsWith('uk')) setLanguage('ru');
+        else setLanguage('de'); // немецкий по умолчанию (целевой рынок DE)
     }
 
     // Language selector (segmented radio)

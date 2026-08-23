@@ -54,6 +54,41 @@
     "covers": 3.19
   },
 
+  "ecoEquipment": {
+    "sprayGun": 15.0,
+    "ledLights": 10.0,
+    "sander": 12.0,
+    "laser": 8.0
+  },
+
+  "ecoExtras": {
+    "extraTape": 5.0,
+    "extraTools": 6.0,
+    "safety": 4.0
+  },
+
+  "ecoWallpaperTools": {
+    "wpKnife": 3.0,
+    "wpSpatula": 4.0,
+    "wpRoller": 5.0,
+    "wpBucket": 2.0
+  },
+
+  "ecoWallpaperExtras": {
+    "wpExtraGlue": 5.0,
+    "wpExtraTools": 6.0,
+    "wpSafety": 3.0
+  },
+
+  "primer": {
+    "name": "Alpina Tiefgrund",
+    "consumptionPerM2": 0.12,
+    "products": [
+      { "size": 10, "price": 15.00 },
+      { "size": 5, "price": 8.00 }
+    ]
+  },
+
   "workRatePerM2": {
     "painting": { "econom": 6, "standard": 12, "premium": 20 },
     "wallpaper": { "econom": 8, "standard": 14, "premium": 22 },
